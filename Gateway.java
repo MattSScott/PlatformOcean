@@ -32,10 +32,10 @@ public class Gateway {
                 }
             } catch (IOException e) {
                 System.out.println("Accept failed, " + e);
+                serverSocket.close();
                 System.exit(1);
             }
 
         }
-        // serverSocket.close();
     }
 }
