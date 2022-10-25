@@ -17,12 +17,9 @@ public class Gateway {
 
         System.out.println("Gateway opened on port: " + PORT_NUMBER);
 
-        ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
-
-        while (true) {
-
-            Socket clientSocket = null;
-            try {
+        try (ServerSocket serverSocket = new ServerSocket(PORT_NUMBER)) {
+            while (true) {
+                Socket clientSocket = null;
                 clientSocket = serverSocket.accept();
                 if (clientSocket.isConnected()) {
                     System.out.println("Client connected.");
@@ -30,12 +27,10 @@ public class Gateway {
                     Server pathway = new Server(clientSocket, "server_" + String.valueOf(numCli));
                     pathway.start();
                 }
-            } catch (IOException e) {
-                System.out.println("Accept failed, " + e);
-                serverSocket.close();
-                System.exit(1);
             }
-
+        } catch (IOException e) {
+            System.out.println("Accept failed, " + e);
+            System.exit(1);
         }
     }
 }
