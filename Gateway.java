@@ -26,6 +26,10 @@ public class Gateway {
         gateway.startServer();
     }
 
+    public ArrayList<Server> requestAllThreads() {
+        return this.allThreads;
+    }
+
     public void startServer() {
         System.out.println("Gateway opened on port: " + this.PORT_NUMBER);
 
@@ -37,7 +41,7 @@ public class Gateway {
                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                     String clientName = in.readLine();
                     System.out.println("Client connected (" + clientName + ").");
-                    Server pathway = new Server(clientSocket, clientName);
+                    Server pathway = new Server(clientSocket, clientName, this);
                     this.allThreads.add(pathway);
                     pathway.start();
                     // in.close();
@@ -49,3 +53,5 @@ public class Gateway {
         }
     }
 }
+
+// https://www.youtube.com/watch?v=bnxOMzxwayE

@@ -33,11 +33,11 @@ public class PO_Client {
                 if (fromServer.equals("bye!"))
                     break;
 
-                fromUser = sc.nextLine();
-                if (fromUser != null) {
-                    System.out.println(this.USERNAME + ": " + fromUser);
-                    out.println(fromUser);
-                }
+                // fromUser = sc.nextLine(); // BLOCKS JOINING CALLS - MAKE ASYNC
+                // if (fromUser != null) {
+                //     System.out.println(this.USERNAME + ": " + fromUser);
+                //     out.println(fromUser);
+                // }
             }
             out.close();
             in.close();
