@@ -1,11 +1,18 @@
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class Gateway {
 
+    private final ArrayList<Server> allThreads = new ArrayList<Server>();
+    private final int PORT_NUMBER;
+
+    Gateway(int PN) {
+        this.PORT_NUMBER = PN;
+    }
+
     public static void main(String[] args) throws IOException {
 
-        int numCli = 0;
         final int PORT_NUMBER;
 
         if (args.length == 0) {
@@ -15,17 +22,25 @@ public class Gateway {
 
         }
 
-        System.out.println("Gateway opened on port: " + PORT_NUMBER);
+        Gateway gateway = new Gateway(PORT_NUMBER);
+        gateway.startServer();
+    }
 
-        try (ServerSocket serverSocket = new ServerSocket(PORT_NUMBER)) {
+    public void startServer() {
+        System.out.println("Gateway opened on port: " + this.PORT_NUMBER);
+
+        try (ServerSocket serverSocket = new ServerSocket(this.PORT_NUMBER)) {
             while (true) {
                 Socket clientSocket = null;
                 clientSocket = serverSocket.accept();
                 if (clientSocket.isConnected()) {
-                    System.out.println("Client connected.");
-                    numCli += 1;
-                    Server pathway = new Server(clientSocket, "server_" + String.valueOf(numCli));
+                    BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                    String clientName = in.readLine();
+                    System.out.println("Client connected (" + clientName + ").");
+                    Server pathway = new Server(clientSocket, clientName);
+                    this.allThreads.add(pathway);
                     pathway.start();
+                    // in.close();
                 }
             }
         } catch (IOException e) {

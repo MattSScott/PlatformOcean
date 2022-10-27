@@ -1,30 +1,32 @@
 public class CS_Protocol {
 
-    enum actionSet {
-        CONNECT,
-        SEND_MSG,
-        DISCONNECT,
-    }
+    // enum actionSet {
+    //     CONNECT,
+    //     SEND_MSG,
+    //     DISCONNECT,
+    // }
 
-    private actionSet state;
+    // private actionSet state;
 
     CS_Protocol() {
-        this.state = actionSet.CONNECT;
-        this.state = actionSet.SEND_MSG;
+        // this.state = actionSet.CONNECT;
+        // this.state = actionSet.SEND_MSG;
     }
 
-    String parseMsg(String input) {
+    Message parseMsg(String input) {
 
-        if (input.equals("bye!")) {
-            this.state = actionSet.DISCONNECT;
-            System.out.println("Client disconnected.");
-            return "Client disconnected.";
-        }
+        Message inputMsg = new Message(input);
 
-        if (this.state == actionSet.SEND_MSG) {
-            return input;
+        try {
+            if (!inputMsg.isValid()) {
+                throw new Exception("Invalid message");
+            }
+            return inputMsg;
+
+        } catch (Exception e) {
+            System.out.println(e);
+            return new Message("");
         }
-        return "";
     }
 
 }

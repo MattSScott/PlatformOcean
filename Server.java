@@ -21,14 +21,18 @@ public class Server extends Thread {
                 BufferedReader in = new BufferedReader(new InputStreamReader(this.client.getInputStream()));) {
             CS_Protocol csp = new CS_Protocol();
             String inputLine;
-            String outputLine = csp.parseMsg("ONLINE");
+            Message outputMsg = csp.parseMsg("ONLINE");
+            String outputLine = outputMsg.getParsed();
             out.println(outputLine);
 
             while ((inputLine = in.readLine()) != null) {
-                outputLine = csp.parseMsg(inputLine);
+                outputMsg = csp.parseMsg(inputLine);
+                outputLine = outputMsg.getParsed();
                 out.println(outputLine);
-                if (outputLine.equals("Client disconnected."))
+                if (outputLine.equals("bye!")) {
+                    System.out.println("Client disconnected.");
                     break;
+                }
             }
 
             out.close();
