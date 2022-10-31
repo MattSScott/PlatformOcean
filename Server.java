@@ -31,21 +31,20 @@ public class Server extends Thread {
             String inputLine;
             Message outputMsg = csp.parseMsg("ONLINE");
             String outputLine = outputMsg.getParsed();
-            out.println(outputLine);
+            this.out.println(outputLine);
 
-            for (Server s : this.gateway.requestAllThreads()) {
-                System.out.println("trying to ping");
-                if (s != this) {
-                    PrintWriter writer = s.getOutputService();
-                    writer.println(this.serverName + " joined");
-                }
-            }
+            this.broadcast("Server: " + this.serverName + " joined", true);
 
             while ((inputLine = this.in.readLine()) != null) {
                 outputMsg = csp.parseMsg(inputLine);
-                outputLine = outputMsg.getParsed();
-                this.out.println(outputLine);
-                if (outputLine.equals("bye!")) {
+                outputLine = this.serverName + ": " + outputMsg.getParsed();
+
+                if (outputMsg.isGlobal()) {
+                    this.broadcast(outputLine, true);
+                } else {
+                    this.out.println(outputLine);
+                }
+                if (outputLine.equals("bye")) {
                     System.out.println("Client disconnected.");
                     break;
                 }
@@ -61,8 +60,16 @@ public class Server extends Thread {
         }
     }
 
-    public PrintWriter getOutputService() {
-        return this.out;
+    public void broadcast(String msg, boolean toAll) {
+        for (Server s : this.gateway.requestAllThreads()) {
+            if (toAll || !s.equals(this)) {
+                s.sendMessage(msg);
+            }
+        }
+    }
+
+    public void sendMessage(String msg) {
+        this.out.println(msg);
     }
 
     public void start() {

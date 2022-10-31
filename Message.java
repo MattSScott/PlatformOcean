@@ -45,6 +45,15 @@ public class Message {
         return this.quantifiers;
     }
 
+    public boolean isGlobal() {
+        for (String s : this.quantifiers) {
+            if (s.equals("g")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         // String test = "!g!e!f example msg";
         String test = "example msg";

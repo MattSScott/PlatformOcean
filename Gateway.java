@@ -44,7 +44,6 @@ public class Gateway {
                     Server pathway = new Server(clientSocket, clientName, this);
                     this.allThreads.add(pathway);
                     pathway.start();
-                    // in.close();
                 }
             }
         } catch (IOException e) {
