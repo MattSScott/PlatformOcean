@@ -15,17 +15,20 @@ public class PO_Client extends Thread {
 
     public void run() {
         try (
-
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));) {
 
             String fromServer;
-            new inStreamHandler(out).start();
+            inStreamHandler handle = new inStreamHandler(out);
+            handle.start();
 
             while ((fromServer = in.readLine()) != null) {
                 System.out.println(fromServer);
+                if (!handle.isAlive()) {
+                    break;
+                }
             }
-
+            socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,8 +60,6 @@ public class PO_Client extends Thread {
                         break;
                     }
                 }
-                socket.close();
-                output.close();
                 sc.close();
             } catch (IOException e) {
                 e.printStackTrace();

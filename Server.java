@@ -44,8 +44,9 @@ public class Server extends Thread {
                 } else {
                     this.out.println(outputLine);
                 }
-                if (outputLine.equals("bye")) {
-                    System.out.println("Client disconnected.");
+                if (outputMsg.getParsed().equals("bye")) {
+                    this.broadcast(this.serverName + " disconnected.", false);
+                    System.out.println("Client disconnected (" + this.serverName + ").");
                     break;
                 }
             }
