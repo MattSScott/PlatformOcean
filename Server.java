@@ -46,11 +46,11 @@ public class Server extends Thread {
                 outputMsg = csp.parseMsg(inputLine);
                 outputLine = this.clientName + ": " + outputMsg.getParsed();
 
-                if (outputMsg.isGlobal()) {
+                if (outputMsg.contains("g")) {
                     this.broadcast(outputLine, true);
-                } else if (outputMsg.isCommList()) {
+                } else if (outputMsg.contains("c")) {
                     this.sendMessage("!g: Send global message\n!r: rename user");
-                } else if (outputMsg.isRename()) {
+                } else if (outputMsg.contains("r")) {
                     this.broadcast(this.clientName + " renamed themselves to: " + outputMsg.getParsed(), true);
                     this.clientName = outputMsg.getParsed();
                 } else {
