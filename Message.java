@@ -45,27 +45,9 @@ public class Message {
         return this.quantifiers;
     }
 
-    public boolean isGlobal() {
+    public boolean contains(String quant) {
         for (String s : this.quantifiers) {
-            if (s.equals("g")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isCommList() {
-        for (String s : this.quantifiers) {
-            if (s.equals("c")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isRename() {
-        for (String s : this.quantifiers) {
-            if (s.equals("r")) {
+            if (s.equals(quant)) {
                 return true;
             }
         }
