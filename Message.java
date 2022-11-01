@@ -54,6 +54,24 @@ public class Message {
         return false;
     }
 
+    public boolean isCommList() {
+        for (String s : this.quantifiers) {
+            if (s.equals("c")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isRename() {
+        for (String s : this.quantifiers) {
+            if (s.equals("r")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
         // String test = "!g!e!f example msg";
         String test = "example msg";

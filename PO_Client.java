@@ -48,7 +48,6 @@ public class PO_Client extends Thread {
                     BufferedReader sc = new BufferedReader(new InputStreamReader(System.in));) {
 
                 // get identity
-                System.out.println("Enter username");
                 this.USERNAME = sc.readLine();
                 output.println(this.USERNAME);
 

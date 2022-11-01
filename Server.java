@@ -1,20 +1,22 @@
 import java.net.*;
 import java.io.*;
+import java.util.UUID;
 
 public class Server extends Thread {
 
     private Thread serverInstance;
-    private String serverName;
+    private String clientName;
     private Socket client;
     private PrintWriter out;
     private BufferedReader in;
+    private final String serverName;
     private final Gateway gateway;
 
-    Server(Socket client, String clientName, Gateway gateway) throws IOException {
-        this.serverName = clientName;
+    Server(Socket client, Gateway gateway) throws IOException {
         this.client = client;
         this.gateway = gateway;
-        System.out.println("Creating server for " + this.serverName);
+        this.serverName = UUID.randomUUID().toString();
+        System.out.println("Creating server with alias: " + this.serverName);
         try {
             this.out = new PrintWriter(this.client.getOutputStream(), true);
             this.in = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
@@ -27,26 +29,36 @@ public class Server extends Thread {
 
     public void run() {
         try {
-            CS_Protocol csp = new CS_Protocol();
+            final CS_Protocol csp = new CS_Protocol();
             String inputLine;
-            Message outputMsg = csp.parseMsg("ONLINE");
+            Message outputMsg = csp.parseMsg("Server: ONLINE");
             String outputLine = outputMsg.getParsed();
-            this.out.println(outputLine);
+            this.sendMessage(outputLine);
 
-            this.broadcast("Server: " + this.serverName + " joined", true);
+            this.sendMessage("Server: Enter username:");
+            this.clientName = this.in.readLine();
+
+            this.broadcast("Server: " + this.clientName + " joined", true);
+
+            this.sendMessage("Server: Type '!c help' for a list of commands.");
 
             while ((inputLine = this.in.readLine()) != null) {
                 outputMsg = csp.parseMsg(inputLine);
-                outputLine = this.serverName + ": " + outputMsg.getParsed();
+                outputLine = this.clientName + ": " + outputMsg.getParsed();
 
                 if (outputMsg.isGlobal()) {
                     this.broadcast(outputLine, true);
+                } else if (outputMsg.isCommList()) {
+                    this.sendMessage("!g: Send global message\n!r: rename user");
+                } else if (outputMsg.isRename()) {
+                    this.broadcast(this.clientName + " renamed themselves to: " + outputMsg.getParsed(), true);
+                    this.clientName = outputMsg.getParsed();
                 } else {
-                    this.out.println(outputLine);
+                    this.sendMessage(outputLine);
                 }
                 if (outputMsg.getParsed().equals("bye")) {
-                    this.broadcast(this.serverName + " disconnected.", false);
-                    System.out.println("Client disconnected (" + this.serverName + ").");
+                    this.broadcast(this.clientName + " disconnected.", false);
+                    System.out.println("Client disconnected (" + this.clientName + ").");
                     break;
                 }
             }
