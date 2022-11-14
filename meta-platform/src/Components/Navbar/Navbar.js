@@ -1,15 +1,22 @@
 import "./Navbar.css";
+import PO_Logo from "./../../po_logo.png";
 
-export default function Navbar({logo}) {
+export default function Navbar({ logo }) {
   return (
     <header className="navHead">
       <div className="logoCont">
-        <img src={logo} alt="nav-logo"></img>
+        <img src={PO_Logo} alt="nav-logo"></img>
       </div>
       <nav className="navbar">
-          <div className="navItem">Home</div>
-          <div className="navItem">Plugins</div>
-          <div className="navItem">About</div>
+        <div className="navItem">
+          <a href="/">HOME</a>
+        </div>
+        <div className="navItem">
+          <a href="/plugins">PLUGINS</a>
+        </div>
+        <div className="navItem">
+          <a href="/about">ABOUT</a>
+        </div>
       </nav>
     </header>
   );

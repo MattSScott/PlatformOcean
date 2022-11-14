@@ -1,8 +1,11 @@
 .navHead {
   display: flex;
   align-items: center;
-  color: white;
+  /* color: white; */
   height: 100%;
+  border-bottom: 2px solid #b8eaf3;
+  margin-left: 75px;
+  margin-right: 75px;
 }
 
 .logoCont {
@@ -12,24 +15,48 @@
   justify-content: center;
 }
 
+.logoCont img {
+  scale: 80%;
+}
+
+/* @font-face {
+  font-family: 'DIN';
+  src: url();
+} */
+
 .navbar {
   width: 80%;
   height: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: right;
+  align-items: center;
+  /* font-family: ; */
 }
 
 .navItem {
   display: flex;
   transition: background-color 0.5s;
-  width: 33%;
+  width: max-content;
   justify-content: center;
   align-items: center;
   font-weight: 500;
-  font-size: 24px;
-  height: 100%;
+  font-size: 25px;
+  height: 50%;
+  border-radius: 100px;
+  padding-left: 25px;
+  padding-right: 25px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .navItem:hover {
-  background-color: #404349;
+  background-color: #b7f1fb;
+}
+
+.navItem a {
+  color: inherit;
+  text-decoration: none;
+  display: inherit;
+  justify-content: inherit;
+  align-items: inherit;
 }

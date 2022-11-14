@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-color: #282c34;
+  background-color: #eff8f9;
   height: 100vh;
 }
 
@@ -17,6 +17,7 @@
 
 .navCont {
   height: 15%;
+  color: #009DDB;
 }
 
 .App-header {
