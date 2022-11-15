@@ -1,14 +1,46 @@
 import * as Utils from "./NetworkUtils.js";
 import { useState } from "react";
-// import * as d3 from "d3";
+import { useSpring, animated } from "react-spring";
+import "./Network.css";
 
 const boxWidth = 200;
 const boxHeight = 200;
 
+const AnimatedCircle = ({ toggler, data }) => {
+  const style = useSpring({
+    config: {
+      duration: 500,
+    },
+    r: data.toggled ? data.size * 1.5 : data.size,
+    // zIndex: data.toggled ? 99 : 1
+    //   opacity: isShowing ? 1 : 0,
+  });
+  return (
+    <animated.circle
+      {...style}
+      position="relative"
+      //   zIndex={data.toggled ? 99 : 1}
+      cx={data.x}
+      cy={data.y}
+      fill={data.col}
+      onMouseOver={toggler}
+      onMouseOut={toggler}
+    />
+  );
+};
 
 export const Circles = () => {
-  const [dataset] = useState(Utils.genItems(boxWidth, boxHeight));
-//   const ref = useRef();
+  const [dataset, updateDataset] = useState(
+    Utils.genItems(boxWidth, boxHeight)
+  );
+
+  const toggleCirc = (idx) => {
+    updateDataset((prevData) => {
+      return prevData.map((v) => {
+        return v.idx === idx ? { ...v, toggled: !v.toggled } : v;
+      });
+    });
+  };
 
   return (
     <svg width="100%" height="100%" viewBox={`0 0 ${boxWidth} ${boxHeight}`}>
@@ -21,7 +53,18 @@ export const Circles = () => {
             y2={boxHeight / 2}
             stroke="black"
           />
-          <circle cx={coord.x} cy={coord.y} fill={coord.col} r={coord.size} />
+          <AnimatedCircle toggler={() => toggleCirc(coord.idx)} data={coord} />
+          <text
+            x={coord.x}
+            y={coord.y}
+            fontSize="5px"
+            textAnchor="middle"
+            stroke="#51c5cf"
+            strokeWidth="0.1px"
+            dy=".3em"
+          >
+            Example Text
+          </text>
         </>
       ))}
       <circle cx={boxWidth / 2} cy={boxHeight / 2} r="10" fill="#03045e" />

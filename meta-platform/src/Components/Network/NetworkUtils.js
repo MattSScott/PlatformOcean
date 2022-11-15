@@ -5,6 +5,7 @@ export const genItems = (xoff, yoff) => {
   let rad = Math.min(xoff, yoff) / 2;
   let circInc = (2 * Math.PI) / numItems;
   let items = [];
+  let index = 0;
   for (let i = 0; i < 2 * Math.PI; i += circInc) {
     let randRange = Math.random() * 0.5 + 0.25;
     let dist = randRange * rad;
@@ -14,8 +15,11 @@ export const genItems = (xoff, yoff) => {
       x: dist * Math.cos(i) + xoff / 2,
       y: dist * Math.sin(i) + yoff / 2,
       col: colourPalette[randCol],
-      size: randSize
+      size: randSize,
+      idx: index,
+      toggled: false
     });
+    index++;
   }
   return items;
 };
