@@ -19,7 +19,6 @@ const AnimatedCircle = ({ toggler, data }) => {
     <animated.circle
       {...style}
       position="relative"
-      //   zIndex={data.toggled ? 99 : 1}
       cx={data.x}
       cy={data.y}
       fill={data.col}
@@ -59,11 +58,10 @@ export const Circles = () => {
             y={coord.y}
             fontSize="5px"
             textAnchor="middle"
-            stroke="#51c5cf"
-            strokeWidth="0.1px"
+            fill="white"
             dy=".3em"
           >
-            Example Text
+            {Utils.itemDescriptors[coord.idx]}
           </text>
         </>
       ))}
