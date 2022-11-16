@@ -41,12 +41,12 @@ export const genItems = (xoff, yoff) => {
     let randCol = Math.floor(colourPalette.length * Math.random());
     let randSize = Math.random() * 10 + 15;
     items.push({
-      x: dist * Math.cos(i) + xoff / 2,
-      y: dist * Math.sin(i) + yoff / 2,
-      col: colourPalette[randCol],
-      size: randSize,
+      cx: dist * Math.cos(i) + xoff / 2,
+      cy: dist * Math.sin(i) + yoff / 2,
+      fill: colourPalette[randCol],
+      r: randSize,
       idx: index,
-      toggled: false,
+    //   toggled: false,
     });
     index++;
   }

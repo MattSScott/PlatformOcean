@@ -1,71 +1,64 @@
 import * as Utils from "./NetworkUtils.js";
-import { useState } from "react";
-import { useSpring, animated } from "react-spring";
+import { useSprings, animated } from "react-spring";
+import { useGesture, useHover, useDrag } from "@use-gesture/react";
 import "./Network.css";
 
 const boxWidth = 200;
 const boxHeight = 200;
 
-const AnimatedCircle = ({ toggler, data }) => {
-  const style = useSpring({
-    config: {
-      duration: 500,
-    },
-    r: data.toggled ? data.size * 1.5 : data.size,
-    // zIndex: data.toggled ? 99 : 1
-    //   opacity: isShowing ? 1 : 0,
-  });
-  return (
-    <animated.circle
-      {...style}
-      position="relative"
-      cx={data.x}
-      cy={data.y}
-      fill={data.col}
-      onMouseOver={toggler}
-      onMouseOut={toggler}
-    />
-  );
-};
-
-export const Circles = () => {
-  const [dataset, updateDataset] = useState(
-    Utils.genItems(boxWidth, boxHeight)
-  );
-
-  const toggleCirc = (idx) => {
-    updateDataset((prevData) => {
-      return prevData.map((v) => {
-        return v.idx === idx ? { ...v, toggled: !v.toggled } : v;
-      });
-    });
+const nodeUpdater =
+  (active = false, index, dataset) =>
+  (data) => {
+    return active && data === index
+      ? { ...dataset[data], r: dataset[data].r * 2 }
+      : dataset[data];
   };
+
+export default function Network() {
+  const dataset = Utils.genItems(boxWidth, boxHeight);
+
+  const [springs, setSprings] = useSprings(dataset.length, (item) => ({
+    config: { duration: 500 },
+    ...dataset[item],
+  }));
+
+  const bind = useHover(({ args: [index], active }) => {
+    setSprings.start(nodeUpdater(active, index, dataset));
+  });
 
   return (
     <svg width="100%" height="100%" viewBox={`0 0 ${boxWidth} ${boxHeight}`}>
-      {dataset.map((coord) => (
+      {springs.map((styles, i) => (
         <>
-          <line
-            x1={coord.x}
-            y1={coord.y}
+          <animated.line
+            key={`line_${i}`}
+            x1={styles.cx}
+            y1={styles.cy}
             x2={boxWidth / 2}
             y2={boxHeight / 2}
             stroke="black"
           />
-          <AnimatedCircle toggler={() => toggleCirc(coord.idx)} data={coord} />
-          <text
-            x={coord.x}
-            y={coord.y}
+          <animated.circle {...bind(i)} key={`circle_${i}`} style={styles} />
+          <animated.text
+            key={`text_${i}`}
+            x={styles.cx}
+            y={styles.cy}
             fontSize="5px"
             textAnchor="middle"
             fill="white"
             dy=".3em"
           >
-            {Utils.itemDescriptors[coord.idx]}
-          </text>
+            {Utils.itemDescriptors[i]}
+          </animated.text>
         </>
       ))}
-      <circle cx={boxWidth / 2} cy={boxHeight / 2} r="10" fill="#03045e" />
+      <circle
+        key={`center_circle`}
+        cx={boxWidth / 2}
+        cy={boxHeight / 2}
+        r="10"
+        fill="#03045e"
+      />
     </svg>
   );
-};
+}
