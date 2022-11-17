@@ -1,6 +1,6 @@
 import * as Utils from "./NetworkUtils.js";
-import { useSprings, animated } from "react-spring";
-import { useGesture, useHover, useDrag } from "@use-gesture/react";
+import { useSpring, useSprings, animated } from "react-spring";
+import { useHover } from "@use-gesture/react";
 import { useState } from "react";
 import "./Network.css";
 
@@ -39,6 +39,13 @@ export default function Network({ logo }) {
     boxY: dataset[item].cy - dataset[item].r,
   }));
 
+  const fadeIn = useSpring({
+    to: { opacity: 1 },
+    from: { opacity: 0 },
+    config: { duration: 1000 },
+    reset: true,
+  });
+
   const [textSprings, setTextSprings] = useState(
     new Array(texts.length).fill(false)
   );
@@ -47,16 +54,6 @@ export default function Network({ logo }) {
     setSprings.start(nodeUpdater(active, index, dataset));
     setTextSprings(textSprings.map((v, i) => (i === index ? !v : v)));
   });
-
-  //   const fadeText = useTransition(textSprings, {
-  //     from: { position: "absolute", opacity: 0 },
-  //     enter: { opacity: 1 },
-  //     leave: { opacity: 0 },
-  //     reverse: toggle,
-  //     delay: 200,
-  //     config: config.molasses,
-  //     onRest: () => set(!toggle),
-  //   });
 
   return (
     <svg width="100%" height="100%" viewBox={`0 0 ${boxWidth} ${boxHeight}`}>
@@ -77,9 +74,15 @@ export default function Network({ logo }) {
             width={styles.boxR}
             height={styles.boxR}
           >
-            <animated.div {...bind(i)} className="circText" color="black">
-              {textSprings[i] ? altTexts[i] : texts[i]}
-            </animated.div>
+            {textSprings[i] ? (
+              <animated.div {...bind(i)} className="circText" color="black">
+                <animated.p style={fadeIn}>{altTexts[i]}</animated.p>
+              </animated.div>
+            ) : (
+              <animated.div {...bind(i)} className="circText" color="black">
+                <animated.p>{texts[i]}</animated.p>
+              </animated.div>
+            )}
           </animated.foreignObject>
         </>
       ))}
