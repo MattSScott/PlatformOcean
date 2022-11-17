@@ -1,11 +1,10 @@
 import "./Navbar.css";
-import PO_Logo from "./../../po_logo.png";
 
 export default function Navbar({ logo }) {
   return (
     <header className="navHead">
       <div className="logoCont">
-        <img src={PO_Logo} alt="nav-logo"></img>
+        <img src={logo} alt="nav-logo" />
       </div>
       <nav className="navbar">
         <div className="navItem">

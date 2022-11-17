@@ -1,4 +1,5 @@
-import logo from "./logo.svg";
+import logo from "./po_logo.svg";
+import minLogo from "./po_small.svg";
 import "./App.css";
 import Navbar from "./Components/Navbar/Navbar";
 import Network from "./Components/Network/Network";
@@ -10,7 +11,7 @@ function App() {
         <Navbar logo={logo} />
       </div>
       <div className="App-header">
-        <Network />
+        <Network logo={minLogo} />
       </div>
     </div>
   );

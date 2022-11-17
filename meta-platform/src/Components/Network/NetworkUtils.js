@@ -52,7 +52,7 @@ export const genItems = (xoff, yoff) => {
       cx: dist * Math.cos(i) + xoff / 2,
       cy: dist * Math.sin(i) + yoff / 2,
       fill: colourPalette[randCol],
-      r: Math.sqrt(itemInfos[index].length) * 1.6,
+      r: Math.sqrt(itemInfos[index].length) * 1.5,
       idx: index,
     });
     index++;

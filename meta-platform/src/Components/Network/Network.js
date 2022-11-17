@@ -14,9 +14,9 @@ const nodeUpdater =
       ? {
           ...dataset[data],
           r: dataset[data].r * 2,
-          boxR: dataset[data].r * 4,
-          boxX: dataset[data].cx - 2 * dataset[data].r,
-          boxY: dataset[data].cy - 2 * dataset[data].r,
+          boxR: dataset[data].r * 4 * 0.85,
+          boxX: dataset[data].cx - 2 * dataset[data].r * 0.85,
+          boxY: dataset[data].cy - 2 * dataset[data].r * 0.85,
         }
       : {
           ...dataset[data],
@@ -26,7 +26,7 @@ const nodeUpdater =
         };
   };
 
-export default function Network() {
+export default function Network({ logo }) {
   const [dataset] = useState(Utils.genItems(boxWidth, boxHeight));
   const texts = Utils.itemDescriptors;
   const altTexts = Utils.itemInfos;
@@ -88,8 +88,16 @@ export default function Network() {
         cx={boxWidth / 2}
         cy={boxHeight / 2}
         r="20"
-        fill="#03045e"
+        fill="#ade8f4"
       />
+      <foreignObject
+        x={boxWidth / 2 - 20}
+        y={boxHeight / 2 - 20}
+        width={40}
+        height={40}
+      >
+        <img className="centerImg" src={logo} alt="cent_logo" />
+      </foreignObject>
     </svg>
   );
 }
