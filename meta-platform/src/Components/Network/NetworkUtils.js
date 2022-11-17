@@ -48,12 +48,11 @@ export const genItems = (xoff, yoff) => {
     let randRange = getRandRange();
     let dist = randRange * rad;
     let randCol = Math.floor(colourPalette.length * Math.random());
-    let randSize = Math.random() * 10 + 15;
     items.push({
       cx: dist * Math.cos(i) + xoff / 2,
       cy: dist * Math.sin(i) + yoff / 2,
       fill: colourPalette[randCol],
-      r: Math.sqrt(itemInfos[index].length) * 1.5,
+      r: Math.sqrt(itemInfos[index].length) * 1.6,
       idx: index,
     });
     index++;

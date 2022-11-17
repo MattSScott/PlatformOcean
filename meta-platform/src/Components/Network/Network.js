@@ -11,8 +11,19 @@ const nodeUpdater =
   (active = false, index, dataset) =>
   (data) => {
     return active && data === index
-      ? { ...dataset[data], r: dataset[data].r * 2 }
-      : dataset[data];
+      ? {
+          ...dataset[data],
+          r: dataset[data].r * 2,
+          boxR: dataset[data].r * 4,
+          boxX: dataset[data].cx - 2 * dataset[data].r,
+          boxY: dataset[data].cy - 2 * dataset[data].r,
+        }
+      : {
+          ...dataset[data],
+          boxR: dataset[data].r * 2,
+          boxX: dataset[data].cx - dataset[data].r,
+          boxY: dataset[data].cy - dataset[data].r,
+        };
   };
 
 export default function Network() {
@@ -23,6 +34,9 @@ export default function Network() {
   const [springs, setSprings] = useSprings(dataset.length, (item) => ({
     config: { duration: 500 },
     ...dataset[item],
+    boxR: dataset[item].r * 2,
+    boxX: dataset[item].cx - dataset[item].r,
+    boxY: dataset[item].cy - dataset[item].r,
   }));
 
   const [textSprings, setTextSprings] = useState(
@@ -56,30 +70,16 @@ export default function Network() {
             y2={boxHeight / 2}
             stroke="black"
           />
-          <animated.circle {...bind(i)} key={`circle_${i}`} style={styles} />
-          {/* <animated.text
-            key={`text_${i}`}
-            x={styles.cx}
-            y={styles.cy}
-            // opacity={textSprings[i].opacity}
-            fontSize="5px"
-            textAnchor="middle"
-            fill="white"
-            dy=".3em"
-          >
-            {textSprings[i] ? altTexts[i] : texts[i]}
-          </animated.text> 
-          */}
+          <animated.circle key={`circle_${i}`} style={styles} />
           <animated.foreignObject
-            {...bind(i)}
-            x={styles.cx.get() - styles.r.get()}
-            y={styles.cy.get() - styles.r.get()}
-            width={styles.r.get() * 2}
-            height={styles.r.get() * 2}
+            x={styles.boxX}
+            y={styles.boxY}
+            width={styles.boxR}
+            height={styles.boxR}
           >
-            <div className="circText" color="black">
+            <animated.div {...bind(i)} className="circText" color="black">
               {textSprings[i] ? altTexts[i] : texts[i]}
-            </div>
+            </animated.div>
           </animated.foreignObject>
         </>
       ))}
@@ -87,7 +87,7 @@ export default function Network() {
         key={`center_circle`}
         cx={boxWidth / 2}
         cy={boxHeight / 2}
-        r="10"
+        r="20"
         fill="#03045e"
       />
     </svg>
