@@ -1,7 +1,20 @@
-/* circle {
-    transition: r 1.5s;
+.circText {
+  position: relative;
+  color: yellow;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  font-size: 5px;
 }
 
-circle:hover {
-    r: 30;
-} */
+.centerImg {
+  width: 100%;
+  height: 100%;
+  scale: 75%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
