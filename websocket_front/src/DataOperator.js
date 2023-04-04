@@ -12,10 +12,12 @@ export default function DataOperator(ChildComponent) {
       routingKey: this.props.routingKey,
       uniqueClientID: this.props.uniqueClientID,
       data: null,
+      dataHistory: [],
     };
 
     componentDidMount() {
       this.subscribe();
+      this.subscribeHistoric();
     }
 
     subscribe() {
@@ -25,13 +27,32 @@ export default function DataOperator(ChildComponent) {
         this.state.client.subscribe(
           SubscriberRoutingAddress,
           (resp) => {
-            console.log(resp);
             this.setState((prevState) => ({
               ...prevState,
               data: JSON.parse(resp.body),
             }));
           },
           { id: `sub-${this.state.uniqueClientID}-${this.state.routingKey}` }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    subscribeHistoric() {
+      const SubscriberRoutingAddress = `/topic/${this.state.routingKey}/history`;
+
+      try {
+        this.state.client.subscribe(
+          SubscriberRoutingAddress,
+          (resp) => {
+            this.setState((prevState) => ({
+              ...prevState,
+              dataHistory: JSON.parse(resp.body),
+            }));
+          },
+          // { id: `sub-${this.state.uniqueClientID}-${this.state.routingKey}` }
+          {}
         );
       } catch (error) {
         console.log(error);
@@ -58,6 +79,8 @@ export default function DataOperator(ChildComponent) {
         console.log(error);
       }
     }
+
+    retrieveHistoricalData() {}
 
     render() {
       return (
