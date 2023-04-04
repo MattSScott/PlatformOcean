@@ -5,6 +5,7 @@ import Message from "../Components/Message/Message";
 import { retrieveRoutingKey } from "../KeyPairGenerator";
 import Coords from "../Components/Coords/Coords";
 import DataOperator from "../DataOperator";
+import Subtitler from "../Components/Subtitler/Subtitler";
 
 class Gateway extends React.Component {
   constructor(props) {
@@ -55,6 +56,7 @@ class Gateway extends React.Component {
 
     const NewMessage = DataOperator(Message);
     const EnhancedCoords = DataOperator(Coords);
+    const EnhancedSubtitler = DataOperator(Subtitler);
 
     return (
       <>
@@ -69,7 +71,7 @@ class Gateway extends React.Component {
             </div>
 
             <div className="componentHouse">
-              <NewMessage
+              <EnhancedSubtitler
                 client={this.state.client}
                 routingKey={PluginKey1}
                 uniqueClientID={UniqueClientID}

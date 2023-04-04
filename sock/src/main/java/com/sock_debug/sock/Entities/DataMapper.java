@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.sock_debug.sock.Controller.OceanMessageConverter;
-//import com.sock_debug.sock.Entities.DataMapper.OceanMessageConverter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
