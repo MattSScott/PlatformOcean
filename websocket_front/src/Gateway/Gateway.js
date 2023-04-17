@@ -48,7 +48,9 @@ class Gateway extends React.Component {
   }
 
   componentWillUnmount() {
-    this.client.disconnect();
+    if (this.client) {
+      this.client.disconnect();
+    }
   }
 
   render() {
@@ -71,13 +73,13 @@ class Gateway extends React.Component {
               />
             </div> */}
 
-            {/* <div className="componentHouse">
+            <div className="componentHouse">
               <EnhancedSubtitler
                 client={this.state.client}
                 routingKey={PluginKey1}
                 uniqueClientID={this.state.clientID}
               />
-            </div> */}
+            </div>
 
             <div className="componentHouse">
               <EnhancedCoords

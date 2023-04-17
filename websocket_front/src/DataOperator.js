@@ -20,7 +20,6 @@ export default function DataOperator(ChildComponent) {
     componentDidMount() {
       this.subscribeHistoric();
       this.subscribe();
-      this.subscribeHistoric();
     }
 
     componentWillUnmount() {
