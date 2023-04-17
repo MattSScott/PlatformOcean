@@ -20,6 +20,7 @@ export default function DataOperator(ChildComponent) {
     componentDidMount() {
       this.subscribeHistoric();
       this.subscribe();
+      this.subscribeHistoric();
     }
 
     componentWillUnmount() {
@@ -111,6 +112,8 @@ export default function DataOperator(ChildComponent) {
         console.log(error);
       }
     }
+
+    retrieveHistoricalData() {}
 
     render() {
       return this.state.dataHistory ? (

@@ -56,8 +56,8 @@ class Gateway extends React.Component {
     const PluginKey1 = "387c68da-e385-4c85-9de7-902608f42066";
     const PluginKey2 = "66c42078-9110-43f7-b154-c4a21ca8ef2d";
 
-    const EnhancedSubtitler = DataOperator(Subtitler);
     const EnhancedCoords = DataOperator(Coords);
+    const EnhancedSubtitler = DataOperator(Subtitler);
 
     return (
       <>
