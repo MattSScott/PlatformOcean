@@ -1,6 +1,6 @@
 package com.sock_debug.sock.Service;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +26,8 @@ public class OceanService implements OceanServiceInterface {
 	}
 
 	@Override
-	public Optional<DataMapper> retrieveMessagesByPlugin(UUID pluginkey) {
-		return repo.findByPluginKey(pluginkey);
+	public List<DataMapper> retrieveMessagesByPlugin(UUID pluginKey) {
+		return repo.findByPluginKey(pluginKey.toString());
 	}
 
 }
