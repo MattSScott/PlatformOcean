@@ -1,9 +1,7 @@
 import React from "react";
 import * as Stomp from "stompjs";
 import SockJS from "sockjs-client";
-import Message from "../Components/Message/Message";
 import { retrieveRoutingKey } from "../KeyPairGenerator";
-import Coords from "../Components/Coords/Coords";
 import DataOperator from "../DataOperator";
 import Subtitler from "../Components/Subtitler/Subtitler";
 
@@ -52,10 +50,10 @@ class Gateway extends React.Component {
 
     const PluginKey = "96e8d6e7-bd3e-4043-a400-880ebd585d76";
     const PluginKey1 = "387c68da-e385-4c85-9de7-902608f42066";
-    const PluginKey2 = "66c42078-9110-43f7-b154-c4a21ca8ef2d";
+    // const PluginKey2 = "66c42078-9110-43f7-b154-c4a21ca8ef2d";
 
-    const EnhancedMessage = DataOperator(Message);
-    const EnhancedCoords = DataOperator(Coords);
+    // const EnhancedMessage = DataOperator(Message);
+    // const EnhancedCoords = DataOperator(Coords);
     const EnhancedSubtitler = DataOperator(Subtitler);
 
     return (

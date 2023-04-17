@@ -30,14 +30,14 @@
 }
 
 .inputArea input {
-  background-color: rgb(108, 221, 108);
+  background-color: rgb(135, 255, 135);
   color: black;
   border-radius: 10px;
   text-align: center;
 }
 
 .subButton {
-  background-color: rgb(255, 114, 114);
+  background-color: rgb(255, 146, 146);
   color: black;
   font-size: small;
   width: fit-content;

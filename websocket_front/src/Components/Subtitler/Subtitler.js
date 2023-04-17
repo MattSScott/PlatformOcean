@@ -6,11 +6,11 @@ export default function Subtitler({ sender, data, clientID }) {
 
   useEffect(() => {
     if (data && data.content) {
-      if (data.content == "host" && data.sender != clientID) {
+      if (data.content === "host" && data.sender !== clientID) {
         setHost(false);
       }
     }
-  }, [data]);
+  }, [data, clientID]);
 
   const sendHost = () => {
     const message = { content: "host", sender: clientID };
@@ -21,7 +21,7 @@ export default function Subtitler({ sender, data, clientID }) {
   return (
     <div className="subtitler">
       <div className="subtitleArea">
-        <p>{data && data.content != "host" && data}</p>
+        <p>{data && data.content !== "host" && data}</p>
       </div>
       <div className="inputArea">
         {isHost ? (
