@@ -1,6 +1,6 @@
 import "./Coords.css";
 
-export default function Coords({ data, sender }) {
+export default function Coords({ data, sender, allData }) {
   const getPos = (event) => {
     var rect = event.target.getBoundingClientRect();
     return { x: event.clientX - rect.left, y: event.clientY - rect.top };
@@ -15,7 +15,6 @@ export default function Coords({ data, sender }) {
       }}
     >
       <p>Click Within Box to "Poke" Users</p>
-      {/* <p>{data && `Clicked: (${data.x}, ${data.y})`}</p> */}
       {data && (
         <svg>
           <circle cy={data.y} cx={data.x} r="30" fill="red"></circle>

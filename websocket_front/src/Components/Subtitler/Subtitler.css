@@ -23,6 +23,7 @@
   margin: auto;
   display: flex;
   text-align: center;
+  align-items: center;
 }
 
 .inputArea form {
@@ -41,5 +42,6 @@
   color: black;
   font-size: small;
   width: fit-content;
+  height: 35px;
   border-radius: 10px;
 }

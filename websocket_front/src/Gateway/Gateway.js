@@ -4,6 +4,7 @@ import SockJS from "sockjs-client";
 import { retrieveRoutingKey } from "../KeyPairGenerator";
 import DataOperator from "../DataOperator";
 import Subtitler from "../Components/Subtitler/Subtitler";
+import Coords from "../Components/Coords/Coords";
 
 class Gateway extends React.Component {
   constructor(props) {
@@ -16,6 +17,7 @@ class Gateway extends React.Component {
 
   state = {
     client: null,
+    clientID: retrieveRoutingKey(),
   };
 
   clientConnector() {
@@ -35,53 +37,55 @@ class Gateway extends React.Component {
   }
 
   successfulConnectionCallback(clientHelper) {
-    this.setState((prevState) => ({ ...prevState, client: clientHelper }));
+    this.setState((prevState) => ({
+      ...prevState,
+      client: clientHelper,
+    }));
   }
 
   componentDidMount() {
     this.clientConnector();
   }
 
-  render() {
-    // Bind to plugin from backend...somehow :/
-    const UniqueClientID = retrieveRoutingKey();
-    // const UniqueKey1 = retrieveRoutingKey();
-    // const UniqueKey2 = retrieveRoutingKey();
+  componentWillUnmount() {
+    this.client.disconnect();
+  }
 
+  render() {
     const PluginKey = "96e8d6e7-bd3e-4043-a400-880ebd585d76";
     const PluginKey1 = "387c68da-e385-4c85-9de7-902608f42066";
-    // const PluginKey2 = "66c42078-9110-43f7-b154-c4a21ca8ef2d";
+    const PluginKey2 = "66c42078-9110-43f7-b154-c4a21ca8ef2d";
 
-    const NewMessage = DataOperator(Message);
+    const EnhancedSubtitler = DataOperator(Subtitler);
     const EnhancedCoords = DataOperator(Coords);
 
     return (
       <>
         {this.state.client ? (
           <div className="allComps">
-            <div className="componentHouse">
+            {/* <div className="componentHouse">
               <EnhancedSubtitler
                 client={this.state.client}
                 routingKey={PluginKey}
-                uniqueClientID={UniqueClientID}
+                uniqueClientID={this.state.clientID}
               />
-            </div>
+            </div> */}
 
-            <div className="componentHouse">
+            {/* <div className="componentHouse">
               <EnhancedSubtitler
                 client={this.state.client}
                 routingKey={PluginKey1}
-                uniqueClientID={UniqueClientID}
+                uniqueClientID={this.state.clientID}
               />
-            </div>
+            </div> */}
 
-            {/* <div className="componentHouse">
+            <div className="componentHouse">
               <EnhancedCoords
                 client={this.state.client}
                 routingKey={PluginKey2}
-                uniqueClientID={UniqueClientID}
+                uniqueClientID={this.state.clientID}
               />
-            </div> */}
+            </div>
           </div>
         ) : (
           <>

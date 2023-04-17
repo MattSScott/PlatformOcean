@@ -12,19 +12,34 @@ export default function DataOperator(ChildComponent) {
       routingKey: this.props.routingKey,
       uniqueClientID: this.props.uniqueClientID,
       data: null,
-      dataHistory: [],
+      dataHistory: null,
+      topicSubscription: null,
+      historySubscription: null,
     };
 
     componentDidMount() {
-      this.subscribe();
       this.subscribeHistoric();
+      this.subscribe();
+    }
+
+    componentWillUnmount() {
+      if (this.state.topicSubscription) {
+        this.state.topicSubscription.unsubscribe();
+      }
+      if (this.state.historySubscription) {
+        this.state.historySubscription.unsubscribe();
+      }
     }
 
     subscribe() {
       const SubscriberRoutingAddress = `/topic/${this.state.routingKey}/receive`;
 
+      if (this.state.topicSubscription) {
+        return;
+      }
+
       try {
-        this.state.client.subscribe(
+        const pluginSubscription = this.state.client.subscribe(
           SubscriberRoutingAddress,
           (resp) => {
             this.setState((prevState) => ({
@@ -34,6 +49,11 @@ export default function DataOperator(ChildComponent) {
           },
           { id: `sub-${this.state.uniqueClientID}-${this.state.routingKey}` }
         );
+
+        this.setState((prevState) => ({
+          ...prevState,
+          topicSubscription: pluginSubscription,
+        }));
       } catch (error) {
         console.log(error);
       }
@@ -41,23 +61,35 @@ export default function DataOperator(ChildComponent) {
 
     subscribeHistoric() {
       const SubscriberRoutingAddress = `/topic/${this.state.routingKey}/history`;
+      const pollHistoryAddress = `/app/${this.state.routingKey}/history`;
+
+      if (this.state.dataHistory) {
+        return;
+      }
 
       try {
-        this.state.client.subscribe(
+        const historySubscription = this.state.client.subscribe(
           SubscriberRoutingAddress,
           (resp) => {
             this.setState((prevState) => ({
               ...prevState,
               dataHistory: JSON.parse(resp.body),
+              historySubscription: historySubscription,
             }));
           },
-          // { id: `sub-${this.state.uniqueClientID}-${this.state.routingKey}` }
-          {}
+          {
+            id: `sub-${this.state.uniqueClientID}-${this.state.routingKey}-history`,
+          }
         );
+        this.state.client.send(pollHistoryAddress);
       } catch (error) {
         console.log(error);
       }
     }
+
+    // formatDataForHistory(dataStruct) {
+    //   return
+    // }
 
     formatDataAsJSON(dataStruct, shouldPersist) {
       var payloadStruct = {
@@ -80,15 +112,16 @@ export default function DataOperator(ChildComponent) {
       }
     }
 
-    retrieveHistoricalData() {}
-
     render() {
-      return (
+      return this.state.dataHistory ? (
         <ChildComponent
           data={this.state.data}
+          allData={this.state.dataHistory}
           sender={this.sendDataToBackend}
           clientID={this.state.uniqueClientID}
         />
+      ) : (
+        <p>Loading Component...</p>
       );
     }
   };
