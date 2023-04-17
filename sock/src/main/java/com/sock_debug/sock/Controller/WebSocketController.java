@@ -34,14 +34,14 @@ public class WebSocketController implements WebSocketControllerInterface {
 	private OceanService serv;
 
 	@Override
-	public String parseDataFromFrontend(@Payload DataMapper dataFromFrontend) throws Exception {
-		return dataFromFrontend.sendDataToFrontend();
+	public SimpleDataMapper parseDataFromFrontend(@Payload DataMapper dataFromFrontend) throws Exception {
+		return dataFromFrontend.castAndSendDataToFrontend();
 	}
 
 	@Override
 	@MessageMapping("/{ClientKey}/{PluginKey}/send")
 	@SendTo("/topic/{PluginKey}/receive")
-	public String distributeDataToFrontend(@DestinationVariable("ClientKey") UUID clientKey,
+	public SimpleDataMapper distributeDataToFrontend(@DestinationVariable("ClientKey") UUID clientKey,
 			@DestinationVariable("PluginKey") UUID pluginKey, @Payload DataMapper dataFromFrontend) throws Exception {
 
 		dataFromFrontend.setClientKey(clientKey);

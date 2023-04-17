@@ -79,8 +79,9 @@ public class DataMapper {
 	}
 
 	// Defines how class data is sent to the front-end
-	public String sendDataToFrontend() {
-		return this.data;
+	public SimpleDataMapper castAndSendDataToFrontend() {
+		SimpleDataMapper sdmCasting = new SimpleDataMapper(this.clientKey, this.data);
+		return sdmCasting;
 	}
 
 }
