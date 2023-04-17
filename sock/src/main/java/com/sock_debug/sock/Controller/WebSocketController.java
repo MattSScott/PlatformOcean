@@ -9,9 +9,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import com.sock_debug.sock.Entities.DataMapper;
 import com.sock_debug.sock.Entities.SimpleDataMapper;
@@ -25,12 +23,12 @@ import com.sock_debug.sock.Service.OceanService;
 @Controller
 public class WebSocketController implements WebSocketControllerInterface {
 
-	private final SimpMessageSendingOperations messagingTemplate;
-
-	@Autowired
-	public WebSocketController(SimpMessageSendingOperations messagingTemplate) {
-		this.messagingTemplate = messagingTemplate;
-	}
+//	private final SimpMessageSendingOperations messagingTemplate;
+//
+//	@Autowired
+//	public WebSocketController(SimpMessageSendingOperations messagingTemplate) {
+//		this.messagingTemplate = messagingTemplate;
+//	}
 
 	@Autowired
 	private OceanService serv;
@@ -52,13 +50,13 @@ public class WebSocketController implements WebSocketControllerInterface {
 			serv.logMessage(dataFromFrontend);
 		}
 
-		this.retrieveDataHistory(pluginKey);
-
 		return this.parseDataFromFrontend(dataFromFrontend);
 	}
 
 	@Override
-	public List<SimpleDataMapper> retrieveDataHistory(@PathVariable("PluginKey") UUID pluginKey) {
+	@MessageMapping("/{PluginKey}/history")
+	@SendTo("/topic/{PluginKey}/history")
+	public List<SimpleDataMapper> retrieveDataHistory(@DestinationVariable("PluginKey") UUID pluginKey) {
 		List<DataMapper> retrievedHistory = serv.retrieveMessagesByPlugin(pluginKey);
 
 		List<SimpleDataMapper> clientKeyMessagePairs = new ArrayList<>();
@@ -68,9 +66,11 @@ public class WebSocketController implements WebSocketControllerInterface {
 			clientKeyMessagePairs.add(clientKeyMessageEntry);
 		}
 
-		String historyRoutingAddress = String.format("/topic/%s/history", pluginKey);
+//		String historyRoutingAddress = String.format("/topic/%s/history", pluginKey);
 
-		this.messagingTemplate.convertAndSend(historyRoutingAddress, clientKeyMessagePairs);
+		System.out.println("SENDING: " + clientKeyMessagePairs);
+
+//		this.messagingTemplate.convertAndSend(historyRoutingAddress, clientKeyMessagePairs);
 		return clientKeyMessagePairs;
 	}
 
