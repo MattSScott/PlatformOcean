@@ -24,11 +24,11 @@ import com.sock_debug.sock.Entities.SimpleDataMapper;
 
 public interface WebSocketControllerInterface {
 
-	public String distributeDataToFrontend(UUID clientKey, UUID pluginKey, DataMapper dataFromFrontend)
+	public SimpleDataMapper distributeDataToFrontend(UUID clientKey, UUID pluginKey, DataMapper dataFromFrontend)
 			throws Exception;
 
 	// Override to change how data is send to front-end
-	public String parseDataFromFrontend(DataMapper dataFromFrontend) throws Exception;
+	public SimpleDataMapper parseDataFromFrontend(DataMapper dataFromFrontend) throws Exception;
 
 	public List<SimpleDataMapper> retrieveDataHistory(UUID pluginKey);
 }

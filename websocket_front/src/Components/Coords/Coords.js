@@ -6,6 +6,9 @@ export default function Coords({ data, sender, allData }) {
     return { x: event.clientX - rect.left, y: event.clientY - rect.top };
   };
 
+  const prevCirc = allData[allData.length - 2];
+  const prevCircButOne = allData[allData.length - 3];
+
   return (
     <div
       className="coordDiv"
@@ -17,7 +20,26 @@ export default function Coords({ data, sender, allData }) {
       <p>Click Within Box to "Poke" Users</p>
       {data && (
         <svg>
-          <circle cy={data.y} cx={data.x} r="30" fill="red"></circle>
+          <circle
+            cy={data.message.y}
+            cx={data.message.x}
+            r="30"
+            fill="red"
+          ></circle>
+
+          <circle
+            cy={prevCirc.message.y}
+            cx={prevCirc.message.x}
+            r="30"
+            fill="blue"
+          ></circle>
+
+          <circle
+            cy={prevCircButOne.message.y}
+            cx={prevCircButOne.message.x}
+            r="30"
+            fill="green"
+          ></circle>
         </svg>
       )}
     </div>

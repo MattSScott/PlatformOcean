@@ -26,8 +26,12 @@ export default function DataOperator(ChildComponent) {
       if (this.state.topicSubscription) {
         this.state.topicSubscription.unsubscribe();
       }
-      if (this.state.historySubscription) {
+    }
+
+    componentDidUpdate() {
+      if (this.state.dataHistory && this.state.historySubscription) {
         this.state.historySubscription.unsubscribe();
+        this.state.historySubscription = null;
       }
     }
 
@@ -42,9 +46,15 @@ export default function DataOperator(ChildComponent) {
         const pluginSubscription = this.state.client.subscribe(
           SubscriberRoutingAddress,
           (resp) => {
+            const deserialiseJSON = JSON.parse(resp.body);
+            const JSONsender = deserialiseJSON.sender;
+            const JSONmessage = JSON.parse(deserialiseJSON.message);
+            const convertedData = { sender: JSONsender, message: JSONmessage };
+
             this.setState((prevState) => ({
               ...prevState,
-              data: JSON.parse(resp.body),
+              data: convertedData,
+              dataHistory: [...this.state.dataHistory, convertedData],
             }));
           },
           { id: `sub-${this.state.uniqueClientID}-${this.state.routingKey}` }
@@ -73,7 +83,10 @@ export default function DataOperator(ChildComponent) {
           (resp) => {
             this.setState((prevState) => ({
               ...prevState,
-              dataHistory: JSON.parse(resp.body),
+              dataHistory: JSON.parse(resp.body).map((el) => ({
+                ...el,
+                message: JSON.parse(el.message),
+              })),
               historySubscription: historySubscription,
             }));
           },
