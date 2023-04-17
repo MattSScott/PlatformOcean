@@ -64,6 +64,7 @@ export default function DataOperator(ChildComponent) {
         <ChildComponent
           data={this.state.data}
           sender={this.sendDataToBackend}
+          clientID={this.state.uniqueClientID}
         />
       );
     }

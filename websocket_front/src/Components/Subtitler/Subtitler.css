@@ -1,0 +1,45 @@
+.subtitler {
+  width: 200px;
+  height: 100%;
+  padding: 0px 10px;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+}
+
+.subtitleArea {
+  width: 100%;
+  height: 60%;
+  background-color: #cad6ef;
+  color: black;
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputArea {
+  height: 40%;
+  margin: auto;
+  display: flex;
+  text-align: center;
+}
+
+.inputArea form {
+  margin: auto;
+}
+
+.inputArea input {
+  background-color: rgb(108, 221, 108);
+  color: black;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.subButton {
+  background-color: rgb(255, 114, 114);
+  color: black;
+  font-size: small;
+  width: fit-content;
+  border-radius: 10px;
+}
