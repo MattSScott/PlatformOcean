@@ -67,7 +67,7 @@ export default function DataOperator(ChildComponent) {
       }
 
       try {
-        const HistoryRoutingAddress = `http://localhost:8080/${this.state.routingKey}/history`;
+        const HistoryRoutingAddress = `http://localhost:8080/history/${this.state.routingKey}`;
 
         const RawFetchedHistory = await fetch(HistoryRoutingAddress);
 

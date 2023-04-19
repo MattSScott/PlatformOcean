@@ -20,7 +20,7 @@ public class HistoryController implements HistoryControllerInterface {
 	private OceanService serv;
 
 	@Override
-	@GetMapping("/{PluginKey}/history")
+	@GetMapping("/history/{PluginKey}")
 	public List<SimpleDataMapper> retrieveDataHistory(@PathVariable("PluginKey") UUID pluginKey) {
 		List<DataMapper> retrievedHistory = serv.retrieveMessagesByPlugin(pluginKey);
 

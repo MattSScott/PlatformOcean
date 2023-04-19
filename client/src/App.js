@@ -1,11 +1,11 @@
 import "./App.css";
-import Gateway from "./Gateway/Gateway";
+import SignupRouter from "./SignupRouter/SignupRouter";
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Gateway />
+        <SignupRouter />
       </header>
     </div>
   );
