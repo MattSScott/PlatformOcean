@@ -14,24 +14,16 @@ export default function DataOperator(ChildComponent) {
       data: null,
       dataHistory: null,
       topicSubscription: null,
-      historySubscription: null,
     };
 
     componentDidMount() {
-      this.subscribeHistoric();
+      this.fetchHistory();
       this.subscribe();
     }
 
     componentWillUnmount() {
       if (this.state.topicSubscription) {
         this.state.topicSubscription.unsubscribe();
-      }
-    }
-
-    componentDidUpdate() {
-      if (this.state.dataHistory && this.state.historySubscription) {
-        this.state.historySubscription.unsubscribe();
-        this.state.historySubscription = null;
       }
     }
 
@@ -69,40 +61,29 @@ export default function DataOperator(ChildComponent) {
       }
     }
 
-    subscribeHistoric() {
-      const SubscriberRoutingAddress = `/topic/${this.state.routingKey}/history`;
-      const pollHistoryAddress = `/app/${this.state.routingKey}/history`;
-
+    async fetchHistory() {
       if (this.state.dataHistory) {
         return;
       }
 
       try {
-        const historySubscription = this.state.client.subscribe(
-          SubscriberRoutingAddress,
-          (resp) => {
-            this.setState((prevState) => ({
-              ...prevState,
-              dataHistory: JSON.parse(resp.body).map((el) => ({
-                ...el,
-                message: JSON.parse(el.message),
-              })),
-              historySubscription: historySubscription,
-            }));
-          },
-          {
-            id: `sub-${this.state.uniqueClientID}-${this.state.routingKey}-history`,
-          }
-        );
-        this.state.client.send(pollHistoryAddress);
+        const HistoryRoutingAddress = `http://localhost:8080/${this.state.routingKey}/history`;
+
+        const RawFetchedHistory = await fetch(HistoryRoutingAddress);
+
+        const ParsedHistory = await RawFetchedHistory.json();
+
+        this.setState((prevState) => ({
+          ...prevState,
+          dataHistory: ParsedHistory.map((el) => ({
+            ...el,
+            message: JSON.parse(el.message),
+          })),
+        }));
       } catch (error) {
         console.log(error);
       }
     }
-
-    // formatDataForHistory(dataStruct) {
-    //   return
-    // }
 
     formatDataAsJSON(dataStruct, shouldPersist) {
       var payloadStruct = {
@@ -124,8 +105,6 @@ export default function DataOperator(ChildComponent) {
         console.log(error);
       }
     }
-
-    retrieveHistoricalData() {}
 
     render() {
       return this.state.dataHistory ? (

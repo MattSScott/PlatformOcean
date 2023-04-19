@@ -1,7 +1,5 @@
-package com.sock_debug.sock.Controller;
+package com.sock_debug.sock.Controller.WebSocket;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +19,7 @@ import com.sock_debug.sock.Service.OceanService;
 //}
 
 @Controller
+//@RestController
 public class WebSocketController implements WebSocketControllerInterface {
 
 //	private final SimpMessageSendingOperations messagingTemplate;
@@ -53,25 +52,19 @@ public class WebSocketController implements WebSocketControllerInterface {
 		return this.parseDataFromFrontend(dataFromFrontend);
 	}
 
-	@Override
-	@MessageMapping("/{PluginKey}/history")
-	@SendTo("/topic/{PluginKey}/history")
-	public List<SimpleDataMapper> retrieveDataHistory(@DestinationVariable("PluginKey") UUID pluginKey) {
-		List<DataMapper> retrievedHistory = serv.retrieveMessagesByPlugin(pluginKey);
-
-		List<SimpleDataMapper> clientKeyMessagePairs = new ArrayList<>();
-
-		for (DataMapper dm : retrievedHistory) {
-			SimpleDataMapper clientKeyMessageEntry = new SimpleDataMapper(dm.getClientKey(), dm.getData());
-			clientKeyMessagePairs.add(clientKeyMessageEntry);
-		}
-
-//		String historyRoutingAddress = String.format("/topic/%s/history", pluginKey);
-
-		System.out.println("SENDING: " + clientKeyMessagePairs);
-
-//		this.messagingTemplate.convertAndSend(historyRoutingAddress, clientKeyMessagePairs);
-		return clientKeyMessagePairs;
-	}
+//	@Override
+//	@GetMapping("/{PluginKey}/history")
+//	public List<SimpleDataMapper> retrieveDataHistory(@PathVariable("PluginKey") UUID pluginKey) {
+//		List<DataMapper> retrievedHistory = serv.retrieveMessagesByPlugin(pluginKey);
+//
+//		List<SimpleDataMapper> clientKeyMessagePairs = new ArrayList<>();
+//
+//		for (DataMapper dm : retrievedHistory) {
+//			SimpleDataMapper clientKeyMessageEntry = new SimpleDataMapper(dm.getClientKey(), dm.getData());
+//			clientKeyMessagePairs.add(clientKeyMessageEntry);
+//		}
+//
+//		return clientKeyMessagePairs;
+//	}
 
 }

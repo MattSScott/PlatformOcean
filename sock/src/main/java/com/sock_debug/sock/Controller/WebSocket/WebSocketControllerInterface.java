@@ -1,6 +1,5 @@
-package com.sock_debug.sock.Controller;
+package com.sock_debug.sock.Controller.WebSocket;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.sock_debug.sock.Entities.DataMapper;
@@ -30,5 +29,5 @@ public interface WebSocketControllerInterface {
 	// Override to change how data is send to front-end
 	public SimpleDataMapper parseDataFromFrontend(DataMapper dataFromFrontend) throws Exception;
 
-	public List<SimpleDataMapper> retrieveDataHistory(UUID pluginKey);
+//	public List<SimpleDataMapper> retrieveDataHistory(UUID pluginKey);
 }

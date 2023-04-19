@@ -6,8 +6,16 @@ export default function Coords({ data, sender, allData }) {
     return { x: event.clientX - rect.left, y: event.clientY - rect.top };
   };
 
-  const prevCirc = allData[allData.length - 2];
-  const prevCircButOne = allData[allData.length - 3];
+  let prevCirc = data;
+  if (allData.length >= 2) {
+    prevCirc = allData[allData.length - 2];
+  }
+
+  let prevCircButOne = data;
+
+  if (allData.length >= 3) {
+    prevCircButOne = allData[allData.length - 3];
+  }
 
   return (
     <div
