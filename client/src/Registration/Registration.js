@@ -60,14 +60,11 @@ class Registration extends React.Component {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(this.state.formEntry), // body data type must match "Content-Type" header
+        body: JSON.stringify(this.state.formEntry),
       });
       const UUID_Resp = await response.json();
 
-      this.props.setClientInfo((prevState) => ({
-        ...prevState,
-        clientID: UUID_Resp,
-      }));
+      this.props.setClientInfo(UUID_Resp);
     } catch (error) {
       console.log(error);
       alert("Duplicate username entered.");
@@ -84,15 +81,12 @@ class Registration extends React.Component {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(this.state.formEntry), // body data type must match "Content-Type" header
+        body: JSON.stringify(this.state.formEntry),
       });
 
       const UUID_Resp = await response.json();
 
-      this.props.setClientInfo((prevState) => ({
-        ...prevState,
-        clientID: UUID_Resp,
-      }));
+      this.props.setClientInfo(UUID_Resp);
     } catch (error) {
       console.log(error);
       alert("Username or password is incorrect.");
