@@ -4,15 +4,23 @@ import DataOperator from "../DataOperator";
 import Subtitler from "../Components/Subtitler/Subtitler";
 import Coords from "../Components/Coords/Coords";
 
+import "./Renderer.css";
+
 class Renderer extends React.Component {
   constructor(props) {
     super(props);
+    this.triggerLogout = this.triggerLogout.bind(this);
   }
 
   state = {
     client: this.props.client,
     clientID: this.props.clientID,
   };
+
+  triggerLogout() {
+    this.props.setClientInfo(null);
+    localStorage.clear();
+  }
 
   render() {
     const PluginKey = "96e8d6e7-bd3e-4043-a400-880ebd585d76";
@@ -24,7 +32,10 @@ class Renderer extends React.Component {
 
     return (
       <>
-        <p>Signed in as: {this.state.clientID}</p>
+        <div className="logout">
+          <p>Signed in as: {`${this.state.clientID.substring(0, 8)}...`}</p>
+          <button onClick={this.triggerLogout}>Logout</button>
+        </div>
         <div className="allComps">
           <div className="componentHouse">
             <EnhancedSubtitler

@@ -17,6 +17,14 @@ class Registration extends React.Component {
 
   componentDidMount() {
     this.loadUsers();
+    this.tryFindClient();
+  }
+
+  tryFindClient() {
+    const loggedInUser = localStorage.getItem("userID");
+    if (loggedInUser) {
+      this.props.setClientInfo(loggedInUser);
+    }
   }
 
   setUsername(event) {
