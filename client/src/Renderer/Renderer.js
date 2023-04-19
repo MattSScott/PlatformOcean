@@ -1,4 +1,5 @@
 import React from "react";
+import Button from "@mui/material/Button";
 
 import DataOperator from "../DataOperator";
 import Subtitler from "../Components/Subtitler/Subtitler";
@@ -34,7 +35,9 @@ class Renderer extends React.Component {
       <>
         <div className="logout">
           <p>Signed in as: {`${this.state.clientID.substring(0, 8)}...`}</p>
-          <button onClick={this.triggerLogout}>Logout</button>
+          <Button variant="contained" onClick={this.triggerLogout}>
+            Logout
+          </Button>
         </div>
         <div className="allComps">
           <div className="componentHouse">
