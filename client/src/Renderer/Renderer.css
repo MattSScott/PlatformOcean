@@ -1,0 +1,22 @@
+.componentHouse {
+  border: 3px solid black;
+  margin: 10px 10px 10px 10px;
+  height: 200px;
+}
+
+.allComps {
+  display: flex;
+  flex-direction: row;
+}
+
+.logout {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  /* margin-right: 10px;
+  margin-left: 10px; */
+}
+
+.logout button {
+  height: fit-content;
+}

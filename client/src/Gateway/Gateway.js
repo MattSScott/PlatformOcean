@@ -57,11 +57,16 @@ class Gateway extends React.Component {
       ...prevState,
       clientID: clientInstance,
     }));
+    localStorage.setItem("userID", clientInstance);
   }
 
   render() {
     const RoutingMechanism = this.state.clientID ? (
-      <Renderer clientID={this.state.clientID} client={this.state.client} />
+      <Renderer
+        clientID={this.state.clientID}
+        client={this.state.client}
+        setClientInfo={this.bindClient}
+      />
     ) : (
       <Registration setClientInfo={this.bindClient} />
     );

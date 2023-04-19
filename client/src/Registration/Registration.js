@@ -1,4 +1,7 @@
 import React from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import "./Registration.css";
 
 class Registration extends React.Component {
   constructor(props) {
@@ -17,6 +20,14 @@ class Registration extends React.Component {
 
   componentDidMount() {
     this.loadUsers();
+    this.tryFindClient();
+  }
+
+  tryFindClient() {
+    const loggedInUser = localStorage.getItem("userID");
+    if (loggedInUser) {
+      this.props.setClientInfo(loggedInUser);
+    }
   }
 
   setUsername(event) {
@@ -96,16 +107,30 @@ class Registration extends React.Component {
   render() {
     return (
       <div>
-        <p>Username:</p>
-        <form>
-          <input type="text" onChange={this.setUsername} />
-        </form>
-        <p>Password:</p>
-        <form>
-          <input type="text" onChange={this.setPassword} />
-        </form>
-        <button onClick={this.submitSignup}>Submit</button>
-        <button onClick={this.submitLogin}>Login</button>
+        <div className="inputHouse">
+          <TextField
+            className="inputButton"
+            id="outlined-basic"
+            label="Username"
+            variant="outlined"
+            onChange={this.setUsername}
+          />
+          <TextField
+            className="inputButton"
+            id="outlined-basic"
+            label="Password"
+            variant="outlined"
+            onChange={this.setPassword}
+          />
+        </div>
+        <div className="buttonHouse">
+          <Button variant="contained" onClick={this.submitSignup}>
+            Submit
+          </Button>
+          <Button variant="contained" onClick={this.submitLogin}>
+            Login
+          </Button>
+        </div>
       </div>
     );
   }
