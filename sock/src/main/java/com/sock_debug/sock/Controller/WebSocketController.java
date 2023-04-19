@@ -10,6 +10,9 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sock_debug.sock.Entities.DataMapper;
 import com.sock_debug.sock.Entities.SimpleDataMapper;
@@ -21,6 +24,7 @@ import com.sock_debug.sock.Service.OceanService;
 //}
 
 @Controller
+@RestController
 public class WebSocketController implements WebSocketControllerInterface {
 
 //	private final SimpMessageSendingOperations messagingTemplate;
@@ -54,9 +58,8 @@ public class WebSocketController implements WebSocketControllerInterface {
 	}
 
 	@Override
-	@MessageMapping("/{PluginKey}/history")
-	@SendTo("/topic/{PluginKey}/history")
-	public List<SimpleDataMapper> retrieveDataHistory(@DestinationVariable("PluginKey") UUID pluginKey) {
+	@GetMapping("/{PluginKey}/history")
+	public List<SimpleDataMapper> retrieveDataHistory(@PathVariable("PluginKey") UUID pluginKey) {
 		List<DataMapper> retrievedHistory = serv.retrieveMessagesByPlugin(pluginKey);
 
 		List<SimpleDataMapper> clientKeyMessagePairs = new ArrayList<>();
@@ -66,11 +69,6 @@ public class WebSocketController implements WebSocketControllerInterface {
 			clientKeyMessagePairs.add(clientKeyMessageEntry);
 		}
 
-//		String historyRoutingAddress = String.format("/topic/%s/history", pluginKey);
-
-		System.out.println("SENDING: " + clientKeyMessagePairs);
-
-//		this.messagingTemplate.convertAndSend(historyRoutingAddress, clientKeyMessagePairs);
 		return clientKeyMessagePairs;
 	}
 
