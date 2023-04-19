@@ -1,10 +1,8 @@
+import Registration from "../Registration/Registration";
 import React from "react";
+import Renderer from "../Renderer/Renderer";
 import * as Stomp from "stompjs";
 import SockJS from "sockjs-client";
-import { retrieveRoutingKey } from "../KeyPairGenerator";
-import DataOperator from "../DataOperator";
-import Subtitler from "../Components/Subtitler/Subtitler";
-import Coords from "../Components/Coords/Coords";
 
 class Gateway extends React.Component {
   constructor(props) {
@@ -13,11 +11,12 @@ class Gateway extends React.Component {
     this.successfulConnectionCallback =
       this.successfulConnectionCallback.bind(this);
     this.noConnectionCallback = this.noConnectionCallback.bind(this);
+    this.bindClient = this.bindClient.bind(this);
   }
 
   state = {
     client: null,
-    clientID: retrieveRoutingKey(),
+    clientID: null,
   };
 
   clientConnector() {
@@ -53,49 +52,31 @@ class Gateway extends React.Component {
     }
   }
 
-  render() {
-    const PluginKey = "96e8d6e7-bd3e-4043-a400-880ebd585d76";
-    const PluginKey1 = "387c68da-e385-4c85-9de7-902608f42066";
-    const PluginKey2 = "66c42078-9110-43f7-b154-c4a21ca8ef2d";
+  bindClient(clientInstance) {
+    this.setState((prevState) => ({
+      ...prevState,
+      clientID: clientInstance,
+    }));
+  }
 
-    const EnhancedCoords = DataOperator(Coords);
-    const EnhancedSubtitler = DataOperator(Subtitler);
+  render() {
+    const RoutingMechanism = this.state.clientID ? (
+      <Renderer clientID={this.state.clientID} client={this.state.client} />
+    ) : (
+      <Registration setClientInfo={this.bindClient} />
+    );
 
     return (
-      <>
+      <div>
         {this.state.client ? (
-          <div className="allComps">
-            {/* <div className="componentHouse">
-              <EnhancedSubtitler
-                client={this.state.client}
-                routingKey={PluginKey}
-                uniqueClientID={this.state.clientID}
-              />
-            </div> */}
-
-            <div className="componentHouse">
-              <EnhancedSubtitler
-                client={this.state.client}
-                routingKey={PluginKey1}
-                uniqueClientID={this.state.clientID}
-              />
-            </div>
-
-            <div className="componentHouse">
-              <EnhancedCoords
-                client={this.state.client}
-                routingKey={PluginKey2}
-                uniqueClientID={this.state.clientID}
-              />
-            </div>
-          </div>
+          RoutingMechanism
         ) : (
           <>
             <p>Establishing Connection to Server...</p>
             <button onClick={this.clientConnector}>Retry Now</button>
           </>
         )}
-      </>
+      </div>
     );
   }
 }
