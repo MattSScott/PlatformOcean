@@ -60,8 +60,6 @@ class Gateway extends React.Component {
   }
 
   render() {
-    console.log(this.state);
-
     const RoutingMechanism = this.state.clientID ? (
       <Renderer clientID={this.state.clientID} client={this.state.client} />
     ) : (
