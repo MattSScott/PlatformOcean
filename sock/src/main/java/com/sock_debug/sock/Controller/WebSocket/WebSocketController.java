@@ -1,7 +1,5 @@
-package com.sock_debug.sock.Controller;
+package com.sock_debug.sock.Controller.WebSocket;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +8,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.sock_debug.sock.Entities.DataMapper;
 import com.sock_debug.sock.Entities.SimpleDataMapper;
@@ -24,7 +19,7 @@ import com.sock_debug.sock.Service.OceanService;
 //}
 
 @Controller
-@RestController
+//@RestController
 public class WebSocketController implements WebSocketControllerInterface {
 
 //	private final SimpMessageSendingOperations messagingTemplate;
@@ -57,19 +52,19 @@ public class WebSocketController implements WebSocketControllerInterface {
 		return this.parseDataFromFrontend(dataFromFrontend);
 	}
 
-	@Override
-	@GetMapping("/{PluginKey}/history")
-	public List<SimpleDataMapper> retrieveDataHistory(@PathVariable("PluginKey") UUID pluginKey) {
-		List<DataMapper> retrievedHistory = serv.retrieveMessagesByPlugin(pluginKey);
-
-		List<SimpleDataMapper> clientKeyMessagePairs = new ArrayList<>();
-
-		for (DataMapper dm : retrievedHistory) {
-			SimpleDataMapper clientKeyMessageEntry = new SimpleDataMapper(dm.getClientKey(), dm.getData());
-			clientKeyMessagePairs.add(clientKeyMessageEntry);
-		}
-
-		return clientKeyMessagePairs;
-	}
+//	@Override
+//	@GetMapping("/{PluginKey}/history")
+//	public List<SimpleDataMapper> retrieveDataHistory(@PathVariable("PluginKey") UUID pluginKey) {
+//		List<DataMapper> retrievedHistory = serv.retrieveMessagesByPlugin(pluginKey);
+//
+//		List<SimpleDataMapper> clientKeyMessagePairs = new ArrayList<>();
+//
+//		for (DataMapper dm : retrievedHistory) {
+//			SimpleDataMapper clientKeyMessageEntry = new SimpleDataMapper(dm.getClientKey(), dm.getData());
+//			clientKeyMessagePairs.add(clientKeyMessageEntry);
+//		}
+//
+//		return clientKeyMessagePairs;
+//	}
 
 }
