@@ -5,6 +5,8 @@ import DataOperator from "../DataOperator";
 import Subtitler from "../Components/Subtitler/Subtitler";
 import Coords from "../Components/Coords/Coords";
 
+import AllComponents from "../Components";
+
 import "./Renderer.css";
 
 class Renderer extends React.Component {
@@ -24,12 +26,18 @@ class Renderer extends React.Component {
   }
 
   render() {
-    const PluginKey = "96e8d6e7-bd3e-4043-a400-880ebd585d76";
-    // const PluginKey1 = "387c68da-e385-4c85-9de7-902608f42066";
-    const PluginKey2 = "66c42078-9110-43f7-b154-c4a21ca8ef2d";
+    // const PluginKey = "96e8d6e7-bd3e-4043-a400-880ebd585d76";
+    // // const PluginKey1 = "387c68da-e385-4c85-9de7-902608f42066";
+    // const PluginKey2 = "66c42078-9110-43f7-b154-c4a21ca8ef2d";
 
-    const EnhancedCoords = DataOperator(Coords);
-    const EnhancedSubtitler = DataOperator(Subtitler);
+    // const EnhancedCoords = DataOperator(Coords);
+    // const EnhancedSubtitler = DataOperator(Subtitler);
+
+    const PluginKeys = [
+      "96e8d6e7-bd3e-4043-a400-880ebd585d76",
+      "387c68da-e385-4c85-9de7-902608f42066",
+      "66c42078-9110-43f7-b154-c4a21ca8ef2d",
+    ];
 
     return (
       <>
@@ -40,7 +48,20 @@ class Renderer extends React.Component {
           </Button>
         </div>
         <div className="allComps">
-          <div className="componentHouse">
+          {Object.values(AllComponents).map((val, i) => {
+            const EnhancedComp = DataOperator(val);
+            return (
+              <div className="componentHouse">
+                <EnhancedComp
+                  client={this.state.client}
+                  routingKey={PluginKeys[i]}
+                  uniqueClientID={this.state.clientID}
+                />
+              </div>
+            );
+          })}
+
+          {/* <div className="componentHouse">
             <EnhancedSubtitler
               client={this.state.client}
               routingKey={PluginKey}
@@ -56,13 +77,13 @@ class Renderer extends React.Component {
               />
             </div> */}
 
-          <div className="componentHouse">
+          {/* <div className="componentHouse">
             <EnhancedCoords
               client={this.state.client}
               routingKey={PluginKey2}
               uniqueClientID={this.state.clientID}
             />
-          </div>
+          </div> } */}
         </div>
       </>
     );

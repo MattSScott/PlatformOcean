@@ -1,4 +1,4 @@
-package platform_ocean.Config;
+package platform_ocean.Config.Messaging;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

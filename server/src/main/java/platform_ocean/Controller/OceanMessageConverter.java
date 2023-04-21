@@ -13,8 +13,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import platform_ocean.Entities.DataMapper;
-import platform_ocean.Entities.Payload;
+import platform_ocean.Entities.Messaging.DataMapper;
+import platform_ocean.Entities.Messaging.Payload;
 
 public class OceanMessageConverter extends JsonDeserializer<DataMapper> {
 

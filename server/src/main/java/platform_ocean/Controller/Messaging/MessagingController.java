@@ -1,4 +1,4 @@
-package platform_ocean.Controller.WebSocket;
+package platform_ocean.Controller.Messaging;
 
 import java.util.UUID;
 
@@ -9,9 +9,9 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import platform_ocean.Entities.DataMapper;
-import platform_ocean.Entities.SimpleDataMapper;
-import platform_ocean.Service.OceanService;
+import platform_ocean.Entities.Messaging.DataMapper;
+import platform_ocean.Entities.Messaging.SimpleDataMapper;
+import platform_ocean.Service.Messaging.OceanService;
 
 //@Controller
 //public class WebSocketController implements WebSocketControllerInterface<String, Message> {
@@ -20,7 +20,7 @@ import platform_ocean.Service.OceanService;
 
 @Controller
 //@RestController
-public class WebSocketController implements WebSocketControllerInterface {
+public class MessagingController implements MessagingControllerInterface {
 
 //	private final SimpMessageSendingOperations messagingTemplate;
 //

@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import platform_ocean.Entities.DataMapper;
-import platform_ocean.Entities.SimpleDataMapper;
-import platform_ocean.Service.OceanService;
+import platform_ocean.Entities.Messaging.DataMapper;
+import platform_ocean.Entities.Messaging.SimpleDataMapper;
+import platform_ocean.Service.Messaging.OceanService;
 
 @RestController
 public class HistoryController implements HistoryControllerInterface {

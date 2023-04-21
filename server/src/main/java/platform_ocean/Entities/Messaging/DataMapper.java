@@ -1,4 +1,4 @@
-package platform_ocean.Entities;
+package platform_ocean.Entities.Messaging;
 
 import java.util.UUID;
 

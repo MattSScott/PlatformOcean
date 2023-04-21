@@ -1,9 +1,9 @@
-package platform_ocean.Service;
+package platform_ocean.Service.Messaging;
 
 import java.util.List;
 import java.util.UUID;
 
-import platform_ocean.Entities.DataMapper;
+import platform_ocean.Entities.Messaging.DataMapper;
 
 public interface OceanServiceInterface {
 

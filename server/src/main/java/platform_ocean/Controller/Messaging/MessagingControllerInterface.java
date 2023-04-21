@@ -1,9 +1,9 @@
-package platform_ocean.Controller.WebSocket;
+package platform_ocean.Controller.Messaging;
 
 import java.util.UUID;
 
-import platform_ocean.Entities.DataMapper;
-import platform_ocean.Entities.SimpleDataMapper;
+import platform_ocean.Entities.Messaging.DataMapper;
+import platform_ocean.Entities.Messaging.SimpleDataMapper;
 
 // Implement Interface<ReturnValue, DataMapperClass>
 //public interface WebSocketControllerInterface<U, T extends DataMapper<U>> {
@@ -21,7 +21,7 @@ import platform_ocean.Entities.SimpleDataMapper;
 //
 //}
 
-public interface WebSocketControllerInterface {
+public interface MessagingControllerInterface {
 
 	public SimpleDataMapper distributeDataToFrontend(UUID clientKey, UUID pluginKey, DataMapper dataFromFrontend)
 			throws Exception;

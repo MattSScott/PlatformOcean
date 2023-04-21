@@ -1,4 +1,4 @@
-package platform_ocean.Service;
+package platform_ocean.Service.Messaging;
 
 import java.util.List;
 import java.util.UUID;
@@ -6,14 +6,14 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import platform_ocean.Entities.DataMapper;
-import platform_ocean.Repository.OceanRepository;
+import platform_ocean.Entities.Messaging.DataMapper;
+import platform_ocean.Repository.Messaging.MessageRepository;
 
 @Service
 public class OceanService implements OceanServiceInterface {
 
 	@Autowired
-	private OceanRepository repo;
+	private MessageRepository repo;
 
 	@Override
 	public String logMessage(DataMapper message) {
