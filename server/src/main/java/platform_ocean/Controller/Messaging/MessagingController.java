@@ -8,6 +8,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import platform_ocean.Entities.Messaging.DataMapper;
 import platform_ocean.Entities.Messaging.SimpleDataMapper;
@@ -19,7 +20,7 @@ import platform_ocean.Service.Messaging.OceanService;
 //}
 
 @Controller
-//@RestController
+@CrossOrigin
 public class MessagingController implements MessagingControllerInterface {
 
 //	private final SimpMessageSendingOperations messagingTemplate;

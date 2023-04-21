@@ -2,10 +2,10 @@ import React from "react";
 import Button from "@mui/material/Button";
 
 import DataOperator from "../DataOperator";
-import Subtitler from "../Components/Subtitler/Subtitler";
-import Coords from "../Components/Coords/Coords";
+// import Subtitler from "../Components/Subtitler/Subtitler";
+// import Coords from "../Components/Coords/Coords";
 
-import AllComponents from "../Components";
+import * as AllComponents from "../Components";
 
 import "./Renderer.css";
 
@@ -18,6 +18,7 @@ class Renderer extends React.Component {
   state = {
     client: this.props.client,
     clientID: this.props.clientID,
+    pluginKeys: this.props.pluginKeys,
   };
 
   triggerLogout() {
@@ -26,19 +27,6 @@ class Renderer extends React.Component {
   }
 
   render() {
-    // const PluginKey = "96e8d6e7-bd3e-4043-a400-880ebd585d76";
-    // // const PluginKey1 = "387c68da-e385-4c85-9de7-902608f42066";
-    // const PluginKey2 = "66c42078-9110-43f7-b154-c4a21ca8ef2d";
-
-    // const EnhancedCoords = DataOperator(Coords);
-    // const EnhancedSubtitler = DataOperator(Subtitler);
-
-    const PluginKeys = [
-      "96e8d6e7-bd3e-4043-a400-880ebd585d76",
-      "387c68da-e385-4c85-9de7-902608f42066",
-      "66c42078-9110-43f7-b154-c4a21ca8ef2d",
-    ];
-
     return (
       <>
         <div className="logout">
@@ -51,10 +39,10 @@ class Renderer extends React.Component {
           {Object.values(AllComponents).map((val, i) => {
             const EnhancedComp = DataOperator(val);
             return (
-              <div className="componentHouse">
+              <div className="componentHouse" key={this.state.pluginKeys[i]}>
                 <EnhancedComp
                   client={this.state.client}
-                  routingKey={PluginKeys[i]}
+                  routingKey={this.state.pluginKeys[i]}
                   uniqueClientID={this.state.clientID}
                 />
               </div>

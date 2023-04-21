@@ -125,7 +125,7 @@ class Registration extends React.Component {
         </div>
         <div className="buttonHouse">
           <Button variant="contained" onClick={this.submitSignup}>
-            Submit
+            SignUp
           </Button>
           <Button variant="contained" onClick={this.submitLogin}>
             Login

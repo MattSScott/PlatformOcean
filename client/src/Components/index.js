@@ -1,11 +1,6 @@
-import Coords from "./Coords/Coords";
-import Message from "./Message/Message";
-import Subtitler from "./Subtitler/Subtitler";
+export { default as Coords } from "./Coords/Coords";
+export { default as Message } from "./Message/Message";
+export { default as Subtitler } from "./Subtitler/Subtitler";
+export { default as Malicious } from "./Malicious/Malicious";
 
-const AllComponents = {};
-
-AllComponents["PK1"] = Coords;
-AllComponents["PK2"] = Message;
-AllComponents["PK3"] = Subtitler;
-
-export default AllComponents;
+// export default AllComponents;

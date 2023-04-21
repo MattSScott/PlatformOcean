@@ -12,11 +12,13 @@ class Gateway extends React.Component {
       this.successfulConnectionCallback.bind(this);
     this.noConnectionCallback = this.noConnectionCallback.bind(this);
     this.bindClient = this.bindClient.bind(this);
+    this.retrievePluginKeys = this.retrievePluginKeys.bind(this);
   }
 
   state = {
     client: null,
     clientID: null,
+    pluginKeys: null,
   };
 
   clientConnector() {
@@ -44,6 +46,7 @@ class Gateway extends React.Component {
 
   componentDidMount() {
     this.clientConnector();
+    this.retrievePluginKeys();
   }
 
   componentWillUnmount() {
@@ -60,11 +63,18 @@ class Gateway extends React.Component {
     localStorage.setItem("userID", clientInstance);
   }
 
+  async retrievePluginKeys() {
+    const rawKeys = await fetch("http://localhost:8080/plugins/get");
+    const parsedKeys = await rawKeys.json();
+    this.setState((prevState) => ({ ...prevState, pluginKeys: parsedKeys }));
+  }
+
   render() {
     const RoutingMechanism = this.state.clientID ? (
       <Renderer
         clientID={this.state.clientID}
         client={this.state.client}
+        pluginKeys={this.state.pluginKeys}
         setClientInfo={this.bindClient}
       />
     ) : (
@@ -73,7 +83,7 @@ class Gateway extends React.Component {
 
     return (
       <div>
-        {this.state.client ? (
+        {this.state.client && this.state.pluginKeys ? (
           RoutingMechanism
         ) : (
           <>
