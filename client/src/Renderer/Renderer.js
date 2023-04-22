@@ -1,9 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 
-import DataOperator from "../DataOperator";
-// import Subtitler from "../Components/Subtitler/Subtitler";
-// import Coords from "../Components/Coords/Coords";
+import DataOperator from "../Utils/DataOperator";
 
 import * as AllComponents from "../Components";
 

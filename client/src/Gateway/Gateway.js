@@ -64,9 +64,13 @@ class Gateway extends React.Component {
   }
 
   async retrievePluginKeys() {
-    const rawKeys = await fetch("http://localhost:8080/plugins/get");
-    const parsedKeys = await rawKeys.json();
-    this.setState((prevState) => ({ ...prevState, pluginKeys: parsedKeys }));
+    try {
+      const rawKeys = await fetch("http://localhost:8080/plugins/get");
+      const parsedKeys = await rawKeys.json();
+      this.setState((prevState) => ({ ...prevState, pluginKeys: parsedKeys }));
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   render() {
