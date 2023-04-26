@@ -4,6 +4,7 @@ import Renderer from "../Renderer/Renderer";
 import * as Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import PluginImporter from "../Utils/PluginImporter";
+import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
 
 class Gateway extends React.Component {
   constructor(props) {
@@ -94,6 +95,12 @@ class Gateway extends React.Component {
 
     return (
       <div>
+        {this.state.client && this.state.clientID && (
+          <PluginSetUpdater
+            client={this.state.client}
+            clientID={this.state.clientID}
+          />
+        )}
         {this.state.client && this.state.pluginDescriptors ? (
           RoutingMechanism
         ) : (
