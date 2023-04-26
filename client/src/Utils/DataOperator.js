@@ -17,7 +17,6 @@ export default function DataOperator(ChildComponent) {
     };
 
     componentDidMount() {
-      // this.requestPluginKey();
       this.fetchHistory();
       this.subscribe();
     }
@@ -107,6 +106,9 @@ export default function DataOperator(ChildComponent) {
         }));
       } catch (error) {
         console.log(error);
+        setTimeout(() => {
+          this.fetchHistory();
+        }, 1000);
       }
     }
 
