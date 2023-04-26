@@ -37,11 +37,12 @@ class Gateway extends React.Component {
     console.log("STOMP: Reconecting in 5 seconds");
   }
 
-  successfulConnectionCallback(clientHelper) {
+  async successfulConnectionCallback(clientHelper) {
     this.setState((prevState) => ({
       ...prevState,
       client: clientHelper,
     }));
+    await this.retrievePluginKeys();
   }
 
   componentDidMount() {
