@@ -9,7 +9,7 @@ export default function DataOperator(ChildComponent) {
 
     state = {
       client: this.props.client,
-      routingKey: this.props.routingKey,
+      pluginKey: this.props.routingKey,
       uniqueClientID: this.props.uniqueClientID,
       data: null,
       dataHistory: null,
@@ -28,7 +28,7 @@ export default function DataOperator(ChildComponent) {
     }
 
     subscribe() {
-      const SubscriberRoutingAddress = `/topic/${this.state.routingKey}/receive`;
+      const SubscriberRoutingAddress = `/topic/${this.state.pluginKey}/receive`;
 
       if (this.state.topicSubscription) {
         return;
@@ -49,7 +49,7 @@ export default function DataOperator(ChildComponent) {
               dataHistory: [...this.state.dataHistory, convertedData],
             }));
           },
-          { id: `sub-${this.state.uniqueClientID}-${this.state.routingKey}` }
+          { id: `sub-${this.state.uniqueClientID}-${this.state.pluginKey}` }
         );
 
         this.setState((prevState) => ({
@@ -61,15 +61,15 @@ export default function DataOperator(ChildComponent) {
       }
     }
 
-    async fetchHistory() {
-      if (this.state.dataHistory) {
+    async requestPluginKey() {
+      if (this.state.pluginKey) {
         return;
       }
 
       try {
-        const HistoryRoutingAddress = `http://localhost:8080/history/${this.state.routingKey}`;
+        const KeyRoutingAddress = `http://localhost:8080/plugins/get`;
 
-        const RawFetchedHistory = await fetch(HistoryRoutingAddress);
+        const RawFetchedHistory = await fetch(KeyRoutingAddress);
 
         const ParsedHistory = await RawFetchedHistory.json();
 
@@ -85,6 +85,33 @@ export default function DataOperator(ChildComponent) {
       }
     }
 
+    async fetchHistory() {
+      if (this.state.dataHistory) {
+        return;
+      }
+
+      try {
+        const HistoryRoutingAddress = `http://localhost:8080/history/${this.state.pluginKey}`;
+
+        const RawFetchedHistory = await fetch(HistoryRoutingAddress);
+
+        const ParsedHistory = await RawFetchedHistory.json();
+
+        this.setState((prevState) => ({
+          ...prevState,
+          dataHistory: ParsedHistory.map((el) => ({
+            ...el,
+            message: JSON.parse(el.message),
+          })),
+        }));
+      } catch (error) {
+        console.log(error);
+        setTimeout(() => {
+          this.fetchHistory();
+        }, 1000);
+      }
+    }
+
     formatDataAsJSON(dataStruct, shouldPersist) {
       var payloadStruct = {
         payload: { data: dataStruct, persist: shouldPersist },
@@ -93,7 +120,7 @@ export default function DataOperator(ChildComponent) {
     }
 
     sendDataToBackend(processedData, shouldPersist = true) {
-      const SenderRoutingAddress = `/app/${this.state.uniqueClientID}/${this.state.routingKey}/send`;
+      const SenderRoutingAddress = `/app/${this.state.uniqueClientID}/${this.state.pluginKey}/send`;
 
       try {
         this.state.client.send(
