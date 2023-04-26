@@ -13,8 +13,7 @@ export default function PluginImporter(ChildComponent) {
     };
 
     componentDidMount() {
-      const plugins = ["Coords", "Message", "Subtitler"];
-      this.loadPlugins(plugins);
+      this.loadPlugins(this.props.pluginDescriptors);
     }
 
     async importPlugin(plugin) {
@@ -33,19 +32,21 @@ export default function PluginImporter(ChildComponent) {
     }
 
     async loadPlugins(pluginNames) {
-      const componentPromises = pluginNames.map(async (plugin, ind) => {
-        const Plugin = await this.importPlugin(plugin);
-        const EnhancedPlugin = DataOperator(Plugin);
-        return (
-          <div className="componentHouse" key={this.props.pluginKeys[ind]}>
-            <EnhancedPlugin
-              client={this.props.client}
-              routingKey={this.props.pluginKeys[ind]}
-              uniqueClientID={this.props.clientID}
-            />
-          </div>
-        );
-      });
+      const componentPromises = Object.entries(pluginNames).map(
+        async ([pluginKey, pluginName]) => {
+          const Plugin = await this.importPlugin(pluginName);
+          const EnhancedPlugin = DataOperator(Plugin);
+          return (
+            <div className="componentHouse" key={pluginKey}>
+              <EnhancedPlugin
+                client={this.props.client}
+                routingKey={pluginKey}
+                uniqueClientID={this.props.clientID}
+              />
+            </div>
+          );
+        }
+      );
       Promise.all(componentPromises).then(this.setPlugins);
     }
 

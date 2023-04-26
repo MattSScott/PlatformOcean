@@ -13,13 +13,13 @@ class Gateway extends React.Component {
       this.successfulConnectionCallback.bind(this);
     this.noConnectionCallback = this.noConnectionCallback.bind(this);
     this.bindClient = this.bindClient.bind(this);
-    this.retrievePluginKeys = this.retrievePluginKeys.bind(this);
+    this.retrievePluginKeys = this.retrievePluginDetails.bind(this);
   }
 
   state = {
     client: null,
     clientID: null,
-    pluginKeys: null,
+    pluginDescriptors: null,
   };
 
   clientConnector() {
@@ -43,12 +43,12 @@ class Gateway extends React.Component {
       ...prevState,
       client: clientHelper,
     }));
-    await this.retrievePluginKeys();
+    await this.retrievePluginDetails();
   }
 
   componentDidMount() {
     this.clientConnector();
-    this.retrievePluginKeys();
+    this.retrievePluginDetails();
   }
 
   componentWillUnmount() {
@@ -65,11 +65,14 @@ class Gateway extends React.Component {
     localStorage.setItem("userID", clientInstance);
   }
 
-  async retrievePluginKeys() {
+  async retrievePluginDetails() {
     try {
       const rawKeys = await fetch("http://localhost:8080/plugins/get");
       const parsedKeys = await rawKeys.json();
-      this.setState((prevState) => ({ ...prevState, pluginKeys: parsedKeys }));
+      this.setState((prevState) => ({
+        ...prevState,
+        pluginDescriptors: parsedKeys,
+      }));
     } catch (error) {
       console.log(error);
     }
@@ -82,7 +85,7 @@ class Gateway extends React.Component {
       <PluginBoundRenderer
         clientID={this.state.clientID}
         client={this.state.client}
-        pluginKeys={this.state.pluginKeys}
+        pluginDescriptors={this.state.pluginDescriptors}
         setClientInfo={this.bindClient}
       />
     ) : (
@@ -91,7 +94,7 @@ class Gateway extends React.Component {
 
     return (
       <div>
-        {this.state.client && this.state.pluginKeys ? (
+        {this.state.client && this.state.pluginDescriptors ? (
           RoutingMechanism
         ) : (
           <>

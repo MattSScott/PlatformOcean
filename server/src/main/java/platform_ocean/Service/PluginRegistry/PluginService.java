@@ -1,6 +1,7 @@
 package platform_ocean.Service.PluginRegistry;
 
-import java.util.ArrayList;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,18 +19,24 @@ public class PluginService implements PluginServiceInterface {
 
 	@Override
 	public UUID registerPlugin(PluginStore plug) {
+		String pluginKeyString = plug.getPLUGIN_KEY().toString();
+		String fileName = plug.getPluginName();
+		// TODO: check for duplicate plugins and increment name (NAME_x)
+		String newDir = Paths.get("").toAbsolutePath().toString();
+		String filePath = newDir + "/src/main/plugins/" + pluginKeyString + "/" + fileName;
+		plug.setFilePath(filePath);
 		repo.save(plug);
 		return plug.getPLUGIN_KEY();
 	}
 
 	@Override
-	public List<UUID> retrievePluginKeys() {
-		List<PluginStore> allPlugins = repo.findAll();
-		List<UUID> allKeys = new ArrayList<>();
-		for (PluginStore p : allPlugins) {
-			allKeys.add(p.getPLUGIN_KEY());
+	public HashMap<UUID, String> retrievePlugins() {
+		List<PluginStore> allPlugs = repo.findAll();
+		HashMap<UUID, String> keyNameMap = new HashMap<UUID, String>();
+		for (PluginStore plugin : allPlugs) {
+			keyNameMap.put(plugin.getPLUGIN_KEY(), plugin.getPluginName());
 		}
-		return allKeys;
+		return keyNameMap;
 	}
 
 }
