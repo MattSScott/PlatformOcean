@@ -1,17 +1,23 @@
 package platform_ocean.Repository.PluginRegistry;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class PluginEncoder {
+
 	public static String generateFilePath(String pluginName) {
 		String serverLoc = System.getProperty("user.dir");
-		String pluginFolderLoc = serverLoc + "/src/main/plugins/";
+		String pluginFolderLoc = serverLoc + "/../plugins/";
 		String pluginLoc = pluginFolderLoc + pluginName + ".zip";
 		return pluginLoc;
 	}
@@ -46,21 +52,48 @@ public class PluginEncoder {
 
 		byte[] fileNameLen = Arrays.copyOfRange(encodedData, 0, 4);
 		int fileSize = ByteBuffer.wrap(fileNameLen).getInt();
-		byte[] fileNameBytes = Arrays.copyOfRange(encodedData, 4, fileSize + 4);
-		String fileName = new String(fileNameBytes);
+		// byte[] fileNameBytes = Arrays.copyOfRange(encodedData, 4, fileSize + 4);
+		// String fileName = new String(fileNameBytes);
 		byte[] fileBytes = Arrays.copyOfRange(encodedData, fileSize + 4, encodedData.length);
-		String newDir = Paths.get("").toAbsolutePath().toString();
-		String reconstructedFilePath = newDir + "/src/main/plugins/" + fileName;
+		String currDir = Paths.get("").toAbsolutePath().toString();
+		String reconstructedFilePath = currDir + "/../client/src/plugins/";
+		InputStream bytesToZip = new ByteArrayInputStream(fileBytes);
 
-		try (FileOutputStream stream = new FileOutputStream(reconstructedFilePath)) {
-			stream.write(fileBytes);
+		PluginEncoder.unzip(bytesToZip, reconstructedFilePath);
+
+	}
+
+	private static void unzip(InputStream bytesToUnzip, String destDir) throws IOException {
+
+		ZipInputStream zipFileBytes = new ZipInputStream(bytesToUnzip);
+		ZipEntry entry = null;
+		boolean firstEntry = true;
+		while ((entry = zipFileBytes.getNextEntry()) != null) {
+			File fileName = new File(destDir + "/" + entry.getName());
+
+			if (firstEntry) {
+				firstEntry = false;
+				if (!fileName.exists()) {
+					fileName.mkdir();
+				}
+				continue;
+			}
+			System.out.println("entry: " + entry);
+
+			FileOutputStream stream = new FileOutputStream(fileName);
+			for (int c = zipFileBytes.read(); c != -1; c = zipFileBytes.read()) {
+				stream.write(c);
+			}
+			zipFileBytes.closeEntry();
+			stream.close();
 		}
+		zipFileBytes.close();
 
 	}
 
 	public static void main(String args[]) throws IOException {
 
-		byte[] encoding = PluginEncoder.encodePlugin("Subtitler");
+		byte[] encoding = PluginEncoder.encodePlugin("Coords");
 		PluginEncoder.decodePlugin(encoding);
 	}
 

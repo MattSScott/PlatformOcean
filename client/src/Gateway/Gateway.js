@@ -15,6 +15,7 @@ class Gateway extends React.Component {
     this.noConnectionCallback = this.noConnectionCallback.bind(this);
     this.bindClient = this.bindClient.bind(this);
     this.retrievePluginKeys = this.retrievePluginDetails.bind(this);
+    this.subscribeToPluginList = this.subscribeToPluginList.bind(this);
   }
 
   state = {
@@ -40,16 +41,21 @@ class Gateway extends React.Component {
   }
 
   async successfulConnectionCallback(clientHelper) {
-    this.setState((prevState) => ({
-      ...prevState,
-      client: clientHelper,
-    }));
-    await this.retrievePluginDetails();
+    this.setState(
+      (prevState) => ({
+        ...prevState,
+        client: clientHelper,
+      }),
+      () => {
+        this.retrievePluginDetails();
+        // TODO: BUGGY!!
+        // this.subscribeToPluginList();
+      }
+    );
   }
 
   componentDidMount() {
     this.clientConnector();
-    this.retrievePluginDetails();
   }
 
   componentWillUnmount() {
@@ -66,6 +72,16 @@ class Gateway extends React.Component {
     localStorage.setItem("userID", clientInstance);
   }
 
+  subscribeToPluginList() {
+    const SubscriberRoutingAddress = `/topic/newPlugins`;
+    this.state.client.subscribe(SubscriberRoutingAddress, (resp) => {
+      this.setState((prevState) => ({
+        ...prevState,
+        pluginDescriptors: JSON.parse(resp.body),
+      }));
+    });
+  }
+
   async retrievePluginDetails() {
     try {
       const rawKeys = await fetch("http://localhost:8080/plugins/get");
@@ -80,6 +96,7 @@ class Gateway extends React.Component {
   }
 
   render() {
+    console.log(this.state.pluginDescriptors);
     const PluginBoundRenderer = PluginImporter(Renderer);
 
     const RoutingMechanism = this.state.clientID ? (
@@ -95,12 +112,12 @@ class Gateway extends React.Component {
 
     return (
       <div>
-        {this.state.client && this.state.clientID && (
+        {/* {this.state.client && this.state.clientID && (
           <PluginSetUpdater
             client={this.state.client}
             clientID={this.state.clientID}
           />
-        )}
+        )} */}
         {this.state.client && this.state.pluginDescriptors ? (
           RoutingMechanism
         ) : (

@@ -18,8 +18,8 @@ export default function PluginImporter(ChildComponent) {
 
     async importPlugin(plugin) {
       return lazy(() =>
-        import(`../Components/${plugin}/${plugin}`).catch((err) =>
-          console.log(err)
+        import(`../plugins/${plugin}/${plugin}`).catch(() =>
+          import("../NullView/NullView")
         )
       );
     }
@@ -34,17 +34,21 @@ export default function PluginImporter(ChildComponent) {
     async loadPlugins(pluginNames) {
       const componentPromises = Object.entries(pluginNames).map(
         async ([pluginKey, pluginName]) => {
-          const Plugin = await this.importPlugin(pluginName);
-          const EnhancedPlugin = DataOperator(Plugin);
-          return (
-            <div className="componentHouse" key={pluginKey}>
-              <EnhancedPlugin
-                client={this.props.client}
-                routingKey={pluginKey}
-                uniqueClientID={this.props.clientID}
-              />
-            </div>
-          );
+          try {
+            const Plugin = await this.importPlugin(pluginName);
+            const EnhancedPlugin = DataOperator(Plugin);
+            return (
+              <div className="componentHouse" key={pluginKey}>
+                <EnhancedPlugin
+                  client={this.props.client}
+                  routingKey={pluginKey}
+                  uniqueClientID={this.props.clientID}
+                />
+              </div>
+            );
+          } catch (error) {
+            console.log(error);
+          }
         }
       );
       Promise.all(componentPromises).then(this.setPlugins);

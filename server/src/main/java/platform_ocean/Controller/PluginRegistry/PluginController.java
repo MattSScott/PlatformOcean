@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,11 +22,16 @@ public class PluginController implements PluginControllerInterface {
 	@Autowired
 	private PluginService serv;
 
+	@Autowired
+	private SimpMessagingTemplate messageSender;
+
 	@Override
 	@PostMapping("/add")
 	@ResponseBody
 	public UUID registerPlugin(@RequestBody PluginStore plug) {
-		return serv.registerPlugin(plug);
+		UUID newKey = serv.registerPlugin(plug);
+		messageSender.convertAndSend("/topic/newPlugins", serv.retrievePlugins());
+		return newKey;
 	}
 
 	@Override
