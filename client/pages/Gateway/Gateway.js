@@ -4,7 +4,7 @@ import Renderer from "../Renderer/Renderer";
 import * as Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import PluginImporter from "../Utils/PluginImporter";
-import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
+// import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
 
 class Gateway extends React.Component {
   constructor(props) {

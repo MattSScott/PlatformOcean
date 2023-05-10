@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./Subtitler.module.css";
+import SubtitlerStyles from "./Subtitler.module.css";
 
 export default function Subtitler({ sender, data, clientID }) {
   const [isHost, setHost] = useState(false);
@@ -19,11 +19,11 @@ export default function Subtitler({ sender, data, clientID }) {
   };
 
   return (
-    <div className="subtitler">
-      <div className="subtitleArea">
+    <div className={SubtitlerStyles.subtitler}>
+      <div className={SubtitlerStyles.subtitleArea}>
         <p>{data && data.message.content !== "host" && data.message}</p>
       </div>
-      <div className="inputArea">
+      <div className={SubtitlerStyles.inputArea}>
         {isHost ? (
           <form>
             <input
@@ -33,7 +33,7 @@ export default function Subtitler({ sender, data, clientID }) {
             />
           </form>
         ) : (
-          <button className="subButton" onClick={sendHost}>
+          <button className={SubtitlerStyles.subButton} onClick={sendHost}>
             Become Host
           </button>
         )}

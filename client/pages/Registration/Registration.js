@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import "./Registration.module.css";
+import RegistrationStyles from "./Registration.module.css";
 
 class Registration extends React.Component {
   constructor(props) {
@@ -107,23 +107,23 @@ class Registration extends React.Component {
   render() {
     return (
       <div>
-        <div className="inputHouse">
+        <div className={RegistrationStyles.inputHouse}>
           <TextField
-            className="inputButton"
+            className={RegistrationStyles.inputButton}
             id="outlined-basic"
             label="Username"
             variant="outlined"
             onChange={this.setUsername}
           />
           <TextField
-            className="inputButton"
+            className={RegistrationStyles.inputButton}
             id="outlined-basic"
             label="Password"
             variant="outlined"
             onChange={this.setPassword}
           />
         </div>
-        <div className="buttonHouse">
+        <div className={RegistrationStyles.buttonHouse}>
           <Button variant="contained" onClick={this.submitSignup}>
             SignUp
           </Button>

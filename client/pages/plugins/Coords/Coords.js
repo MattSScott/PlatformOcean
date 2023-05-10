@@ -1,4 +1,4 @@
-import "./Coords.module.css";
+import CoordsStyle from "./Coords.module.css";
 
 export default function Coords({ data, sender, allData }) {
   const getPos = (event) => {
@@ -19,7 +19,7 @@ export default function Coords({ data, sender, allData }) {
 
   return (
     <div
-      className="coordDiv"
+      className={CoordsStyle.coordDiv}
       onClick={(e) => {
         var obj = getPos(e);
         sender(obj);

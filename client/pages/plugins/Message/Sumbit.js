@@ -1,15 +1,15 @@
 import { useState } from "react";
-import "./Submit.module.css";
+import Styles from "./Submit.module.css";
 
 export default function Submit({ sender }) {
   const [msgInfo, setMsgInfo] = useState({ sender: null, content: null });
 
   return (
     <div>
-      <div className="formCont">
-        <div className="subForm">
+      <div className={Styles.formCont}>
+        <div className={Styles.subForm}>
           <p>Name</p>
-          <form className="formEl">
+          <form className={Styles.formEl}>
             <input
               type="text"
               onChange={(e) =>
@@ -18,9 +18,9 @@ export default function Submit({ sender }) {
             />
           </form>
         </div>
-        <div className="subForm">
+        <div className={Styles.subForm}>
           <p>Message</p>
-          <form className="formEl">
+          <form className={Styles.formEl}>
             <input
               type="text"
               onChange={(e) =>
@@ -30,7 +30,7 @@ export default function Submit({ sender }) {
           </form>
         </div>
       </div>
-      <button className="submitter" onClick={() => sender(msgInfo)}>
+      <button className={Styles.submitter} onClick={() => sender(msgInfo)}>
         Submit
       </button>
     </div>

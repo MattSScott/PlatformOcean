@@ -1,5 +1,5 @@
 const nextConfig = {
-  assetPrefix: ".",
+  // assetPrefix: "./",
 };
 
 export default nextConfig;
