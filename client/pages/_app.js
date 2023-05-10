@@ -1,4 +1,5 @@
 import "./App.css";
+import "./index.css";
 import Gateway from "./Gateway/Gateway";
 
 function App() {

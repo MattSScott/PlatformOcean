@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Submit.css";
+import "./Submit.module.css";
 
 export default function Submit({ sender }) {
   const [msgInfo, setMsgInfo] = useState({ sender: null, content: null });

@@ -1,6 +1,8 @@
 import React, { lazy } from "react";
 import DataOperator from "./DataOperator";
 
+import styles from "./PluginImporter.module.css";
+
 export default function PluginImporter(ChildComponent) {
   return class extends React.Component {
     constructor(props) {
@@ -38,7 +40,7 @@ export default function PluginImporter(ChildComponent) {
             const Plugin = await this.importPlugin(pluginName);
             const EnhancedPlugin = DataOperator(Plugin);
             return (
-              <div className="componentHouse" key={pluginKey}>
+              <div className={styles.componentHouse} key={pluginKey}>
                 <EnhancedPlugin
                   client={this.props.client}
                   routingKey={pluginKey}

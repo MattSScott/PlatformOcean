@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@mui/material/Button";
 
-import "./Renderer.css";
+import styles from "../Utils/PluginImporter.module.css";
 
 class Renderer extends React.Component {
   constructor(props) {
@@ -17,13 +17,13 @@ class Renderer extends React.Component {
   render() {
     return (
       <>
-        <div className="logout">
+        <div className={styles.logout}>
           <p>Signed in as: {`${this.props.clientID.substring(0, 8)}...`}</p>
           <Button variant="contained" onClick={this.triggerLogout}>
             Logout
           </Button>
         </div>
-        <div className="allComps">{this.props.loadedPlugins}</div>
+        <div className={styles.allComps}>{this.props.loadedPlugins}</div>
       </>
     );
   }

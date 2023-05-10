@@ -56,7 +56,7 @@ public class PluginEncoder {
 		// String fileName = new String(fileNameBytes);
 		byte[] fileBytes = Arrays.copyOfRange(encodedData, fileSize + 4, encodedData.length);
 		String currDir = Paths.get("").toAbsolutePath().toString();
-		String reconstructedFilePath = currDir + "/../client/src/plugins/";
+		String reconstructedFilePath = currDir + "/../client/pages/plugins/";
 		InputStream bytesToZip = new ByteArrayInputStream(fileBytes);
 
 		PluginEncoder.unzip(bytesToZip, reconstructedFilePath);

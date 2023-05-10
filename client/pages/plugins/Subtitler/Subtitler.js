@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./Subtitler.css";
+import "./Subtitler.module.css";
 
 export default function Subtitler({ sender, data, clientID }) {
   const [isHost, setHost] = useState(false);
