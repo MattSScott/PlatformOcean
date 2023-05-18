@@ -1,7 +1,9 @@
 import "./App.css";
+import React from "react";
 import Gateway from "./Gateway/Gateway";
 
 function App() {
+  window.React = React;
   return (
     <div className="App">
       <header className="App-header">

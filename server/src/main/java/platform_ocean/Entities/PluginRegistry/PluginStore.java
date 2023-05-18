@@ -16,6 +16,7 @@ public class PluginStore {
 	private final String developerName;
 	private final String pluginName;
 	private String filePath;
+	private String retrievalAddress;
 
 	public PluginStore(String developer, String pluginName) {
 		this.PLUGIN_KEY = UUID.randomUUID();
@@ -47,6 +48,14 @@ public class PluginStore {
 
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+	public String getRetrievalAddress() {
+		return retrievalAddress;
+	}
+
+	public void setRetrievalAddress(String retrievalAddress) {
+		this.retrievalAddress = retrievalAddress;
 	}
 
 }

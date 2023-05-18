@@ -96,7 +96,7 @@ class Gateway extends React.Component {
   }
 
   render() {
-    console.log(this.state.pluginDescriptors);
+    // console.log(this.state.pluginDescriptors);
     const PluginBoundRenderer = PluginImporter(Renderer);
 
     const RoutingMechanism = this.state.clientID ? (

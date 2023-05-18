@@ -84,7 +84,7 @@ class Registration extends React.Component {
 
   async submitLogin(e) {
     e.preventDefault();
-
+    console.log(this.state.formEntry);
     try {
       const RegistrationAddress = "http://localhost:8080/registry/get";
       const response = await fetch(RegistrationAddress, {

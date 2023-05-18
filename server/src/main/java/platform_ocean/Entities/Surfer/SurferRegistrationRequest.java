@@ -4,6 +4,11 @@ public class SurferRegistrationRequest {
 	private final String username;
 	private final String password;
 
+	public SurferRegistrationRequest() {
+		username = "err";
+		password = "err";
+	}
+
 	public SurferRegistrationRequest(String un, String pw) {
 		username = un;
 		password = pw;

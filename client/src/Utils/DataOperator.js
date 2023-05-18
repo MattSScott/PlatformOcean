@@ -61,29 +61,31 @@ export default function DataOperator(ChildComponent) {
       }
     }
 
-    async requestPluginKey() {
-      if (this.state.pluginKey) {
-        return;
-      }
+    // async requestPluginKey() {
+    //   if (this.state.pluginKey) {
+    //     return;
+    //   }
 
-      try {
-        const KeyRoutingAddress = `http://localhost:8080/plugins/get`;
+    //   try {
+    //     const KeyRoutingAddress = `http://localhost:8080/plugins/get`;
 
-        const RawFetchedHistory = await fetch(KeyRoutingAddress);
+    //     const RawFetchedHistory = await fetch(KeyRoutingAddress);
 
-        const ParsedHistory = await RawFetchedHistory.json();
+    //     const ParsedHistory = await RawFetchedHistory.json();
 
-        this.setState((prevState) => ({
-          ...prevState,
-          dataHistory: ParsedHistory.map((el) => ({
-            ...el,
-            message: JSON.parse(el.message),
-          })),
-        }));
-      } catch (error) {
-        console.log(error);
-      }
-    }
+    //     console.log(ParsedHistory);
+
+    //     this.setState((prevState) => ({
+    //       ...prevState,
+    //       dataHistory: ParsedHistory.map((el) => ({
+    //         ...el,
+    //         message: JSON.parse(el.message),
+    //       })),
+    //     }));
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
 
     async fetchHistory() {
       if (this.state.dataHistory) {
