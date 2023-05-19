@@ -8,6 +8,8 @@ import Coords from "../Components/Coords/Coords";
 import AllComponents from "../Components";
 
 import "./Renderer.css";
+import TestComp from "../Components/TestComp/TestComp";
+import Counter from "../Components/Counter/Counter";
 
 class Renderer extends React.Component {
   constructor(props) {
@@ -48,7 +50,7 @@ class Renderer extends React.Component {
           </Button>
         </div>
         <div className="allComps">
-          {Object.values(AllComponents).map((val, i) => {
+          {/* {Object.values(AllComponents).map((val, i) => {
             const EnhancedComp = DataOperator(val);
             return (
               <div className="componentHouse">
@@ -59,8 +61,22 @@ class Renderer extends React.Component {
                 />
               </div>
             );
-          })}
+          })} */}
+          <div className="componentHouse">
+            <TestComp
+              client={this.state.client}
+              routingKey={PluginKeys[0]}
+              uniqueClientID={this.state.clientID}
+            />
+          </div>
 
+          <div className="componentHouse">
+            <Counter
+              client={this.state.client}
+              routingKey={PluginKeys[1]}
+              uniqueClientID={this.state.clientID}
+            />
+          </div>
           {/* <div className="componentHouse">
             <EnhancedSubtitler
               client={this.state.client}
