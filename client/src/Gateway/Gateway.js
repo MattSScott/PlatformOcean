@@ -4,9 +4,11 @@ import Renderer from "../Renderer/Renderer";
 import * as Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import PluginImporter from "../Utils/PluginImporter";
-import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
+// import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
+import ServerAddressContext from "../Utils/ServerContext";
 
 class Gateway extends React.Component {
+  static contextType = ServerAddressContext;
   constructor(props) {
     super(props);
     this.clientConnector = this.clientConnector.bind(this);
@@ -25,7 +27,8 @@ class Gateway extends React.Component {
   };
 
   clientConnector() {
-    const socket = new SockJS("http://localhost:8080/PlatformOcean"); // handshake with endpoint
+    // const socket = new SockJS("http://localhost:8080/PlatformOcean"); // handshake with endpoint
+    const socket = new SockJS(`${this.context.add}/PlatformOcean`); // handshake with endpoint
     const clientHelper = Stomp.over(socket);
     clientHelper.connect(
       {},

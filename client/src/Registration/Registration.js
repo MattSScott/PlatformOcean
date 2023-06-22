@@ -2,8 +2,10 @@ import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import "./Registration.css";
+import ServerAddressContext from "../Utils/ServerContext";
 
 class Registration extends React.Component {
+  static contextType = ServerAddressContext;
   constructor(props) {
     super(props);
     this.setUsername = this.setUsername.bind(this);
@@ -45,7 +47,7 @@ class Registration extends React.Component {
   }
 
   async loadUsers() {
-    const UserListAddress = "http://localhost:8080/registry/getAll";
+    const UserListAddress = `${this.context.add}registry/getAll`;
     try {
       const UserData = await fetch(UserListAddress);
       const UserJSON = await UserData.json();
@@ -60,7 +62,7 @@ class Registration extends React.Component {
 
     try {
       const numUsers = Object.keys(this.state.users).length;
-      let registrationAddress = "http://localhost:8080/registry/";
+      let registrationAddress = `${this.context.add}/registry/`;
       if (numUsers === 0) {
         registrationAddress += "own";
       } else {
@@ -86,7 +88,7 @@ class Registration extends React.Component {
     e.preventDefault();
 
     try {
-      const RegistrationAddress = "http://localhost:8080/registry/get";
+      const RegistrationAddress = `${this.context.add}/registry/get`;
       const response = await fetch(RegistrationAddress, {
         method: "POST",
         headers: {

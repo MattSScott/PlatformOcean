@@ -5,7 +5,7 @@ import ServerContext from "./Utils/ServerContext";
 import ServerSelector from "./ServerSelector/ServerSelector";
 
 function App() {
-  const [serverAddress, setServerAddress] = useState("http://localhost:3000");
+  const [serverAddress, setServerAddress] = useState("http://localhost:2000");
 
   return (
     <div className="App">
