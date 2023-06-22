@@ -1,0 +1,18 @@
+.servDiv {
+  display: flex;
+  line-height: 0;
+  justify-content: center;
+  text-align: center;
+  height: fit-content;
+}
+
+.servDiv input {
+  width: 30px;
+  block-size: fit-content;
+}
+
+.servDiv div {
+  width: fit-content;
+  height: fit-content;
+  font-size: 40px;
+}

@@ -13,12 +13,13 @@ export default function PluginImporter(ChildComponent) {
     };
 
     componentDidMount() {
+      console.log(this.props.pluginDescriptors);
       this.loadPlugins(this.props.pluginDescriptors);
     }
 
     async importPlugin(plugin) {
       return lazy(() =>
-        import(`../plugins/${plugin}/${plugin}`).catch(() =>
+        import(`../Components/${plugin}/${plugin}`).catch(() =>
           import("../NullView/NullView")
         )
       );

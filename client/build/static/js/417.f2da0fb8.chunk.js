@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkwebsocket_front=self.webpackChunkwebsocket_front||[]).push([[417],{3417:function(n,e,r){r.r(e),r.d(e,{default:function(){return u}});var t=r(184);function u(){return(0,t.jsx)("div",{children:(0,t.jsx)("p",{children:"Error loading plugin \ud83d\ude22"})})}}}]);
+//# sourceMappingURL=417.f2da0fb8.chunk.js.map

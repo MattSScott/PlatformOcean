@@ -1,0 +1,1 @@
+{"version":3,"file":"static/js/417.f2da0fb8.chunk.js","mappings":"iLAAe,SAASA,IACtB,OACE,0BACE,uBAAG,uCAGT,C","sources":["NullView/NullView.js"],"sourcesContent":["export default function NullView() {\n  return (\n    <div>\n      <p>Error loading plugin 😢</p>\n    </div>\n  );\n}\n"],"names":["NullView"],"sourceRoot":""}

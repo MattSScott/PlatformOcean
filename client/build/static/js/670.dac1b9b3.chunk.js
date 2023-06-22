@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebsocket_front=self.webpackChunkwebsocket_front||[]).push([[670],{5670:function(e){e.exports=JSON.parse('{"developerName":"matt","pluginName":"Coords"}')}}]);

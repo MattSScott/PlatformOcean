@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkwebsocket_front=self.webpackChunkwebsocket_front||[]).push([[635],{7635:function(e){e.exports=JSON.parse('{"developerName":"matt","pluginName":"Subtitler"}')}}]);
