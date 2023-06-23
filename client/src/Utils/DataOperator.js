@@ -67,7 +67,7 @@ export default function DataOperator(ChildComponent) {
     //   }
 
     //   try {
-    //     const KeyRoutingAddress = `http://localhost:8080/plugins/get`;
+    //     const KeyRoutingAddress = `http://192.168.0.24:8080/plugins/get`;
 
     //     const RawFetchedHistory = await fetch(KeyRoutingAddress);
 
@@ -93,7 +93,7 @@ export default function DataOperator(ChildComponent) {
       }
 
       try {
-        const HistoryRoutingAddress = `http://localhost:8080/history/${this.state.pluginKey}`;
+        const HistoryRoutingAddress = `http://192.168.0.24:8080/history/${this.state.pluginKey}`;
 
         const RawFetchedHistory = await fetch(HistoryRoutingAddress);
 

@@ -25,7 +25,7 @@ class Gateway extends React.Component {
   };
 
   clientConnector() {
-    const socket = new SockJS("http://localhost:8080/PlatformOcean"); // handshake with endpoint
+    const socket = new SockJS("http://192.168.0.24:8080/PlatformOcean"); // handshake with endpoint
     const clientHelper = Stomp.over(socket);
     clientHelper.connect(
       {},
@@ -84,7 +84,7 @@ class Gateway extends React.Component {
 
   async retrievePluginDetails() {
     try {
-      const rawKeys = await fetch("http://localhost:8080/plugins/get");
+      const rawKeys = await fetch("http://192.168.0.24:8080/plugins/get");
       const parsedKeys = await rawKeys.json();
       this.setState((prevState) => ({
         ...prevState,

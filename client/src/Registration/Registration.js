@@ -45,7 +45,7 @@ class Registration extends React.Component {
   }
 
   async loadUsers() {
-    const UserListAddress = "http://localhost:8080/registry/getAll";
+    const UserListAddress = "http://192.168.0.24:8080/registry/getAll";
     try {
       const UserData = await fetch(UserListAddress);
       const UserJSON = await UserData.json();
@@ -60,7 +60,7 @@ class Registration extends React.Component {
 
     try {
       const numUsers = Object.keys(this.state.users).length;
-      let registrationAddress = "http://localhost:8080/registry/";
+      let registrationAddress = "http://192.168.0.24:8080/registry/";
       if (numUsers === 0) {
         registrationAddress += "own";
       } else {
@@ -86,7 +86,7 @@ class Registration extends React.Component {
     e.preventDefault();
     console.log(this.state.formEntry);
     try {
-      const RegistrationAddress = "http://localhost:8080/registry/get";
+      const RegistrationAddress = "http://192.168.0.24:8080/registry/get";
       const response = await fetch(RegistrationAddress, {
         method: "POST",
         headers: {

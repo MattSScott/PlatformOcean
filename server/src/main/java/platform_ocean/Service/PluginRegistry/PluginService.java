@@ -47,7 +47,7 @@ public class PluginService implements PluginServiceInterface {
 		List<PluginStore> allPlugs = repo.findAll();
 		HashMap<UUID, String> keyNameMap = new HashMap<UUID, String>();
 		for (PluginStore plugin : allPlugs) {
-			keyNameMap.put(plugin.getPLUGIN_KEY(), plugin.getRetrievalAddress());
+			keyNameMap.put(plugin.getPLUGIN_KEY(), plugin.getPluginName());
 		}
 		return keyNameMap;
 	}

@@ -22,7 +22,7 @@ export function fetchPlugin(pluginKey, pluginURL) {
 // export default function PluginFetcher({ pluginURL, pluginKey }) {
 //   useEffect(() => {
 //     const Plug = React.lazy(() => {
-//       import("http://localhost:8080/plugs/Subtitler/main.js");
+//       import("http://192.168.0.24:8080/plugs/Subtitler/main.js");
 //     });
 //   }, []);
 

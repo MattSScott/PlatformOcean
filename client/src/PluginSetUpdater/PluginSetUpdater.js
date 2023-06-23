@@ -29,7 +29,7 @@ class PluginSetUpdater extends React.Component {
   }
 
   async pluginCommunication() {
-    const PluginCheckSendAddress = `http://localhost:8080/pluginCheck/${this.props.clientID}`;
+    const PluginCheckSendAddress = `http://192.168.0.24:8080/pluginCheck/${this.props.clientID}`;
 
     const pluginDiffRaw = await fetch(PluginCheckSendAddress, {
       method: "POST",

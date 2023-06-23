@@ -15,8 +15,7 @@ export default function PluginImporter(ChildComponent) {
     };
 
     componentDidMount() {
-      this.assignPluginsToGlobalScope(this.props.pluginDescriptors);
-      this.importAllPlugins(this.props.pluginDescriptors);
+      this.loadPlugins(this.props.pluginDescriptors);
     }
 
     async importPlugin(plugin) {
@@ -40,31 +39,31 @@ export default function PluginImporter(ChildComponent) {
       });
     }
 
-    async importAllPlugins(pluginDescriptors) {
-      const componentSignatures = Object.keys(pluginDescriptors).map((key) => {
-        console.log(key);
-        const Plugin = window[key];
-        if (Plugin) {
-          const EnhancedPlugin = DataOperator(Plugin);
-          return (
-            <div className="componentHouse" key={key}>
-              <EnhancedPlugin
-                client={this.props.client}
-                routingKey={key}
-                uniqueClientID={this.props.clientID}
-              />
-            </div>
-          );
-        } else {
-          return (
-            <div className="componentHouse" key={key}>
-              <NullView />
-            </div>
-          );
-        }
-      });
-      this.setPlugins(componentSignatures);
-    }
+    // async importAllPlugins(pluginDescriptors) {
+    //   const componentSignatures = Object.keys(pluginDescriptors).map((key) => {
+    //     console.log(key);
+    //     const Plugin = window[key];
+    //     if (Plugin) {
+    //       const EnhancedPlugin = DataOperator(Plugin);
+    //       return (
+    //         <div className="componentHouse" key={key}>
+    //           <EnhancedPlugin
+    //             client={this.props.client}
+    //             routingKey={key}
+    //             uniqueClientID={this.props.clientID}
+    //           />
+    //         </div>
+    //       );
+    //     } else {
+    //       return (
+    //         <div className="componentHouse" key={key}>
+    //           <NullView />
+    //         </div>
+    //       );
+    //     }
+    //   });
+    //   this.setPlugins(componentSignatures);
+    // }
 
     // loadSub() {
     //   const TestComp = window["keyCheck"];
@@ -90,6 +89,7 @@ export default function PluginImporter(ChildComponent) {
     async loadPlugins(pluginNames) {
       const componentPromises = Object.entries(pluginNames).map(
         async ([pluginKey, pluginName]) => {
+          console.log(pluginName);
           try {
             const Plugin = await this.importPlugin(pluginName);
             const EnhancedPlugin = DataOperator(Plugin);

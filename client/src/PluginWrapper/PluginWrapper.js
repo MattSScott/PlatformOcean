@@ -81,7 +81,7 @@ class PluginWrapper extends React.Component {
     }
 
     try {
-      const HistoryRoutingAddress = `http://localhost:8080/history/${this.state.routingKey}`;
+      const HistoryRoutingAddress = `http://192.168.0.24:8080/history/${this.state.routingKey}`;
 
       const RawFetchedHistory = await fetch(HistoryRoutingAddress);
 
