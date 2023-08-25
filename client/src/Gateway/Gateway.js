@@ -3,6 +3,8 @@ import React from "react";
 import Renderer from "../Renderer/Renderer";
 import * as Stomp from "stompjs";
 import SockJS from "sockjs-client";
+import PluginImporter from "../Utils/PluginImporter";
+import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
 
 class Gateway extends React.Component {
   constructor(props) {
@@ -12,11 +14,14 @@ class Gateway extends React.Component {
       this.successfulConnectionCallback.bind(this);
     this.noConnectionCallback = this.noConnectionCallback.bind(this);
     this.bindClient = this.bindClient.bind(this);
+    this.retrievePluginKeys = this.retrievePluginDetails.bind(this);
+    this.subscribeToPluginList = this.subscribeToPluginList.bind(this);
   }
 
   state = {
     client: null,
     clientID: null,
+    pluginDescriptors: null,
   };
 
   clientConnector() {
@@ -35,11 +40,18 @@ class Gateway extends React.Component {
     console.log("STOMP: Reconecting in 5 seconds");
   }
 
-  successfulConnectionCallback(clientHelper) {
-    this.setState((prevState) => ({
-      ...prevState,
-      client: clientHelper,
-    }));
+  async successfulConnectionCallback(clientHelper) {
+    this.setState(
+      (prevState) => ({
+        ...prevState,
+        client: clientHelper,
+      }),
+      () => {
+        this.retrievePluginDetails();
+        // TODO: BUGGY!!
+        // this.subscribeToPluginList();
+      }
+    );
   }
 
   componentDidMount() {
@@ -60,11 +72,38 @@ class Gateway extends React.Component {
     localStorage.setItem("userID", clientInstance);
   }
 
+  subscribeToPluginList() {
+    const SubscriberRoutingAddress = `/topic/newPlugins`;
+    this.state.client.subscribe(SubscriberRoutingAddress, (resp) => {
+      this.setState((prevState) => ({
+        ...prevState,
+        pluginDescriptors: JSON.parse(resp.body),
+      }));
+    });
+  }
+
+  async retrievePluginDetails() {
+    try {
+      const rawKeys = await fetch("http://localhost:8080/plugins/get");
+      const parsedKeys = await rawKeys.json();
+      this.setState((prevState) => ({
+        ...prevState,
+        pluginDescriptors: parsedKeys,
+      }));
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   render() {
+    console.log(this.state.pluginDescriptors);
+    const PluginBoundRenderer = PluginImporter(Renderer);
+
     const RoutingMechanism = this.state.clientID ? (
-      <Renderer
+      <PluginBoundRenderer
         clientID={this.state.clientID}
         client={this.state.client}
+        pluginDescriptors={this.state.pluginDescriptors}
         setClientInfo={this.bindClient}
       />
     ) : (
@@ -73,7 +112,13 @@ class Gateway extends React.Component {
 
     return (
       <div>
-        {this.state.client ? (
+        {/* {this.state.client && this.state.clientID && (
+          <PluginSetUpdater
+            client={this.state.client}
+            clientID={this.state.clientID}
+          />
+        )} */}
+        {this.state.client && this.state.pluginDescriptors ? (
           RoutingMechanism
         ) : (
           <>
