@@ -3,13 +3,10 @@ import "../Renderer/Renderer.css";
 import NullView from "../NullView/NullView";
 
 class PluginWrapper extends React.Component {
-  constructor(props) {
-    super(props);
-  }
   state = {
-    client: this.props.client,
-    routingKey: this.props.routingKey,
-    uniqueClientID: this.props.uniqueClientID,
+    // client: this.props.client,
+    // routingKey: this.props.routingKey,
+    // uniqueClientID: this.props.uniqueClientID,
     data: null,
     dataHistory: null,
     topicSubscription: null,
@@ -36,20 +33,20 @@ class PluginWrapper extends React.Component {
 
   isMe() {
     if (this.state.data) {
-      return this.state.data.sender == this.state.uniqueClientID;
+      return this.state.data.sender === this.props.uniqueClientID;
     }
     return false;
   }
 
   subscribe() {
-    const SubscriberRoutingAddress = `/topic/${this.state.routingKey}/receive`;
+    const SubscriberRoutingAddress = `/topic/${this.props.routingKey}/receive`;
 
     if (this.state.topicSubscription) {
       return;
     }
 
     try {
-      const pluginSubscription = this.state.client.subscribe(
+      const pluginSubscription = this.props.client.subscribe(
         SubscriberRoutingAddress,
         (resp) => {
           const deserialiseJSON = JSON.parse(resp.body);
@@ -63,7 +60,7 @@ class PluginWrapper extends React.Component {
             dataHistory: [...this.state.dataHistory, convertedData],
           }));
         },
-        { id: `sub-${this.state.uniqueClientID}-${this.state.routingKey}` }
+        { id: `sub-${this.props.uniqueClientID}-${this.props.routingKey}` }
       );
 
       this.setState((prevState) => ({
@@ -81,7 +78,7 @@ class PluginWrapper extends React.Component {
     }
 
     try {
-      const HistoryRoutingAddress = `http://localhost:8080/history/${this.state.routingKey}`;
+      const HistoryRoutingAddress = `http://localhost:8080/history/${this.props.routingKey}`;
 
       const RawFetchedHistory = await fetch(HistoryRoutingAddress);
 
@@ -107,10 +104,10 @@ class PluginWrapper extends React.Component {
   }
 
   sendDataToBackend(processedData, shouldPersist = true) {
-    const SenderRoutingAddress = `/app/${this.state.uniqueClientID}/${this.state.routingKey}/send`;
+    const SenderRoutingAddress = `/app/${this.props.uniqueClientID}/${this.props.routingKey}/send`;
 
     try {
-      this.state.client.send(
+      this.props.client.send(
         SenderRoutingAddress,
         {},
         this.formatDataAsJSON(processedData, shouldPersist)
