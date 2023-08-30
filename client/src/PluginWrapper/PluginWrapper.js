@@ -20,8 +20,8 @@ class PluginWrapper extends React.Component {
     }
   }
 
-  getData() {
-    return this.state.data ? this.state.data.message : null;
+  getData(preprocessor) {
+    return this.state.data ? preprocessor(this.state.data.message) : null;
   }
 
   handleMessageReceived(data) {

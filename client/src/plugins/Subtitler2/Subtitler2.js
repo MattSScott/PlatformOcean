@@ -8,7 +8,6 @@ export default class Subtitler2 extends PluginWrapper {
   }
 
   state = {
-    ...this.state,
     isHost: false,
   };
 
@@ -34,19 +33,13 @@ export default class Subtitler2 extends PluginWrapper {
     return (
       <div className="subtitler">
         <div className="subtitleArea">
-          {/* TODO: pass function into this.getData() */}
-          <p>
-            {this.getData() &&
-              this.getData().content !== "host" &&
-              this.getData()}
-          </p>
+          <p>{this.getData((d) => d.content !== "host" && d)}</p>
         </div>
         <div className="inputArea">
           {this.state.isHost ? (
             <form>
               <input
                 onChange={(e) => {
-                  console.log(e.target.value);
                   this.sendDataToBackend(e.target.value, false);
                 }}
               />
