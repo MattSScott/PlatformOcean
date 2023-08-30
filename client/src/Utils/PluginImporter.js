@@ -1,5 +1,5 @@
 import React, { lazy } from "react";
-import DataOperator from "./DataOperator";
+// import DataOperator from "./DataOperator";
 
 export default function PluginImporter(ChildComponent) {
   return class extends React.Component {
@@ -31,15 +31,37 @@ export default function PluginImporter(ChildComponent) {
       }));
     }
 
+    // async loadPlugins(pluginNames) {
+    //   const componentPromises = Object.entries(pluginNames).map(
+    //     async ([pluginKey, pluginName]) => {
+    //       try {
+    //         const Plugin = await this.importPlugin(pluginName);
+    //         const EnhancedPlugin = DataOperator(Plugin);
+    //         return (
+    //           <div className="componentHouse" key={pluginKey}>
+    //             <EnhancedPlugin
+    //               client={this.props.client}
+    //               routingKey={pluginKey}
+    //               uniqueClientID={this.props.clientID}
+    //             />
+    //           </div>
+    //         );
+    //       } catch (error) {
+    //         console.log(error);
+    //       }
+    //     }
+    //   );
+    //   Promise.all(componentPromises).then(this.setPlugins);
+    // }
+
     async loadPlugins(pluginNames) {
       const componentPromises = Object.entries(pluginNames).map(
         async ([pluginKey, pluginName]) => {
           try {
             const Plugin = await this.importPlugin(pluginName);
-            const EnhancedPlugin = DataOperator(Plugin);
             return (
               <div className="componentHouse" key={pluginKey}>
-                <EnhancedPlugin
+                <Plugin
                   client={this.props.client}
                   routingKey={pluginKey}
                   uniqueClientID={this.props.clientID}

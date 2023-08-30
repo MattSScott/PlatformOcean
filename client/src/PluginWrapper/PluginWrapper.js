@@ -4,9 +4,6 @@ import NullView from "../NullView/NullView";
 
 class PluginWrapper extends React.Component {
   state = {
-    // client: this.props.client,
-    // routingKey: this.props.routingKey,
-    // uniqueClientID: this.props.uniqueClientID,
     data: null,
     dataHistory: null,
     topicSubscription: null,
@@ -25,6 +22,11 @@ class PluginWrapper extends React.Component {
 
   getData() {
     return this.state.data ? this.state.data.message : null;
+  }
+
+  handleMessageReceived(data) {
+    console.log("Superclass called");
+    return data;
   }
 
   getSender() {
@@ -54,11 +56,16 @@ class PluginWrapper extends React.Component {
           const JSONmessage = JSON.parse(deserialiseJSON.message);
           const convertedData = { sender: JSONsender, message: JSONmessage };
 
-          this.setState((prevState) => ({
-            ...prevState,
-            data: convertedData,
-            dataHistory: [...this.state.dataHistory, convertedData],
-          }));
+          this.setState(
+            (prevState) => ({
+              ...prevState,
+              data: convertedData,
+              dataHistory: [...this.state.dataHistory, convertedData],
+            }),
+            () => {
+              this.handleMessageReceived(convertedData);
+            }
+          );
         },
         { id: `sub-${this.props.uniqueClientID}-${this.props.routingKey}` }
       );
