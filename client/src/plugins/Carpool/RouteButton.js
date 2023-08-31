@@ -6,7 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function RouteButton({ routeObject }) {
+export default function RouteButton({ routeObject, user }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(routeObject.name);
   const [postcode, setPostcode] = useState(routeObject.postcode);
@@ -56,7 +56,9 @@ export default function RouteButton({ routeObject }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSave}>Save</Button>
+          {user === routeObject.creator && (
+            <Button onClick={handleSave}>Save</Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>

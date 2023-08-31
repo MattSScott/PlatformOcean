@@ -62,7 +62,9 @@ export default class Carpool extends PluginWrapper {
   }
 
   appendRoute(addedRoute) {
-    const NewRoute = <RouteButton routeObject={addedRoute} />;
+    const NewRoute = (
+      <RouteButton routeObject={addedRoute} user={this.getUser()} />
+    );
     this.setState((prevState) => ({
       ...prevState,
       createdRoutes: [...prevState.createdRoutes, NewRoute],
@@ -70,15 +72,18 @@ export default class Carpool extends PluginWrapper {
   }
 
   handleSubmit() {
-    console.log(this.state.formDetails);
-    this.appendRoute(this.state.formDetails);
+    const FullRouteForm = {
+      ...this.state.formDetails,
+      creator: this.getUser(),
+    };
+    this.appendRoute(FullRouteForm);
     this.handleClose();
   }
 
   render() {
     return (
-      <div style={{ "margin-left": "20px", "margin-right": "20px" }}>
-        <div style={{ "margin-top": "10px" }}>
+      <div style={{ marginLeft: "20px", marginRight: "20px" }}>
+        <div style={{ marginTop: "10px" }}>
           <Button variant="outlined" onClick={this.handleClickOpen}>
             Add Route
           </Button>
@@ -114,7 +119,7 @@ export default class Carpool extends PluginWrapper {
             </DialogActions>
           </Dialog>
         </div>
-        <div style={{ "margin-top": "10px" }}>
+        <div style={{ marginTop: "10px" }}>
           <Stack direction="column" spacing={1}>
             {this.state.createdRoutes.map((Route) => Route)}
           </Stack>
