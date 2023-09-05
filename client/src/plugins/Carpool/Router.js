@@ -2,9 +2,9 @@ import Button from "@mui/material/Button";
 
 export default function Router({ locations }) {
   const generateRoute = () => {
-    locations.map((loc) => {
+    for (const loc of locations) {
       console.log(loc);
-    });
+    }
   };
 
   return (

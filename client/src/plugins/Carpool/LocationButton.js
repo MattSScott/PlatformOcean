@@ -38,6 +38,7 @@ export default function LocationButton({
 
   const handleDelete = () => {
     deleter(routeObject);
+    handleClose();
   };
 
   return (

@@ -60,12 +60,13 @@ export default class Carpool extends PluginWrapper {
         <AddLocation appendLocation={this.appendLocation} />
         <div style={{ marginTop: "10px" }}>
           <Stack direction="column" spacing={1}>
-            {this.state.locations.map((locationObject) => (
+            {this.state.locations.map((locationObject, idx) => (
               <LocationButton
                 routeObject={locationObject}
                 user={this.getUser()}
                 updater={this.updateLocation}
                 deleter={this.removeLocation}
+                key={`location-button-${idx}`}
               />
             ))}
           </Stack>
