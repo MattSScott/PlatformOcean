@@ -6,7 +6,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function LocationButton({ routeObject, user }) {
+export default function LocationButton({
+  routeObject,
+  user,
+  updater,
+  deleter,
+}) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(routeObject.name);
   const [postcode, setPostcode] = useState(routeObject.postcode);
@@ -20,9 +25,19 @@ export default function LocationButton({ routeObject, user }) {
   };
 
   const handleSave = () => {
-    routeObject.name = name;
-    routeObject.postcode = postcode;
+    const NewLocation = {
+      name: name,
+      postcode: postcode,
+      id: routeObject.id,
+      creator: user,
+    };
+
+    updater(NewLocation);
     handleClose();
+  };
+
+  const handleDelete = () => {
+    deleter(routeObject);
   };
 
   return (
@@ -56,6 +71,11 @@ export default function LocationButton({ routeObject, user }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
+          {user === routeObject.creator && (
+            <Button color="warning" onClick={handleDelete}>
+              Delete
+            </Button>
+          )}
           {user === routeObject.creator && (
             <Button onClick={handleSave}>Save</Button>
           )}
