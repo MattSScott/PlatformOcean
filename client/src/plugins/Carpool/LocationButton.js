@@ -1,12 +1,12 @@
-import Button from "@mui/material/Button";
 import { useState } from "react";
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 
-export default function RouteButton({ routeObject, user }) {
+export default function LocationButton({ routeObject, user }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(routeObject.name);
   const [postcode, setPostcode] = useState(routeObject.postcode);

@@ -7,8 +7,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import RouteButton from "./RouteButton";
+import LocationButton from "./LocationButton";
 import Stack from "@mui/material/Stack";
+import Router from "./Router";
 
 export default class Carpool extends PluginWrapper {
   constructor() {
@@ -18,9 +19,11 @@ export default class Carpool extends PluginWrapper {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  //   TODO: get history of messages + convert to route buttons
+
   state = {
     addRouteFormOpen: false,
-    createdRoutes: [],
+    locations: [],
     formDetails: {
       name: null,
       postcode: null,
@@ -61,22 +64,31 @@ export default class Carpool extends PluginWrapper {
     }));
   }
 
-  appendRoute(addedRoute) {
-    const NewRoute = (
-      <RouteButton routeObject={addedRoute} user={this.getUser()} />
-    );
+  appendLocation(addedLocation) {
     this.setState((prevState) => ({
       ...prevState,
-      createdRoutes: [...prevState.createdRoutes, NewRoute],
+      locations: [...prevState.locations, addedLocation],
     }));
   }
 
   handleSubmit() {
+    const ValidPostcodeRegex =
+      /([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z][0-9]{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y][0-9]{1,2})|(([A-Za-z][0-9][A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y][0-9][A-Za-z]?))))\s?[0-9][A-Za-z]{2})/g;
+
+    const PostcodeIsValid = ValidPostcodeRegex.test(
+      this.state.formDetails.postcode
+    );
+
+    if (!PostcodeIsValid) {
+      alert("Postcode format is invalid.");
+      return;
+    }
+
     const FullRouteForm = {
       ...this.state.formDetails,
       creator: this.getUser(),
     };
-    this.appendRoute(FullRouteForm);
+    this.appendLocation(FullRouteForm);
     this.handleClose();
   }
 
@@ -85,7 +97,7 @@ export default class Carpool extends PluginWrapper {
       <div style={{ marginLeft: "20px", marginRight: "20px" }}>
         <div style={{ marginTop: "10px" }}>
           <Button variant="outlined" onClick={this.handleClickOpen}>
-            Add Route
+            Add Location
           </Button>
           <Dialog open={this.state.addRouteFormOpen} onClose={this.handleClose}>
             <DialogTitle>Add Location</DialogTitle>
@@ -121,8 +133,16 @@ export default class Carpool extends PluginWrapper {
         </div>
         <div style={{ marginTop: "10px" }}>
           <Stack direction="column" spacing={1}>
-            {this.state.createdRoutes.map((Route) => Route)}
+            {this.state.locations.map((locationObject) => (
+              <LocationButton
+                routeObject={locationObject}
+                user={this.getUser()}
+              />
+            ))}
           </Stack>
+        </div>
+        <div style={{ marginTop: "10px" }}>
+          <Router locations={this.state.locations} />
         </div>
       </div>
     );
