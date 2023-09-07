@@ -3,8 +3,9 @@ import React from "react";
 import Renderer from "../Renderer/Renderer";
 import * as Stomp from "stompjs";
 import SockJS from "sockjs-client";
-import PluginImporter from "../Utils/PluginImporter";
-import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
+import PluginImporter from "../ImportUtils/PluginImporter";
+import { ClientContext, ClientIDContext } from "../Contexts/ClientContext";
+// import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
 
 class Gateway extends React.Component {
   constructor(props) {
@@ -27,6 +28,7 @@ class Gateway extends React.Component {
   clientConnector() {
     const socket = new SockJS("http://localhost:8080/PlatformOcean"); // handshake with endpoint
     const clientHelper = Stomp.over(socket);
+    // clientHelper.debug = () => {}; // avoid debug messages in console
     clientHelper.connect(
       {},
       () => this.successfulConnectionCallback(clientHelper),
@@ -96,13 +98,14 @@ class Gateway extends React.Component {
   }
 
   render() {
-    console.log(this.state.pluginDescriptors);
+    // console.log(this.state.pluginDescriptors);
+
     const PluginBoundRenderer = PluginImporter(Renderer);
 
     const RoutingMechanism = this.state.clientID ? (
       <PluginBoundRenderer
-        clientID={this.state.clientID}
-        client={this.state.client}
+        // clientID={this.state.clientID}
+        // client={this.state.client}
         pluginDescriptors={this.state.pluginDescriptors}
         setClientInfo={this.bindClient}
       />
@@ -118,14 +121,18 @@ class Gateway extends React.Component {
             clientID={this.state.clientID}
           />
         )} */}
-        {this.state.client && this.state.pluginDescriptors ? (
-          RoutingMechanism
-        ) : (
-          <>
-            <p>Establishing Connection to Server...</p>
-            <button onClick={this.clientConnector}>Retry Now</button>
-          </>
-        )}
+        <ClientContext.Provider value={this.state.client}>
+          <ClientIDContext.Provider value={this.state.clientID}>
+            {this.state.client && this.state.pluginDescriptors ? (
+              RoutingMechanism
+            ) : (
+              <div>
+                <p>Establishing Connection to Server...</p>
+                <button onClick={this.clientConnector}>Retry Now</button>
+              </div>
+            )}
+          </ClientIDContext.Provider>
+        </ClientContext.Provider>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import React, { lazy } from "react";
+import PluginStacker from "./PluginStacker";
 // import DataOperator from "./DataOperator";
 
 export default function PluginImporter(ChildComponent) {
@@ -9,7 +10,7 @@ export default function PluginImporter(ChildComponent) {
     }
 
     state = {
-      loadedPlugins: null,
+      loadedPlugins: [],
     };
 
     componentDidMount() {
@@ -25,9 +26,24 @@ export default function PluginImporter(ChildComponent) {
     }
 
     setPlugins(pluginsReturned) {
+      const PluginMapping = {};
+      for (const { name, plugin, key } of pluginsReturned) {
+        if (name in PluginMapping) {
+          PluginMapping[name].push({ plugin: plugin, key: key });
+        } else {
+          PluginMapping[name] = [{ plugin: plugin, key: key }];
+        }
+      }
+
+      const PluginStackerArray = Object.values(PluginMapping).map(
+        (pluginKeyPair, idx) => (
+          <PluginStacker plugins={pluginKeyPair} key={`stacker-${idx}`} />
+        )
+      );
+
       this.setState((prevState) => ({
         ...prevState,
-        loadedPlugins: pluginsReturned,
+        loadedPlugins: PluginStackerArray,
       }));
     }
 
@@ -59,15 +75,7 @@ export default function PluginImporter(ChildComponent) {
         async ([pluginKey, pluginName]) => {
           try {
             const Plugin = await this.importPlugin(pluginName);
-            return (
-              <div className="componentHouse" key={pluginKey}>
-                <Plugin
-                  client={this.props.client}
-                  routingKey={pluginKey}
-                  uniqueClientID={this.props.clientID}
-                />
-              </div>
-            );
+            return { name: pluginName, plugin: Plugin, key: pluginKey };
           } catch (error) {
             console.log(error);
           }

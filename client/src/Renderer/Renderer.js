@@ -1,9 +1,8 @@
 import React from "react";
 import Button from "@mui/material/Button";
-
+// import PluginStacker from "../ImportUtils/PluginStacker";
 import "./Renderer.css";
-import TestComp from "../Components/TestComp/TestComp";
-import Counter from "../Components/Counter/Counter";
+import { ClientIDContext } from "../Contexts/ClientContext";
 
 class Renderer extends React.Component {
   constructor(props) {
@@ -20,7 +19,11 @@ class Renderer extends React.Component {
     return (
       <>
         <div className="logout">
-          <p>Signed in as: {`${this.props.clientID.substring(0, 8)}...`}</p>
+          <ClientIDContext.Consumer>
+            {(clientID) => (
+              <p>Signed in as: {`${clientID.substring(0, 8)}...`}</p>
+            )}
+          </ClientIDContext.Consumer>
           <Button variant="contained" onClick={this.triggerLogout}>
             Logout
           </Button>

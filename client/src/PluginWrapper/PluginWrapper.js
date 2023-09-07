@@ -33,6 +33,10 @@ class PluginWrapper extends React.Component {
     return this.state.data ? this.state.data.sender : null;
   }
 
+  getUser() {
+    return this.props.uniqueClientID;
+  }
+
   isMe() {
     if (this.state.data) {
       return this.state.data.sender === this.props.uniqueClientID;
