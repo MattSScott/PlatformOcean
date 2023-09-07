@@ -2,8 +2,9 @@ import React from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Button } from "@mui/material";
+import { ClientContext, ClientIDContext } from "../Contexts/ClientContext";
 
-class PluginStacker extends React.Component {
+export default class PluginStacker extends React.Component {
   constructor() {
     super();
     this.cycleLeft = this.cycleLeft.bind(this);
@@ -39,9 +40,36 @@ class PluginStacker extends React.Component {
   }
 
   render() {
+    const PluginArray = this.props.plugins.map(({ plugin, key }, idx) => {
+      const ToggleablePlugin = plugin;
+      return (
+        <ClientContext.Consumer>
+          {(client) => (
+            <ClientIDContext.Consumer>
+              {(clientID) => (
+                <div
+                  className="componentHouse"
+                  key={`plugin-${idx}`}
+                  style={{
+                    display: idx == this.state.currentIdx ? "" : "none",
+                  }}
+                >
+                  <ToggleablePlugin
+                    routingKey={key}
+                    client={client}
+                    clientID={clientID}
+                  />
+                </div>
+              )}
+            </ClientIDContext.Consumer>
+          )}
+        </ClientContext.Consumer>
+      );
+    });
+
     return (
       <div>
-        {this.props.plugins[this.state.currentIdx]}
+        {PluginArray}
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Button onClick={this.cycleLeft}>
             <ArrowBackIcon />
