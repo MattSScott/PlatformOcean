@@ -26,7 +26,6 @@ export default function PluginImporter(ChildComponent) {
     }
 
     setPlugins(pluginsReturned) {
-      console.log(pluginsReturned);
       const PluginMapping = {};
       for (const { name, plugin, key } of pluginsReturned) {
         if (name in PluginMapping) {
@@ -36,25 +35,20 @@ export default function PluginImporter(ChildComponent) {
         }
       }
 
-      console.log(PluginMapping);
+      // console.log(PluginMapping);
 
       const PluginStackerArray = Object.values(PluginMapping).map(
-        (pluginKeyPair) => {
-          return <PluginStacker plugins={pluginKeyPair} />;
-        }
+        (pluginKeyPair, idx) => (
+          <PluginStacker plugins={pluginKeyPair} key={`stacker-${idx}`} />
+        )
       );
 
-      console.log(PluginStackerArray);
+      // console.log(PluginStackerArray);
 
-      this.setState(
-        (prevState) => ({
-          ...prevState,
-          loadedPlugins: PluginStackerArray,
-        }),
-        () => {
-          console.log(this.state.loadedPlugins);
-        }
-      );
+      this.setState((prevState) => ({
+        ...prevState,
+        loadedPlugins: PluginStackerArray,
+      }));
     }
 
     // async loadPlugins(pluginNames) {
@@ -95,7 +89,6 @@ export default function PluginImporter(ChildComponent) {
     }
 
     render() {
-      console.log(this.state.loadedPlugins);
       return (
         <ChildComponent
           {...this.props}

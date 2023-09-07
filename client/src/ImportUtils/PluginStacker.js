@@ -43,13 +43,12 @@ export default class PluginStacker extends React.Component {
     const PluginArray = this.props.plugins.map(({ plugin, key }, idx) => {
       const ToggleablePlugin = plugin;
       return (
-        <ClientContext.Consumer>
+        <ClientContext.Consumer key={key}>
           {(client) => (
             <ClientIDContext.Consumer>
               {(clientID) => (
                 <div
                   className="componentHouse"
-                  key={`plugin-${idx}`}
                   style={{
                     display: idx == this.state.currentIdx ? "" : "none",
                   }}

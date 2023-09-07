@@ -16,7 +16,6 @@ class Renderer extends React.Component {
   }
 
   render() {
-    console.log(this.props.loadedPlugins);
     return (
       <>
         <div className="logout">
@@ -29,9 +28,7 @@ class Renderer extends React.Component {
             Logout
           </Button>
         </div>
-        <div className="allComps">
-          {this.props.loadedPlugins}
-        </div>
+        <div className="allComps">{this.props.loadedPlugins}</div>
       </>
     );
   }
