@@ -2,8 +2,6 @@ import React from "react";
 import Button from "@mui/material/Button";
 
 import "./Renderer.css";
-import TestComp from "../Components/TestComp/TestComp";
-import Counter from "../Components/Counter/Counter";
 
 class Renderer extends React.Component {
   constructor(props) {

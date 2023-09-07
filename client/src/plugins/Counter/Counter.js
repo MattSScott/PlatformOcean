@@ -8,7 +8,7 @@ class Counter extends PluginWrapper {
 
   count() {
     // current count is most recent message (and check if data has already been sent)
-    const currentCount = this.getData() || 0;
+    const currentCount = this.getData((d) => d || 0);
     // get count from previous message and increment
     const nextCount = currentCount + 1;
     // send count back to other users (and don't log)
@@ -18,7 +18,7 @@ class Counter extends PluginWrapper {
   render() {
     return (
       <div>
-        <p>{this.getData() || 0}</p>
+        <p>{this.getData((d) => d || 0)}</p>
         <button onClick={this.count}>Increment</button>
       </div>
     );
