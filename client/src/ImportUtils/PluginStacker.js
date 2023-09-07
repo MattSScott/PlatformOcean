@@ -56,7 +56,7 @@ export default class PluginStacker extends React.Component {
                   <ToggleablePlugin
                     routingKey={key}
                     client={client}
-                    clientID={clientID}
+                    uniqueClientID={clientID}
                   />
                 </div>
               )}
