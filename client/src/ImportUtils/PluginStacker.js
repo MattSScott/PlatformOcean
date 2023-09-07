@@ -50,7 +50,7 @@ export default class PluginStacker extends React.Component {
                 <div
                   className="componentHouse"
                   style={{
-                    display: idx == this.state.currentIdx ? "" : "none",
+                    display: idx === this.state.currentIdx ? "" : "none",
                   }}
                 >
                   <ToggleablePlugin
@@ -69,14 +69,31 @@ export default class PluginStacker extends React.Component {
     return (
       <div>
         {PluginArray}
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <Button onClick={this.cycleLeft}>
-            <ArrowBackIcon />
-          </Button>
-          <Button onClick={this.cycleRight}>
-            <ArrowForwardIcon />
-          </Button>
-        </div>
+        {this.props.plugins.length > 1 && (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Button
+              variant="outlined"
+              onClick={this.cycleLeft}
+              style={{ marginRight: "5px" }}
+            >
+              <ArrowBackIcon />
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={this.cycleRight}
+              style={{ marginLeft: "5px" }}
+            >
+              <ArrowForwardIcon />
+            </Button>
+          </div>
+        )}
       </div>
     );
   }

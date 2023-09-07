@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import Button from "@mui/material/Button";
 // import PluginStacker from "../ImportUtils/PluginStacker";
 import "./Renderer.css";

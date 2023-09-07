@@ -35,15 +35,11 @@ export default function PluginImporter(ChildComponent) {
         }
       }
 
-      // console.log(PluginMapping);
-
       const PluginStackerArray = Object.values(PluginMapping).map(
         (pluginKeyPair, idx) => (
           <PluginStacker plugins={pluginKeyPair} key={`stacker-${idx}`} />
         )
       );
-
-      // console.log(PluginStackerArray);
 
       this.setState((prevState) => ({
         ...prevState,
