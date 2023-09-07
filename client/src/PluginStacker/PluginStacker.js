@@ -1,4 +1,7 @@
 import React from "react";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { Button } from "@mui/material";
 
 class PluginStacker extends React.Component {
   constructor() {
@@ -40,8 +43,12 @@ class PluginStacker extends React.Component {
       <div>
         {this.props.plugins[this.state.currentIdx]}
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <button onClick={this.cycleLeft}>Left Arrow</button>
-          <button onClick={this.cycleRight}>Right Arrow</button>
+          <Button onClick={this.cycleLeft}>
+            <ArrowBackIcon />
+          </Button>
+          <Button onClick={this.cycleRight}>
+            <ArrowForwardIcon />
+          </Button>
         </div>
       </div>
     );
