@@ -18,7 +18,7 @@ class Gateway extends React.Component {
     this.bindClient = this.bindClient.bind(this);
     this.retrievePluginKeys = this.retrievePluginDetails.bind(this);
     this.subscribeToPluginList = this.subscribeToPluginList.bind(this);
-    this.networkAddress = `http://146.169.171.158:8080`;
+    this.networkAddress = process.env.REACT_APP_SERVER_IP;
   }
 
   state = {
