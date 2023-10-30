@@ -1,6 +1,7 @@
 import React from "react";
 import "../Renderer/Renderer.css";
 import NullView from "../NullView/NullView";
+import { NetworkIPContext } from "../Contexts/ServerIPContext";
 
 class PluginWrapper extends React.Component {
   state = {
@@ -8,6 +9,8 @@ class PluginWrapper extends React.Component {
     dataHistory: null,
     topicSubscription: null,
   };
+
+  static contextType = NetworkIPContext;
 
   componentDidMount() {
     this.fetchHistory();
@@ -89,7 +92,7 @@ class PluginWrapper extends React.Component {
     }
 
     try {
-      const HistoryRoutingAddress = `http://localhost:8080/history/${this.props.routingKey}`;
+      const HistoryRoutingAddress = `${this.context}/history/${this.props.routingKey}`;
 
       const RawFetchedHistory = await fetch(HistoryRoutingAddress);
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { NetworkIPContext } from "../Contexts/ServerIPContext";
 
 export default function DataOperator(ChildComponent) {
   return class extends React.Component {
@@ -6,6 +7,8 @@ export default function DataOperator(ChildComponent) {
       super(props);
       this.sendDataToBackend = this.sendDataToBackend.bind(this);
     }
+
+    static contextType = NetworkIPContext;
 
     state = {
       client: this.props.client,
@@ -67,7 +70,7 @@ export default function DataOperator(ChildComponent) {
       }
 
       try {
-        const KeyRoutingAddress = `http://localhost:8080/plugins/get`;
+        const KeyRoutingAddress = `${this.context}/plugins/get`;
 
         const RawFetchedHistory = await fetch(KeyRoutingAddress);
 
@@ -91,7 +94,7 @@ export default function DataOperator(ChildComponent) {
       }
 
       try {
-        const HistoryRoutingAddress = `http://localhost:8080/history/${this.state.pluginKey}`;
+        const HistoryRoutingAddress = `${this.context}/history/${this.state.pluginKey}`;
 
         const RawFetchedHistory = await fetch(HistoryRoutingAddress);
 
