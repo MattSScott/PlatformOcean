@@ -1,9 +1,7 @@
 package platform_ocean.Config.NetworkWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 
@@ -12,19 +10,14 @@ import java.nio.file.Paths;
 import java.io.FileWriter;
 import java.io.IOException;
 
-@ConfigurationProperties(prefix = "server")
 @Configuration
 public class NetworkConfig {
-
-	@Value("${server.port}")
-	private String serverPort;
 
 	@Autowired
 	private NetworkInfoStore ipInfo;
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void writeServerIP() throws UnknownHostException {
-		System.out.println(serverPort);
 		try {
 			this.writeToFile(ipInfo.getFullServerAddress());
 		} catch (IOException e) {

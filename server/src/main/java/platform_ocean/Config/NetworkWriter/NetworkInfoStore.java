@@ -1,6 +1,5 @@
 package platform_ocean.Config.NetworkWriter;
 
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -56,9 +55,7 @@ public class NetworkInfoStore {
 		PlatformIdentifier platformIdentifier = new PlatformIdentifier();
 		ObjectMapper jsonGenerator = new ObjectMapper();
 
-		// Converting the Java object into a JSON string
 		String jsonStr = jsonGenerator.writeValueAsString(platformIdentifier);
-		// Displaying Java object into a JSON string
 		System.out.println(jsonStr);
 
 		return jsonStr.getBytes();
