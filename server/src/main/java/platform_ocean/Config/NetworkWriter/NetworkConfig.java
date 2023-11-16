@@ -1,12 +1,12 @@
 package platform_ocean.Config.NetworkWriter;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Paths;
 import java.io.FileWriter;
@@ -19,17 +19,14 @@ public class NetworkConfig {
 	@Value("${server.port}")
 	private String serverPort;
 
-	public String getServerIP() throws UnknownHostException {
-		String serverIP = InetAddress.getLocalHost().getHostAddress();
-		String fullServerAddress = String.format("http://%s:%s", serverIP, serverPort);
-		return fullServerAddress;
-	}
+	@Autowired
+	private NetworkInfoStore ipInfo;
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void writeServerIP() throws UnknownHostException {
 		System.out.println(serverPort);
 		try {
-			this.writeToFile(this.getServerIP());
+			this.writeToFile(ipInfo.getFullServerAddress());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

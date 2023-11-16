@@ -13,6 +13,7 @@ import java.net.SocketAddress;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 
 import java.net.InetSocketAddress;
@@ -29,6 +30,9 @@ public class MulticastSubscriber extends Thread {
 	protected MulticastSocket socket = null;
 	protected NetworkInterface localNetwork = null;
 	protected byte[] buffer = new byte[256];
+
+	@Autowired
+	private NetworkInfoStore networkData;
 
 	public MulticastSubscriber() {
 
@@ -103,19 +107,19 @@ public class MulticastSubscriber extends Thread {
 //			responseSocket.bind(localIP);
 			System.out.println(responseAddress);
 			responseSocket.connect(responseAddress);
-			
-			DatagramPacket pack = new DatagramPacket(buffer, buffer.length);
-			
-			
+
+			byte[] networkDataBuffer = networkData.generateDiscoveryInfo();
+
+			DatagramPacket pack = new DatagramPacket(networkDataBuffer, networkDataBuffer.length);
+
 			responseSocket.send(pack);
-			
+
 //			OutputStream os = responseSocket.getOutputStream();
 //	        OutputStreamWriter osw = new OutputStreamWriter(os);
 //	        BufferedWriter bw = new BufferedWriter(osw);
 //	        
 //	        bw.write("found you!");
-			
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
