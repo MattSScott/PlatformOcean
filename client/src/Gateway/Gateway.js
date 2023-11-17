@@ -5,6 +5,7 @@ import * as Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import PluginImporter from "../ImportUtils/PluginImporter";
 import { ClientContext, ClientIDContext } from "../Contexts/ClientContext";
+import { NetworkIPContext } from "../Contexts/ServerIPContext";
 // import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
 
 class Gateway extends React.Component {
@@ -17,6 +18,7 @@ class Gateway extends React.Component {
     this.bindClient = this.bindClient.bind(this);
     this.retrievePluginKeys = this.retrievePluginDetails.bind(this);
     this.subscribeToPluginList = this.subscribeToPluginList.bind(this);
+    this.networkAddress = process.env.REACT_APP_SERVER_IP;
   }
 
   state = {
@@ -26,7 +28,7 @@ class Gateway extends React.Component {
   };
 
   clientConnector() {
-    const socket = new SockJS("http://localhost:8080/PlatformOcean"); // handshake with endpoint
+    const socket = new SockJS(`${this.networkAddress}/PlatformOcean`); // handshake with endpoint
     const clientHelper = Stomp.over(socket);
     // clientHelper.debug = () => {}; // avoid debug messages in console
     clientHelper.connect(
@@ -86,7 +88,7 @@ class Gateway extends React.Component {
 
   async retrievePluginDetails() {
     try {
-      const rawKeys = await fetch("http://localhost:8080/plugins/get");
+      const rawKeys = await fetch(`${this.networkAddress}/plugins/get`);
       const parsedKeys = await rawKeys.json();
       this.setState((prevState) => ({
         ...prevState,
@@ -123,14 +125,16 @@ class Gateway extends React.Component {
         )} */}
         <ClientContext.Provider value={this.state.client}>
           <ClientIDContext.Provider value={this.state.clientID}>
-            {this.state.client && this.state.pluginDescriptors ? (
-              RoutingMechanism
-            ) : (
-              <div>
-                <p>Establishing Connection to Server...</p>
-                <button onClick={this.clientConnector}>Retry Now</button>
-              </div>
-            )}
+            <NetworkIPContext.Provider value={this.networkAddress}>
+              {this.state.client && this.state.pluginDescriptors ? (
+                RoutingMechanism
+              ) : (
+                <div>
+                  <p>Establishing Connection to Server...</p>
+                  <button onClick={this.clientConnector}>Retry Now</button>
+                </div>
+              )}
+            </NetworkIPContext.Provider>
           </ClientIDContext.Provider>
         </ClientContext.Provider>
       </div>

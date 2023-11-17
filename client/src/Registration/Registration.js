@@ -2,6 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import "./Registration.css";
+import { NetworkIPContext } from "../Contexts/ServerIPContext";
 
 class Registration extends React.Component {
   constructor(props) {
@@ -12,6 +13,8 @@ class Registration extends React.Component {
     this.submitLogin = this.submitLogin.bind(this);
     this.loadUsers = this.loadUsers.bind(this);
   }
+
+  static contextType = NetworkIPContext;
 
   state = {
     users: [],
@@ -45,7 +48,7 @@ class Registration extends React.Component {
   }
 
   async loadUsers() {
-    const UserListAddress = "http://localhost:8080/registry/getAll";
+    const UserListAddress = `${this.context}/registry/getAll`;
     try {
       const UserData = await fetch(UserListAddress);
       const UserJSON = await UserData.json();
@@ -60,7 +63,7 @@ class Registration extends React.Component {
 
     try {
       const numUsers = Object.keys(this.state.users).length;
-      let registrationAddress = "http://localhost:8080/registry/";
+      let registrationAddress = `${this.context}/registry/`;
       if (numUsers === 0) {
         registrationAddress += "own";
       } else {
@@ -86,7 +89,7 @@ class Registration extends React.Component {
     e.preventDefault();
 
     try {
-      const RegistrationAddress = "http://localhost:8080/registry/get";
+      const RegistrationAddress = `${this.context}/registry/get`;
       const response = await fetch(RegistrationAddress, {
         method: "POST",
         headers: {
