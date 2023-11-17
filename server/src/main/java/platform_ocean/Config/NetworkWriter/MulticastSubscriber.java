@@ -1,13 +1,9 @@
 package platform_ocean.Config.NetworkWriter;
 
-//import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
 import java.net.DatagramSocket;
 import java.net.SocketAddress;
-//import java.net.SocketException;
-//import java.net.UnknownHostException;
-//import java.util.Enumeration;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
