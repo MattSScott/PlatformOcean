@@ -2,7 +2,10 @@ package platform_ocean.Config.NetworkWriter;
 
 import java.io.Serializable;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Enumeration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -26,7 +29,7 @@ public class NetworkInfoStore {
 
 		public PlatformIdentifier() throws UnknownHostException {
 
-			platformOwner = "Matt";
+			platformOwner = "Matt_Uni";
 			platformIP = getFullGatewayAddress();
 		}
 
@@ -36,17 +39,45 @@ public class NetworkInfoStore {
 	private String serverPort;
 
 	@Bean
+	public InetAddress getServerAddress() {
+		Enumeration<NetworkInterface> interfaces;
+		try {
+			interfaces = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e) {
+			throw new RuntimeException("NetworkInterface not found", e);
+		}
+		while (interfaces.hasMoreElements()) {
+			NetworkInterface networkInterface = interfaces.nextElement();
+			Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+			while (addresses.hasMoreElements()) {
+				InetAddress address = addresses.nextElement();
+				System.out.println(address);
+				if (address.isLoopbackAddress())
+					continue;
+				if (address.isSiteLocalAddress())
+					continue;
+				if (address.getHostAddress().contains(":"))
+					continue;
+				return address;
+			}
+		}
+		throw new RuntimeException("Non-loopback IP address not found");
+	}
+
+	@Bean
 	public String getFullServerAddress() throws UnknownHostException {
-		String serverIP = InetAddress.getLocalHost().getHostAddress();
-		String fullServerAddress = String.format("http://%s:%s", serverIP, serverPort);
+		InetAddress serverIP = getServerAddress();
+		String serverIpString = serverIP.getHostAddress();
+		String fullServerAddress = String.format("http://%s:%s", serverIpString, serverPort);
 		return fullServerAddress;
 	}
 
 	@Bean
 	public String getFullGatewayAddress() throws UnknownHostException {
-		String serverIP = InetAddress.getLocalHost().getHostAddress();
+		InetAddress serverIP = getServerAddress();
+		String serverIpString = serverIP.getHostAddress();
 		final int GATEWAY_PORT = 3000;
-		String fullServerAddress = String.format("http://%s:%s", serverIP, GATEWAY_PORT);
+		String fullServerAddress = String.format("http://%s:%s", serverIpString, GATEWAY_PORT);
 		return fullServerAddress;
 	}
 

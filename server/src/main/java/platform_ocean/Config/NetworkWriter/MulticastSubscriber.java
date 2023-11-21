@@ -1,19 +1,19 @@
 package platform_ocean.Config.NetworkWriter;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.NetworkInterface;
-import java.net.DatagramSocket;
 import java.net.SocketAddress;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-
-import java.net.InetSocketAddress;
-import java.io.IOException;
-import java.net.DatagramPacket;
 
 @Component
 public class MulticastSubscriber extends Thread {
@@ -58,7 +58,7 @@ public class MulticastSubscriber extends Thread {
 
 		try (DatagramSocket responseSocket = new DatagramSocket()) {
 
-			SocketAddress responseAddress = new InetSocketAddress(senderIP, 9002);
+			SocketAddress responseAddress = new InetSocketAddress(senderIP, 9001);
 
 //			System.out.println(responseAddress);
 			responseSocket.connect(responseAddress);
@@ -77,9 +77,13 @@ public class MulticastSubscriber extends Thread {
 		}
 	}
 
+	@Override
 	@Async
 	@EventListener(ApplicationReadyEvent.class)
 	public void run() {
+
+		InetAddress x = networkData.getServerAddress();
+		System.out.println(x);
 
 		try (MulticastSocket socket = new MulticastSocket(9001)) {
 
@@ -93,7 +97,7 @@ public class MulticastSubscriber extends Thread {
 				String senderIP = packet.getAddress().getHostAddress();
 //				System.out.println(senderIP);
 				String received = new String(packet.getData(), 0, packet.getLength());
-//				System.out.println(received);
+				System.out.println(received);
 				if (received.equals("PlatformOceanDiscovery")) {
 					System.out.println("TEST");
 					this.respondToServiceDiscovery(senderIP, localNetwork);
