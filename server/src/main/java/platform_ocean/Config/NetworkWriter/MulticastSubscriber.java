@@ -58,7 +58,7 @@ public class MulticastSubscriber extends Thread {
 
 		try (DatagramSocket responseSocket = new DatagramSocket()) {
 
-			SocketAddress responseAddress = new InetSocketAddress(senderIP, 9002);
+			SocketAddress responseAddress = new InetSocketAddress(senderIP, 9001);
 
 //			System.out.println(responseAddress);
 			responseSocket.connect(responseAddress);

@@ -8,10 +8,10 @@
 		<version>3.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.sock_debug</groupId>
-	<artifactId>sock</artifactId>
+	<groupId>com.platform_ocean</groupId>
+	<artifactId>server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sock</name>
+	<name>server</name>
 	<description>Platform Instance</description>
 	<properties>
 		<java.version>17</java.version>
