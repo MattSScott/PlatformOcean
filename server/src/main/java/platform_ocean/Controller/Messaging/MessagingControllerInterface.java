@@ -28,6 +28,9 @@ public interface MessagingControllerInterface {
 
 	// Override to change how data is send to front-end
 	public SimpleDataMapper parseDataFromFrontend(DataMapper dataFromFrontend) throws Exception;
+	
+	
+	public SimpleDataMapper deleteMessage(UUID clientKey, UUID pluginKey, UUID messageID);
 
 //	public List<SimpleDataMapper> retrieveDataHistory(UUID pluginKey);
 }

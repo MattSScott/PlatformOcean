@@ -29,7 +29,7 @@ public class HistoryController implements HistoryControllerInterface {
 		List<SimpleDataMapper> clientKeyMessagePairs = new ArrayList<>();
 
 		for (DataMapper dm : retrievedHistory) {
-			SimpleDataMapper clientKeyMessageEntry = new SimpleDataMapper(dm.getClientKey(), dm.getData());
+			SimpleDataMapper clientKeyMessageEntry = new SimpleDataMapper(dm.getClientKey(), dm.getData(), dm.getId());
 			clientKeyMessagePairs.add(clientKeyMessageEntry);
 		}
 

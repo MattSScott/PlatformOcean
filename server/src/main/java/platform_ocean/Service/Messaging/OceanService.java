@@ -30,4 +30,28 @@ public class OceanService implements OceanServiceInterface {
 		return repo.findByPluginKey(pluginKey.toString());
 	}
 
+	@Override
+	public boolean matchDeletionRequestToSender(UUID clientKey, UUID messageID) {
+
+		List<UUID> matchingSenders = repo.findClientKeyById(messageID);
+
+		if (matchingSenders.size() > 1) {
+			return false;
+		}
+
+		UUID sender = matchingSenders.get(0);
+
+		return sender == clientKey;
+	}
+
+	@Override
+	public boolean deleteMessage(UUID messageID) {
+		try {
+			repo.deleteById(messageID);
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
 }

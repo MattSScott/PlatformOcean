@@ -53,19 +53,20 @@ public class MessagingController implements MessagingControllerInterface {
 		return this.parseDataFromFrontend(dataFromFrontend);
 	}
 
-//	@Override
-//	@GetMapping("/{PluginKey}/history")
-//	public List<SimpleDataMapper> retrieveDataHistory(@PathVariable("PluginKey") UUID pluginKey) {
-//		List<DataMapper> retrievedHistory = serv.retrieveMessagesByPlugin(pluginKey);
-//
-//		List<SimpleDataMapper> clientKeyMessagePairs = new ArrayList<>();
-//
-//		for (DataMapper dm : retrievedHistory) {
-//			SimpleDataMapper clientKeyMessageEntry = new SimpleDataMapper(dm.getClientKey(), dm.getData());
-//			clientKeyMessagePairs.add(clientKeyMessageEntry);
-//		}
-//
-//		return clientKeyMessagePairs;
-//	}
+	@MessageMapping("{ClientKey}/{PluginKey}/delete")
+	@SendTo("/topic/{PluginKey}/receive")
+	public SimpleDataMapper deleteMessage(@DestinationVariable("ClientKey") UUID clientKey,
+			@DestinationVariable("PluginKey") UUID pluginKey, @Payload UUID messageID) {
+
+		boolean canDelete = serv.matchDeletionRequestToSender(clientKey, messageID);
+
+		if (canDelete) {
+			serv.deleteMessage(messageID);
+			return new SimpleDataMapper(messageID, null, messageID);
+		}
+		
+		return null;
+
+	}
 
 }

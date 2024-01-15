@@ -11,4 +11,8 @@ public interface OceanServiceInterface {
 
 	public List<DataMapper> retrieveMessagesByPlugin(UUID pluginkey);
 
+	public boolean matchDeletionRequestToSender(UUID clientKey, UUID messageID);
+	
+	public boolean deleteMessage(UUID messageID);
+	
 }
