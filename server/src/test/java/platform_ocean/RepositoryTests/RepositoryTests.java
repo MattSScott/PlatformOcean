@@ -24,7 +24,7 @@ public class RepositoryTests {
 	private MessageRepository repo;
 
 	@Test
-	public void ServiceCanMatchSenderAndMessageID() throws JsonProcessingException {
+	public void RepoCanMatchSenderAndMessageID() throws JsonProcessingException {
 		UUID clientTest = UUID.randomUUID();
 		UUID pluginTest = UUID.randomUUID();
 		DataMapper dm = new DataMapper(new Payload(null, true));
@@ -43,7 +43,7 @@ public class RepositoryTests {
 	}
 
 	@Test
-	public void ServiceCanFailMatchSenderAndMessageID() throws JsonProcessingException {
+	public void RepoCanFailMatchSenderAndMessageID() throws JsonProcessingException {
 		UUID clientTest = UUID.randomUUID();
 		UUID pluginTest = UUID.randomUUID();
 		DataMapper dm = new DataMapper(new Payload(null, true));
@@ -63,7 +63,7 @@ public class RepositoryTests {
 	}
 
 	@Test
-	public void ServiceCanDeleteByMessageID() throws JsonProcessingException {
+	public void RepoCanDeleteByMessageID() throws JsonProcessingException {
 
 		UUID clientTest = UUID.randomUUID();
 		UUID pluginTest = UUID.randomUUID();
@@ -83,6 +83,56 @@ public class RepositoryTests {
 		List<UUID> newClientsFound = repo.findClientKeyById(messageTest);
 
 		Assertions.assertThat(newClientsFound.size()).isEqualTo(0);
-
 	}
+
+	@Test
+	public void RepoCanRetrieveMessagesById() throws JsonProcessingException {
+		UUID clientKey1 = UUID.randomUUID();
+		UUID clientKey2 = UUID.randomUUID();
+		UUID pluginKey = UUID.randomUUID();
+		DataMapper dm1 = new DataMapper(new Payload(null, true));
+		dm1.setClientKey(clientKey1);
+		dm1.setPluginKey(pluginKey);
+		repo.save(dm1);
+		DataMapper dm2 = new DataMapper(new Payload(null, true));
+		dm2.setClientKey(clientKey2);
+		dm2.setPluginKey(pluginKey);
+		repo.save(dm2);
+
+		UUID messageKey1 = dm1.getPluginKey();
+		UUID messageKey2 = dm2.getPluginKey();
+
+		Assertions.assertThat(messageKey1).isEqualTo(messageKey2);
+
+		List<DataMapper> messagesFound = repo.findMessagesByPluginKey(messageKey1);
+
+		Assertions.assertThat(messagesFound.size()).isEqualTo(2);
+	}
+
+	@Test
+	public void RepoCanFailRetrieveMessagesById() throws JsonProcessingException {
+		UUID clientKey1 = UUID.randomUUID();
+		UUID clientKey2 = UUID.randomUUID();
+		UUID pluginKey = UUID.randomUUID();
+		DataMapper dm1 = new DataMapper(new Payload(null, true));
+		dm1.setClientKey(clientKey1);
+		dm1.setPluginKey(pluginKey);
+		repo.save(dm1);
+		DataMapper dm2 = new DataMapper(new Payload(null, true));
+		dm2.setClientKey(clientKey2);
+		dm2.setPluginKey(pluginKey);
+		repo.save(dm2);
+
+		UUID messageKey1 = dm1.getPluginKey();
+		UUID messageKey2 = dm2.getPluginKey();
+
+		Assertions.assertThat(messageKey1).isEqualTo(messageKey2);
+
+		UUID fakeMessageKey = UUID.randomUUID();
+
+		List<DataMapper> messagesFound = repo.findMessagesByPluginKey(fakeMessageKey);
+
+		Assertions.assertThat(messagesFound.size()).isEqualTo(0);
+	}
+
 }

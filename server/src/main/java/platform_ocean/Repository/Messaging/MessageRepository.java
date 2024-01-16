@@ -13,12 +13,8 @@ import platform_ocean.Entities.Messaging.DataMapper;
 @Repository
 public interface MessageRepository extends JpaRepository<DataMapper, UUID> {
 
-	@Query(value = "SELECT * from data where plugin_key like uuid_to_bin(:key)", nativeQuery = true)
-	List<DataMapper> findByPluginKey(@Param("key") String pluginKey);
-	
-	
-	@Query(value = "SELECT bin_to_uuid(client_key) from data where data.id like uuid_to_bin(:key)", nativeQuery = true)
-	UUID findSenderFromMessageID(@Param("key") UUID messageID);
+	@Query(value = "SELECT * from data where plugin_key = (:key)", nativeQuery = true)
+	List<DataMapper> findMessagesByPluginKey(@Param("key") UUID pluginKey);
 
 	@Query(value = "SELECT bin_to_uuid(client_key) from data where data.id = (:key)", nativeQuery = true)
 	List<UUID> findClientKeyById(@Param("key") UUID messageID);
