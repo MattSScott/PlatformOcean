@@ -35,13 +35,13 @@ public class OceanService implements OceanServiceInterface {
 
 		List<UUID> matchingSenders = repo.findClientKeyById(messageID);
 
-		if (matchingSenders.size() > 1) {
+		if (matchingSenders.size() != 1) {
 			return false;
 		}
 
 		UUID sender = matchingSenders.get(0);
 
-		return sender == clientKey;
+		return sender.equals(clientKey);
 	}
 
 	@Override

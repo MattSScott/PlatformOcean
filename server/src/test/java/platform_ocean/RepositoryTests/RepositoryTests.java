@@ -1,5 +1,6 @@
-package platform_ocean.ServiceTests;
+package platform_ocean.RepositoryTests;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
@@ -13,14 +14,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import platform_ocean.Entities.Messaging.DataMapper;
 import platform_ocean.Entities.Messaging.Payload;
-import platform_ocean.Service.Messaging.OceanService;
+import platform_ocean.Repository.Messaging.MessageRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class MessagingTests {
+public class RepositoryTests {
 
 	@Autowired
-	private OceanService serv;
+	private MessageRepository repo;
 
 	@Test
 	public void ServiceCanMatchSenderAndMessageID() throws JsonProcessingException {
@@ -29,14 +30,16 @@ public class MessagingTests {
 		DataMapper dm = new DataMapper(new Payload(null, true));
 		dm.setClientKey(clientTest);
 		dm.setPluginKey(pluginTest);
-		serv.logMessage(dm);
+		repo.save(dm);
 
 		UUID messageTest = dm.getId();
 
-		boolean doesMatch = serv.matchDeletionRequestToSender(clientTest, messageTest);
+		List<UUID> clientsFound = repo.findClientKeyById(messageTest);
 
-		Assertions.assertThat(doesMatch).isEqualTo(true);
+		Assertions.assertThat(clientsFound.size()).isEqualTo(1);
 
+		UUID matchingClient = clientsFound.get(0);
+		Assertions.assertThat(matchingClient).isEqualTo(clientTest);
 	}
 
 	@Test
@@ -46,14 +49,17 @@ public class MessagingTests {
 		DataMapper dm = new DataMapper(new Payload(null, true));
 		dm.setClientKey(clientTest);
 		dm.setPluginKey(pluginTest);
-		serv.logMessage(dm);
+		repo.save(dm);
 
 		UUID messageTest = dm.getId();
-		UUID fakeSender = UUID.randomUUID();
 
-		boolean doesMatch = serv.matchDeletionRequestToSender(fakeSender, messageTest);
+		List<UUID> clientsFound = repo.findClientKeyById(messageTest);
 
-		Assertions.assertThat(doesMatch).isEqualTo(false);
+		Assertions.assertThat(clientsFound.size()).isEqualTo(1);
+
+		UUID matchingClient = clientsFound.get(0);
+		UUID falseClient = UUID.randomUUID();
+		Assertions.assertThat(matchingClient).isNotEqualTo(falseClient);
 	}
 
 	@Test
@@ -64,20 +70,19 @@ public class MessagingTests {
 		DataMapper dm = new DataMapper(new Payload(null, true));
 		dm.setClientKey(clientTest);
 		dm.setPluginKey(pluginTest);
-		serv.logMessage(dm);
+		repo.save(dm);
 
 		UUID messageTest = dm.getId();
 
-		boolean doesMatch = serv.matchDeletionRequestToSender(clientTest, messageTest);
+		List<UUID> clientsFound = repo.findClientKeyById(messageTest);
 
-		Assertions.assertThat(doesMatch).isEqualTo(true);
+		Assertions.assertThat(clientsFound.size()).isEqualTo(1);
 
-		serv.deleteMessage(messageTest);
+		repo.deleteById(messageTest);
 
-		boolean retryDoesMatch = serv.matchDeletionRequestToSender(clientTest, messageTest);
+		List<UUID> newClientsFound = repo.findClientKeyById(messageTest);
 
-		Assertions.assertThat(retryDoesMatch).isEqualTo(false);
+		Assertions.assertThat(newClientsFound.size()).isEqualTo(0);
 
 	}
-
 }
