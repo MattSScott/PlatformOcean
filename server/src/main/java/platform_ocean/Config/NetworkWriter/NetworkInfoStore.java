@@ -35,11 +35,29 @@ public class NetworkInfoStore {
 
 	}
 
+	public class AddressInterfacePair {
+		private final NetworkInterface netInf;
+		private final InetAddress serverIP;
+
+		public AddressInterfacePair(NetworkInterface netInf, InetAddress serverIP) {
+			this.netInf = netInf;
+			this.serverIP = serverIP;
+		}
+
+		public NetworkInterface getNetInf() {
+			return netInf;
+		}
+
+		public InetAddress getServerIP() {
+			return serverIP;
+		}
+	}
+
 	@Value("${server.port}")
 	private String serverPort;
 
 	@Bean
-	public InetAddress getServerAddress() {
+	public AddressInterfacePair getServerAddressInterfacePair() {
 		Enumeration<NetworkInterface> interfaces;
 		try {
 			interfaces = NetworkInterface.getNetworkInterfaces();
@@ -48,7 +66,17 @@ public class NetworkInfoStore {
 		}
 		while (interfaces.hasMoreElements()) {
 			NetworkInterface networkInterface = interfaces.nextElement();
+
+			try {
+				if (!networkInterface.supportsMulticast()) {
+					continue;
+				}
+			} catch (SocketException e) {
+				e.printStackTrace();
+			}
+
 			Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+
 			while (addresses.hasMoreElements()) {
 				InetAddress address = addresses.nextElement();
 				System.out.println(address);
@@ -58,7 +86,8 @@ public class NetworkInfoStore {
 					continue;
 				if (address.getHostAddress().contains(":"))
 					continue;
-				return address;
+				System.out.println(networkInterface);
+				return new AddressInterfacePair(networkInterface, address);
 			}
 		}
 		throw new RuntimeException("Non-loopback IP address not found");
@@ -66,7 +95,7 @@ public class NetworkInfoStore {
 
 	@Bean
 	public String getFullServerAddress() throws UnknownHostException {
-		InetAddress serverIP = getServerAddress();
+		InetAddress serverIP = getServerAddressInterfacePair().getServerIP();
 		String serverIpString = serverIP.getHostAddress();
 		String fullServerAddress = String.format("http://%s:%s", serverIpString, serverPort);
 		return fullServerAddress;
@@ -74,7 +103,7 @@ public class NetworkInfoStore {
 
 	@Bean
 	public String getFullGatewayAddress() throws UnknownHostException {
-		InetAddress serverIP = getServerAddress();
+		InetAddress serverIP = getServerAddressInterfacePair().getServerIP();
 		String serverIpString = serverIP.getHostAddress();
 		final int GATEWAY_PORT = 3000;
 		String fullServerAddress = String.format("http://%s:%s", serverIpString, GATEWAY_PORT);

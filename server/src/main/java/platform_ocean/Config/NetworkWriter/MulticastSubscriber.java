@@ -15,6 +15,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import platform_ocean.Config.NetworkWriter.NetworkInfoStore.AddressInterfacePair;
+
 @Component
 public class MulticastSubscriber extends Thread {
 
@@ -82,13 +84,24 @@ public class MulticastSubscriber extends Thread {
 	@EventListener(ApplicationReadyEvent.class)
 	public void run() {
 
-		InetAddress x = networkData.getServerAddress();
-		System.out.println(x);
+		AddressInterfacePair serverInfo = networkData.getServerAddressInterfacePair();
+		final int PORT = 9001;
+		final String MCAST_ADDR = "224.0.0.1";
+//		final String MCAST_ADDR = "230.185.192.108";
 
-		try (MulticastSocket socket = new MulticastSocket(9001)) {
+		try (MulticastSocket socket = new MulticastSocket(PORT)) {
 
-			SocketAddress group = new InetSocketAddress("230.185.192.108", 9001);
-			NetworkInterface localNetwork = socket.getNetworkInterface();
+			InetAddress mcast = InetAddress.getByName(MCAST_ADDR);
+			SocketAddress group = new InetSocketAddress(mcast, PORT);
+
+//			NetworkInterface localNetwork = socket.getNetworkInterface();
+			NetworkInterface localNetwork = null;
+//			InetAddress test = InetAddress.getByName("230.185.192.108");
+//			NetworkInterface localNetwork = serverInfo.getNetInf();
+//			System.out.println(localNetwork);
+//			System.out.println(localNetwork.supportsMulticast());
+//			NetworkInterface localNetwork = NetworkInterface.getByInetAddress(serverAddress);
+//			socket.bind(new InetSocketAddress(PORT));
 			socket.joinGroup(group, localNetwork);
 
 			while (true) {
