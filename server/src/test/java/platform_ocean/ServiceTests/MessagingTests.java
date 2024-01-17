@@ -1,5 +1,6 @@
 package platform_ocean.ServiceTests;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.assertj.core.api.Assertions;
@@ -78,6 +79,58 @@ public class MessagingTests {
 
 		Assertions.assertThat(retryDoesMatch).isEqualTo(false);
 
+	}
+
+	@Test
+	public void ServiceCanLogMessage() throws JsonProcessingException {
+		UUID pluginKey = UUID.randomUUID();
+		UUID clientKey1 = UUID.randomUUID();
+		UUID clientKey2 = UUID.randomUUID();
+
+		DataMapper dm1 = new DataMapper(new Payload(null, true));
+		dm1.setClientKey(clientKey1);
+		dm1.setPluginKey(pluginKey);
+
+		serv.logMessage(dm1);
+
+		DataMapper dm2 = new DataMapper(new Payload(null, true));
+		dm2.setClientKey(clientKey2);
+		dm2.setPluginKey(pluginKey);
+
+		serv.logMessage(dm2);
+
+		List<DataMapper> messages = serv.retrieveMessagesByPlugin(pluginKey);
+
+		Assertions.assertThat(messages.size()).isEqualTo(2);
+	}
+
+	@Test
+	public void ServiceCanDeleteMultipleMessagesByID() throws JsonProcessingException {
+		UUID pluginKey = UUID.randomUUID();
+		UUID clientKey1 = UUID.randomUUID();
+		UUID clientKey2 = UUID.randomUUID();
+
+		DataMapper dm1 = new DataMapper(new Payload(null, true));
+		dm1.setClientKey(clientKey1);
+		dm1.setPluginKey(pluginKey);
+
+		serv.logMessage(dm1);
+
+		DataMapper dm2 = new DataMapper(new Payload(null, true));
+		dm2.setClientKey(clientKey2);
+		dm2.setPluginKey(pluginKey);
+
+		serv.logMessage(dm2);
+
+		List<DataMapper> messages = serv.retrieveMessagesByPlugin(pluginKey);
+
+		Assertions.assertThat(messages.size()).isEqualTo(2);
+
+		serv.deleteMessage(dm1.getId());
+		
+		List<DataMapper> messagesRecheck = serv.retrieveMessagesByPlugin(pluginKey);
+
+		Assertions.assertThat(messagesRecheck.size()).isEqualTo(1);
 	}
 
 }
