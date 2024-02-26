@@ -18,7 +18,7 @@ import platform_ocean.Repository.Messaging.MessageRepository;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class RepositoryTests {
+public class MessagingTests {
 
 	@Autowired
 	private MessageRepository repo;

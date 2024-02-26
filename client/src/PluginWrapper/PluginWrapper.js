@@ -13,6 +13,7 @@ class PluginWrapper extends React.Component {
   static contextType = NetworkIPContext;
 
   componentDidMount() {
+    console.log("called?");
     this.fetchHistory();
     this.subscribe();
   }
@@ -48,6 +49,7 @@ class PluginWrapper extends React.Component {
   }
 
   subscribe() {
+    console.log("SUBBED: " + this.props.routingKey);
     const SubscriberRoutingAddress = `/topic/${this.props.routingKey}/receive`;
 
     if (this.state.topicSubscription) {
@@ -59,6 +61,7 @@ class PluginWrapper extends React.Component {
         SubscriberRoutingAddress,
         (resp) => {
           const deserialiseJSON = JSON.parse(resp.body);
+          console.log(deserialiseJSON);
           const JSONsender = deserialiseJSON.sender;
           const JSONmessage = JSON.parse(deserialiseJSON.message);
           const convertedData = { sender: JSONsender, message: JSONmessage };
@@ -97,6 +100,8 @@ class PluginWrapper extends React.Component {
       const RawFetchedHistory = await fetch(HistoryRoutingAddress);
 
       const ParsedHistory = await RawFetchedHistory.json();
+
+      console.log(ParsedHistory);
 
       this.setState((prevState) => ({
         ...prevState,
