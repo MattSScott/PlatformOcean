@@ -6,27 +6,6 @@ export default class Coords extends PluginWrapper {
     super();
     this.getPos = this.getPos.bind(this);
   }
-  state = {
-    ...this.state,
-    L: 0,
-    prevCirc: this.getData(),
-    prevCircButOne: this.getData(),
-  };
-
-  componentDidMount() {
-    console.log(this.state.dataHistory);
-    // this.setState((prevState) => ({
-    //   ...prevState,
-    //   L: this.state.dataHistory.length,
-    // }));
-    if (this.state.L >= 2) {
-      this.state.prevCirc = this.state.dataHistory[this.state.L - 2];
-    }
-
-    if (this.state.L >= 3) {
-      this.prevCircButOne = this.state.dataHistory[this.state.L - 3];
-    }
-  }
 
   getPos(event) {
     var rect = event.target.getBoundingClientRect();
@@ -34,6 +13,20 @@ export default class Coords extends PluginWrapper {
   }
 
   render() {
+    let dHist = this.getDataHistory();
+    let dLen = dHist ? dHist.length : 0;
+
+    let prevCirc = null;
+    let prevCircButOne = null;
+
+    if (dLen >= 2) {
+      prevCirc = dHist[dLen - 2];
+    }
+
+    if (dLen >= 3) {
+      prevCircButOne = dHist[dLen - 3];
+    }
+
     return (
       <div
         className="coordDiv"
@@ -44,29 +37,31 @@ export default class Coords extends PluginWrapper {
       >
         <p>Click Within Box to "Poke" Users</p>
         <svg>
-          {this.data && (
-            <>
-              <circle
-                cy={this.data.y}
-                cx={this.data.x}
-                r="30"
-                fill="red"
-              ></circle>
+          {this.getData() && (
+            <circle
+              cy={this.getData().y}
+              cx={this.getData().x}
+              r="30"
+              fill="red"
+            ></circle>
+          )}
 
-              <circle
-                cy={this.state.prevCirc.y}
-                cx={this.state.prevCirc.x}
-                r="30"
-                fill="blue"
-              ></circle>
+          {prevCirc && (
+            <circle
+              cy={prevCirc.message.y}
+              cx={prevCirc.message.x}
+              r="30"
+              fill="blue"
+            ></circle>
+          )}
 
-              <circle
-                cy={this.state.prevCircButOne.y}
-                cx={this.state.prevCircButOne.x}
-                r="30"
-                fill="green"
-              ></circle>
-            </>
+          {prevCircButOne && (
+            <circle
+              cy={prevCircButOne.message.y}
+              cx={prevCircButOne.message.x}
+              r="30"
+              fill="green"
+            ></circle>
           )}
         </svg>
       </div>
