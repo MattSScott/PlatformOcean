@@ -24,14 +24,23 @@ export default class Carpool extends PluginWrapper {
     const FullLocation = {
       ...addedLocation,
       creator: this.getUser(),
-      id: uuidv4(),
     };
 
-    this.setState((prevState) => ({
-      ...prevState,
-      locations: [...prevState.locations, FullLocation],
-    }));
+    this.sendDataToBackend(FullLocation, true);
   }
+
+  // appendLocation(addedLocation) {
+  //   const FullLocation = {
+  //     ...addedLocation,
+  //     creator: this.getUser(),
+  //     id: uuidv4(),
+  //   };
+
+  //   this.setState((prevState) => ({
+  //     ...prevState,
+  //     locations: [...prevState.locations, FullLocation],
+  //   }));
+  // }
 
   removeLocation(removalLocation) {
     this.setState((prevState) => ({
@@ -60,9 +69,9 @@ export default class Carpool extends PluginWrapper {
         <AddLocation appendLocation={this.appendLocation} />
         <div style={{ marginTop: "10px" }}>
           <Stack direction="column" spacing={1}>
-            {this.state.locations.map((locationObject, idx) => (
+            {this.getDataHistory().map((locationObject, idx) => (
               <LocationButton
-                routeObject={locationObject}
+                routeObject={locationObject.message}
                 user={this.getUser()}
                 updater={this.updateLocation}
                 deleter={this.removeLocation}
@@ -72,7 +81,7 @@ export default class Carpool extends PluginWrapper {
           </Stack>
         </div>
         <div style={{ marginTop: "10px" }}>
-          <Router locations={this.state.locations} />
+          <Router locations={this.getDataHistory()} />
         </div>
       </div>
     );

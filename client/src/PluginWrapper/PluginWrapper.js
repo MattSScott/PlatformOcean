@@ -28,7 +28,7 @@ class PluginWrapper extends React.Component {
   }
 
   getDataHistory() {
-    return this.state.dataHistory;
+    return this.state.dataHistory ? this.state.dataHistory : [];
   }
 
   handleMessageReceived(data) {
@@ -104,8 +104,6 @@ class PluginWrapper extends React.Component {
       const HistoryRoutingAddress = `${this.context}/history/${this.props.routingKey}`;
       const RawFetchedHistory = await fetch(HistoryRoutingAddress);
       const ParsedHistory = await RawFetchedHistory.json();
-
-      console.log(ParsedHistory);
 
       this.setState((prevState) => ({
         ...prevState,
