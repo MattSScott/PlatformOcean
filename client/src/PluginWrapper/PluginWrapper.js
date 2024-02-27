@@ -23,12 +23,15 @@ class PluginWrapper extends React.Component {
     }
   }
 
-  getData(preprocessor) {
+  getData(preprocessor = (x) => x) {
     return this.state.data ? preprocessor(this.state.data.message) : null;
   }
 
+  getDataHistory() {
+    return this.state.dataHistory;
+  }
+
   handleMessageReceived(data) {
-    console.log("Superclass called");
     return data;
   }
 
@@ -59,9 +62,15 @@ class PluginWrapper extends React.Component {
         SubscriberRoutingAddress,
         (resp) => {
           const deserialiseJSON = JSON.parse(resp.body);
+
           const JSONsender = deserialiseJSON.sender;
           const JSONmessage = JSON.parse(deserialiseJSON.message);
-          const convertedData = { sender: JSONsender, message: JSONmessage };
+          const JSONmessageID = deserialiseJSON.messageID;
+          const convertedData = {
+            sender: JSONsender,
+            message: JSONmessage,
+            messageID: JSONmessageID,
+          };
 
           this.setState(
             (prevState) => ({
@@ -93,10 +102,10 @@ class PluginWrapper extends React.Component {
 
     try {
       const HistoryRoutingAddress = `${this.context}/history/${this.props.routingKey}`;
-
       const RawFetchedHistory = await fetch(HistoryRoutingAddress);
-
       const ParsedHistory = await RawFetchedHistory.json();
+
+      console.log(ParsedHistory);
 
       this.setState((prevState) => ({
         ...prevState,

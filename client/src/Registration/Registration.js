@@ -87,7 +87,6 @@ class Registration extends React.Component {
 
   async submitLogin(e) {
     e.preventDefault();
-
     try {
       const RegistrationAddress = `${this.context}/registry/get`;
       const response = await fetch(RegistrationAddress, {
