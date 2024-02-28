@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 import platform_ocean.Entities.Messaging.DataMapper;
+import platform_ocean.Entities.Messaging.DeleteRequest;
+import platform_ocean.Entities.Messaging.MessageProtocol;
 import platform_ocean.Entities.Messaging.SimpleDataMapper;
 import platform_ocean.Service.Messaging.OceanService;
 
@@ -56,13 +58,14 @@ public class MessagingController implements MessagingControllerInterface {
 	@MessageMapping("{ClientKey}/{PluginKey}/delete")
 	@SendTo("/topic/{PluginKey}/receive")
 	public SimpleDataMapper deleteMessage(@DestinationVariable("ClientKey") UUID clientKey,
-			@DestinationVariable("PluginKey") UUID pluginKey, @Payload UUID messageID) {
-
+			@DestinationVariable("PluginKey") UUID pluginKey, @Payload DeleteRequest messageDeleteRequest) {
+		
+		final UUID messageID = messageDeleteRequest.getMessageID();
 		boolean canDelete = serv.matchDeletionRequestToSender(clientKey, messageID);
 
 		if (canDelete) {
 			serv.deleteMessage(messageID);
-			return new SimpleDataMapper(messageID, null, messageID);
+			return new SimpleDataMapper(messageID, null, messageID, MessageProtocol.DELETE);
 		}
 		
 		return null;

@@ -9,8 +9,8 @@ export default class Carpool extends PluginWrapper {
   constructor() {
     super();
     this.appendLocation = this.appendLocation.bind(this);
-    this.removeLocation = this.removeLocation.bind(this);
     this.updateLocation = this.updateLocation.bind(this);
+    this.sendDeleteMessage = this.sendDeleteMessage.bind(this);
   }
 
   appendLocation(addedLocation) {
@@ -20,15 +20,6 @@ export default class Carpool extends PluginWrapper {
     };
 
     this.sendDataToBackend(FullLocation, true);
-  }
-
-  removeLocation(removalLocation) {
-    this.setState((prevState) => ({
-      ...prevState,
-      locations: prevState.locations.filter(
-        (loc) => loc.id !== removalLocation.id
-      ),
-    }));
   }
 
   updateLocation(updatedLocation) {
@@ -58,7 +49,8 @@ export default class Carpool extends PluginWrapper {
                 routeObject={locationObject.message}
                 user={this.getUser()}
                 updater={this.updateLocation}
-                deleter={this.removeLocation}
+                deleter={this.sendDeleteMessage}
+                deleterID={String(locationObject.messageID)}
                 key={`location-button-${idx}`}
               />
             ))}

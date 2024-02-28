@@ -3,6 +3,7 @@ package platform_ocean.Controller.Messaging;
 import java.util.UUID;
 
 import platform_ocean.Entities.Messaging.DataMapper;
+import platform_ocean.Entities.Messaging.DeleteRequest;
 import platform_ocean.Entities.Messaging.SimpleDataMapper;
 
 // Implement Interface<ReturnValue, DataMapperClass>
@@ -30,7 +31,7 @@ public interface MessagingControllerInterface {
 	public SimpleDataMapper parseDataFromFrontend(DataMapper dataFromFrontend) throws Exception;
 	
 	
-	public SimpleDataMapper deleteMessage(UUID clientKey, UUID pluginKey, UUID messageID);
+	public SimpleDataMapper deleteMessage(UUID clientKey, UUID pluginKey, DeleteRequest messageID);
 
 //	public List<SimpleDataMapper> retrieveDataHistory(UUID pluginKey);
 }

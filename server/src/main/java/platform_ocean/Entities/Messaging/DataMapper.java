@@ -23,7 +23,6 @@ public class DataMapper {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	private UUID id;
-//	private final UUID id = UUID.randomUUID();
 
 	@Transient
 	private Payload payload;
@@ -82,7 +81,7 @@ public class DataMapper {
 
 	// Defines how class data is sent to the front-end
 	public SimpleDataMapper castAndSendDataToFrontend() {
-		SimpleDataMapper sdmCasting = new SimpleDataMapper(this.clientKey, this.data, this.id);
+		SimpleDataMapper sdmCasting = new SimpleDataMapper(this.clientKey, this.data, this.id, MessageProtocol.CREATE);
 		return sdmCasting;
 	}
 

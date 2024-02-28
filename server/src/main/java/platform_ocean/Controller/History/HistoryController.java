@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import platform_ocean.Entities.Messaging.DataMapper;
+import platform_ocean.Entities.Messaging.MessageProtocol;
 import platform_ocean.Entities.Messaging.SimpleDataMapper;
 import platform_ocean.Service.Messaging.OceanService;
 
@@ -29,7 +30,7 @@ public class HistoryController implements HistoryControllerInterface {
 		List<SimpleDataMapper> clientKeyMessagePairs = new ArrayList<>();
 
 		for (DataMapper dm : retrievedHistory) {
-			SimpleDataMapper clientKeyMessageEntry = new SimpleDataMapper(dm.getClientKey(), dm.getData(), dm.getId());
+			SimpleDataMapper clientKeyMessageEntry = new SimpleDataMapper(dm.getClientKey(), dm.getData(), dm.getId(), MessageProtocol.PERSIST);
 			clientKeyMessagePairs.add(clientKeyMessageEntry);
 		}
 
