@@ -37,7 +37,11 @@ export default function AddLocation({ appendLocation }) {
 
   return (
     <div style={{ marginTop: "10px" }}>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button
+        variant="outlined"
+        style={{ width: "150px" }}
+        onClick={handleClickOpen}
+      >
         Add Location
       </Button>
       <Dialog open={addRouteFormOpen} onClose={handleClose}>

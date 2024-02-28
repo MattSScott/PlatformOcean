@@ -9,7 +9,11 @@ export default function Router({ locations }) {
 
   return (
     locations.length > 1 && (
-      <Button variant="outlined" onClick={generateRoute}>
+      <Button
+        variant="outlined"
+        style={{ width: "200px" }}
+        onClick={generateRoute}
+      >
         Generate Route
       </Button>
     )

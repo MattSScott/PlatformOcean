@@ -11,6 +11,7 @@ export default function LocationButton({
   user,
   updater,
   deleter,
+  deleterID,
 }) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(routeObject.name);
@@ -47,7 +48,7 @@ export default function LocationButton({
   };
 
   const handleDelete = () => {
-    deleter(routeObject);
+    deleter(deleterID);
     handleClose();
   };
 

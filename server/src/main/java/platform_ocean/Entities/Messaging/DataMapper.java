@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -20,8 +21,8 @@ import platform_ocean.Controller.OceanMessageConverter;
 public class DataMapper {
 
 	@Id
-	@GeneratedValue
-	private final UUID id = UUID.randomUUID();
+	@GeneratedValue(strategy = GenerationType.UUID)
+	private UUID id;
 
 	@Transient
 	private Payload payload;
@@ -80,7 +81,7 @@ public class DataMapper {
 
 	// Defines how class data is sent to the front-end
 	public SimpleDataMapper castAndSendDataToFrontend() {
-		SimpleDataMapper sdmCasting = new SimpleDataMapper(this.clientKey, this.data);
+		SimpleDataMapper sdmCasting = new SimpleDataMapper(this.clientKey, this.data, this.id, MessageProtocol.CREATE);
 		return sdmCasting;
 	}
 

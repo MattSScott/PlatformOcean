@@ -4,42 +4,22 @@ import AddLocation from "./AddLocation";
 import LocationButton from "./LocationButton";
 import Stack from "@mui/material/Stack";
 import Router from "./Router";
-import { v4 as uuidv4 } from "uuid";
 
 export default class Carpool extends PluginWrapper {
   constructor() {
     super();
     this.appendLocation = this.appendLocation.bind(this);
-    this.removeLocation = this.removeLocation.bind(this);
     this.updateLocation = this.updateLocation.bind(this);
+    this.sendDeleteMessage = this.sendDeleteMessage.bind(this);
   }
-
-  //   TODO: get history of messages + convert to route buttons
-
-  state = {
-    locations: [],
-  };
 
   appendLocation(addedLocation) {
     const FullLocation = {
       ...addedLocation,
       creator: this.getUser(),
-      id: uuidv4(),
     };
 
-    this.setState((prevState) => ({
-      ...prevState,
-      locations: [...prevState.locations, FullLocation],
-    }));
-  }
-
-  removeLocation(removalLocation) {
-    this.setState((prevState) => ({
-      ...prevState,
-      locations: prevState.locations.filter(
-        (loc) => loc.id !== removalLocation.id
-      ),
-    }));
+    this.sendDataToBackend(FullLocation, true);
   }
 
   updateLocation(updatedLocation) {
@@ -59,20 +39,25 @@ export default class Carpool extends PluginWrapper {
       <div style={{ marginLeft: "20px", marginRight: "20px" }}>
         <AddLocation appendLocation={this.appendLocation} />
         <div style={{ marginTop: "10px" }}>
-          <Stack direction="column" spacing={1}>
-            {this.state.locations.map((locationObject, idx) => (
+          <Stack
+            direction="column"
+            spacing={0.5}
+            style={{ maxHeight: 80, overflow: "auto" }}
+          >
+            {this.getDataHistory().map((locationObject, idx) => (
               <LocationButton
-                routeObject={locationObject}
+                routeObject={locationObject.message}
                 user={this.getUser()}
                 updater={this.updateLocation}
-                deleter={this.removeLocation}
+                deleter={this.sendDeleteMessage}
+                deleterID={String(locationObject.messageID)}
                 key={`location-button-${idx}`}
               />
             ))}
           </Stack>
         </div>
         <div style={{ marginTop: "10px" }}>
-          <Router locations={this.state.locations} />
+          <Router locations={this.getDataHistory()} />
         </div>
       </div>
     );

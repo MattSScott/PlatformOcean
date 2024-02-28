@@ -23,13 +23,45 @@ class PluginWrapper extends React.Component {
     }
   }
 
-  getData(preprocessor) {
+  getData(preprocessor = (x) => x) {
     return this.state.data ? preprocessor(this.state.data.message) : null;
   }
 
-  handleMessageReceived(data) {
-    console.log("Superclass called");
+  getDataHistory() {
+    return this.state.dataHistory ? this.state.dataHistory : [];
+  }
+
+  runMessageProtocol(message, protocol) {
+    switch (protocol) {
+      case "CREATE":
+        this.handleCreateMessage(message);
+        return;
+      case "UPDATE":
+        this.handleUpdateMessage(message);
+        return;
+      case "DELETE":
+        this.handleDeleteMessage(message);
+        return;
+      default:
+        return;
+    }
+  }
+
+  handleCreateMessage(data) {
     return data;
+  }
+
+  handleUpdateMessage(data) {
+    return data;
+  }
+
+  handleDeleteMessage(data) {
+    this.setState((prevState) => ({
+      ...prevState,
+      dataHistory: prevState.dataHistory.filter(
+        (entry) => entry.messageID !== data.messageID
+      ),
+    }));
   }
 
   getSender() {
@@ -59,18 +91,26 @@ class PluginWrapper extends React.Component {
         SubscriberRoutingAddress,
         (resp) => {
           const deserialiseJSON = JSON.parse(resp.body);
+
           const JSONsender = deserialiseJSON.sender;
           const JSONmessage = JSON.parse(deserialiseJSON.message);
-          const convertedData = { sender: JSONsender, message: JSONmessage };
+          const JSONmessageID = deserialiseJSON.messageID;
+          const MessageProtcol = deserialiseJSON.protocol;
+          const ParsedDatagram = {
+            sender: JSONsender,
+            message: JSONmessage,
+            messageID: JSONmessageID,
+          };
 
           this.setState(
-            (prevState) => ({
-              ...prevState,
-              data: convertedData,
-              dataHistory: [...this.state.dataHistory, convertedData],
-            }),
+            (prevState) =>
+              MessageProtcol == "CREATE" && {
+                ...prevState,
+                data: ParsedDatagram,
+                dataHistory: [...this.state.dataHistory, ParsedDatagram],
+              },
             () => {
-              this.handleMessageReceived(convertedData);
+              this.runMessageProtocol(ParsedDatagram, MessageProtcol);
             }
           );
         },
@@ -93,9 +133,7 @@ class PluginWrapper extends React.Component {
 
     try {
       const HistoryRoutingAddress = `${this.context}/history/${this.props.routingKey}`;
-
       const RawFetchedHistory = await fetch(HistoryRoutingAddress);
-
       const ParsedHistory = await RawFetchedHistory.json();
 
       this.setState((prevState) => ({
@@ -126,6 +164,16 @@ class PluginWrapper extends React.Component {
         {},
         this.formatDataAsJSON(processedData, shouldPersist)
       );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  sendDeleteMessage(messageID) {
+    const SenderRoutingAddress = `/app/${this.props.uniqueClientID}/${this.props.routingKey}/delete`;
+    const DeleteStruct = JSON.stringify({ messageID: messageID });
+    try {
+      this.props.client.send(SenderRoutingAddress, {}, DeleteStruct);
     } catch (error) {
       console.log(error);
     }
