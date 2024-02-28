@@ -4,7 +4,6 @@ import AddLocation from "./AddLocation";
 import LocationButton from "./LocationButton";
 import Stack from "@mui/material/Stack";
 import Router from "./Router";
-import { v4 as uuidv4 } from "uuid";
 
 export default class Carpool extends PluginWrapper {
   constructor() {
@@ -14,12 +13,6 @@ export default class Carpool extends PluginWrapper {
     this.updateLocation = this.updateLocation.bind(this);
   }
 
-  //   TODO: get history of messages + convert to route buttons
-
-  state = {
-    locations: [],
-  };
-
   appendLocation(addedLocation) {
     const FullLocation = {
       ...addedLocation,
@@ -28,19 +21,6 @@ export default class Carpool extends PluginWrapper {
 
     this.sendDataToBackend(FullLocation, true);
   }
-
-  // appendLocation(addedLocation) {
-  //   const FullLocation = {
-  //     ...addedLocation,
-  //     creator: this.getUser(),
-  //     id: uuidv4(),
-  //   };
-
-  //   this.setState((prevState) => ({
-  //     ...prevState,
-  //     locations: [...prevState.locations, FullLocation],
-  //   }));
-  // }
 
   removeLocation(removalLocation) {
     this.setState((prevState) => ({
@@ -68,7 +48,11 @@ export default class Carpool extends PluginWrapper {
       <div style={{ marginLeft: "20px", marginRight: "20px" }}>
         <AddLocation appendLocation={this.appendLocation} />
         <div style={{ marginTop: "10px" }}>
-          <Stack direction="column" spacing={1}>
+          <Stack
+            direction="column"
+            spacing={0.5}
+            style={{ maxHeight: 80, overflow: "auto" }}
+          >
             {this.getDataHistory().map((locationObject, idx) => (
               <LocationButton
                 routeObject={locationObject.message}
