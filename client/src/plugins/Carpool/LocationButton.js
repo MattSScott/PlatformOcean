@@ -43,7 +43,7 @@ export default function LocationButton({
       creator: user,
     };
 
-    updater(NewLocation);
+    updater(deleterID, NewLocation);
     handleClose();
   };
 

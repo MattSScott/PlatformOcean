@@ -11,6 +11,7 @@ export default class Carpool extends PluginWrapper {
     this.appendLocation = this.appendLocation.bind(this);
     this.updateLocation = this.updateLocation.bind(this);
     this.sendDeleteMessage = this.sendDeleteMessage.bind(this);
+    this.sendUpdateMessage = this.sendUpdateMessage.bind(this);
   }
 
   appendLocation(addedLocation) {
@@ -48,7 +49,7 @@ export default class Carpool extends PluginWrapper {
               <LocationButton
                 routeObject={locationObject.message}
                 user={this.getUser()}
-                updater={this.updateLocation}
+                updater={this.sendUpdateMessage}
                 deleter={this.sendDeleteMessage}
                 deleterID={String(locationObject.messageID)}
                 key={`location-button-${idx}`}

@@ -5,6 +5,7 @@ import java.util.UUID;
 import platform_ocean.Entities.Messaging.DataMapper;
 import platform_ocean.Entities.Messaging.DeleteRequest;
 import platform_ocean.Entities.Messaging.SimpleDataMapper;
+import platform_ocean.Entities.Messaging.UpdatedDataMapper;
 
 // Implement Interface<ReturnValue, DataMapperClass>
 //public interface WebSocketControllerInterface<U, T extends DataMapper<U>> {
@@ -24,14 +25,14 @@ import platform_ocean.Entities.Messaging.SimpleDataMapper;
 
 public interface MessagingControllerInterface {
 
-	public SimpleDataMapper distributeDataToFrontend(UUID clientKey, UUID pluginKey, DataMapper dataFromFrontend)
-			throws Exception;
+	public SimpleDataMapper createMessage(UUID clientKey, UUID pluginKey, DataMapper dataFromFrontend);
 
 	// Override to change how data is send to front-end
-	public SimpleDataMapper parseDataFromFrontend(DataMapper dataFromFrontend) throws Exception;
-	
-	
+//	public SimpleDataMapper parseDataFromFrontend(DataMapper dataFromFrontend) throws Exception;
+
 	public SimpleDataMapper deleteMessage(UUID clientKey, UUID pluginKey, DeleteRequest messageID);
+
+	public SimpleDataMapper updateMessage(UUID clientKey, UUID pluginKey, UpdatedDataMapper udm);
 
 //	public List<SimpleDataMapper> retrieveDataHistory(UUID pluginKey);
 }

@@ -1,6 +1,7 @@
-package platform_ocean.Controller;
+package platform_ocean.Entities.Messaging;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import org.springframework.context.annotation.Bean;
 
@@ -13,15 +14,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import platform_ocean.Entities.Messaging.DataMapper;
-
-public class OceanMessageConverter extends JsonDeserializer<DataMapper> {
+public class UpdatedOceanMessageConverter extends JsonDeserializer<UpdatedDataMapper> {
 
 	private static final long serialVersionUID = 1L;
 
 	@Override
 	@Bean
-	public DataMapper deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException, JacksonException {
+	public UpdatedDataMapper deserialize(JsonParser parser, DeserializationContext ctxt)
+			throws IOException, JacksonException {
 
 		ObjectMapper mapper = new ObjectMapper();
 
@@ -29,18 +29,21 @@ public class OceanMessageConverter extends JsonDeserializer<DataMapper> {
 
 		TreeNode dataFromPayload = node.get("dataNode");
 		TreeNode persistFromPayload = node.get("persist");
+		TreeNode idFromPayload = node.get("id");
 
 		JsonNode data = mapper.treeToValue(dataFromPayload, JsonNode.class);
 		JsonNode persist = mapper.treeToValue(persistFromPayload, JsonNode.class);
+		JsonNode id = mapper.treeToValue(idFromPayload, JsonNode.class);
 
 		Boolean parsedPersist = persist.asBoolean();
-		return new DataMapper(data, parsedPersist);
+		UUID parsedId = UUID.fromString(id.textValue());
+		return new UpdatedDataMapper(data, parsedPersist, parsedId);
 	}
 
 	@Bean
 	public SimpleModule oceanMessageDeserialiser() {
 		SimpleModule module = new SimpleModule();
-		module.addDeserializer(DataMapper.class, new OceanMessageConverter());
+		module.addDeserializer(UpdatedDataMapper.class, new UpdatedOceanMessageConverter());
 		return module;
 	}
 
