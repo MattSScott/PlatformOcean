@@ -33,7 +33,7 @@ public class MessagingTests {
 
 		UUID messageTest = dm.getId();
 
-		boolean doesMatch = serv.matchDeletionRequestToSender(clientTest, messageTest);
+		boolean doesMatch = serv.matchRequestWithSender(clientTest, messageTest);
 
 		Assertions.assertThat(doesMatch).isEqualTo(true);
 
@@ -51,7 +51,7 @@ public class MessagingTests {
 		UUID messageTest = dm.getId();
 		UUID fakeSender = UUID.randomUUID();
 
-		boolean doesMatch = serv.matchDeletionRequestToSender(fakeSender, messageTest);
+		boolean doesMatch = serv.matchRequestWithSender(fakeSender, messageTest);
 
 		Assertions.assertThat(doesMatch).isEqualTo(false);
 	}
@@ -68,13 +68,13 @@ public class MessagingTests {
 
 		UUID messageTest = dm.getId();
 
-		boolean doesMatch = serv.matchDeletionRequestToSender(clientTest, messageTest);
+		boolean doesMatch = serv.matchRequestWithSender(clientTest, messageTest);
 
 		Assertions.assertThat(doesMatch).isEqualTo(true);
 
 		serv.deleteMessage(messageTest);
 
-		boolean retryDoesMatch = serv.matchDeletionRequestToSender(clientTest, messageTest);
+		boolean retryDoesMatch = serv.matchRequestWithSender(clientTest, messageTest);
 
 		Assertions.assertThat(retryDoesMatch).isEqualTo(false);
 

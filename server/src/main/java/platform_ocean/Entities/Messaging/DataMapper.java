@@ -79,6 +79,10 @@ public class DataMapper {
 	public String getData() {
 		return data;
 	}
+	
+	public void setData(String data) {
+		this.data = data;
+	}
 
 //	private String serialiseJsonData(JsonNode unserialisedData) throws JsonProcessingException {
 //		ObjectMapper om = new ObjectMapper();

@@ -31,7 +31,7 @@ public class OceanService implements OceanServiceInterface {
 	}
 
 	@Override
-	public boolean matchDeletionRequestToSender(UUID clientKey, UUID messageID) {
+	public boolean matchRequestWithSender(UUID clientKey, UUID messageID) {
 
 		List<UUID> matchingSenders = repo.findClientKeyById(messageID);
 
@@ -52,6 +52,25 @@ public class OceanService implements OceanServiceInterface {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public boolean updateMessage(UUID messageIDToChange, String newContent) {
+		try {
+			List<DataMapper> oldMessages = repo.findMessageById(messageIDToChange);
+			if (oldMessages.size() != 1) {
+				throw new Exception("Multiple messages found with id: " + messageIDToChange.toString());
+			}
+			DataMapper msg = oldMessages.get(0);
+			msg.setData(newContent);
+			repo.save(msg);
+			return true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
 	}
 
 }

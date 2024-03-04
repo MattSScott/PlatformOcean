@@ -26,20 +26,8 @@ import platform_ocean.Service.Messaging.OceanService;
 @CrossOrigin
 public class MessagingController implements MessagingControllerInterface {
 
-//	private final SimpMessageSendingOperations messagingTemplate;
-//
-//	@Autowired
-//	public WebSocketController(SimpMessageSendingOperations messagingTemplate) {
-//		this.messagingTemplate = messagingTemplate;
-//	}
-
 	@Autowired
 	private OceanService serv;
-
-//	@Override
-//	public SimpleDataMapper parseDataFromFrontend(@Payload DataMapper dataFromFrontend) throws Exception {
-//		return dataFromFrontend.castToSimpleDataMapper();
-//	}
 
 	@Override
 	@MessageMapping("/{ClientKey}/{PluginKey}/send")
@@ -54,7 +42,6 @@ public class MessagingController implements MessagingControllerInterface {
 		}
 
 		return dataFromFrontend.castToSimpleDataMapper(MessageProtocol.CREATE);
-//		return this.parseDataFromFrontend(dataFromFrontend);
 	}
 
 	@Override
@@ -64,7 +51,7 @@ public class MessagingController implements MessagingControllerInterface {
 			@DestinationVariable("PluginKey") UUID pluginKey, @Payload DeleteRequest messageDeleteRequest) {
 
 		final UUID messageID = messageDeleteRequest.getMessageID();
-		boolean canDelete = serv.matchDeletionRequestToSender(clientKey, messageID);
+		boolean canDelete = serv.matchRequestWithSender(clientKey, messageID);
 
 		if (canDelete) {
 			serv.deleteMessage(messageID);
@@ -81,22 +68,21 @@ public class MessagingController implements MessagingControllerInterface {
 	public SimpleDataMapper updateMessage(@DestinationVariable("ClientKey") UUID clientKey,
 			@DestinationVariable("PluginKey") UUID pluginKey, @Payload UpdatedDataMapper messageUpdateRequest) {
 
+		UUID idForChange = messageUpdateRequest.getId();
+		boolean canUpdate = serv.matchRequestWithSender(clientKey, idForChange);
+
+		if (!canUpdate) {
+			return null;
+		}
+
 		try {
-			// TODO: Make server do stuff
+			String contentToChange = messageUpdateRequest.getData();
+			serv.updateMessage(idForChange, contentToChange);
 			return messageUpdateRequest.castToSimpleDataMapper(MessageProtocol.UPDATE);
 		} catch (Exception e) {
 			System.out.println(e);
 			return null;
 		}
-
-//		final UUID messageID = messageUpdateRequest.getId();
-//		return new SimpleDataMapper(clientKey, null, messageID, MessageProtocol.UPDATE);
-//		boolean canDelete = serv.matchDeletionRequestToSender(clientKey, messageID);
-//
-//		if (canDelete) {
-//			serv.deleteMessage(messageID);
-//			return new SimpleDataMapper(clientKey, null, messageID, MessageProtocol.UPDATE);
-//		}
 
 	}
 
