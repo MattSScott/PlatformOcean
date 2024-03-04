@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import platform_ocean.Entities.Messaging.DataMapper;
 import platform_ocean.Service.Messaging.OceanService;
 
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class MessagingTests {
@@ -130,6 +131,27 @@ public class MessagingTests {
 		List<DataMapper> messagesRecheck = serv.retrieveMessagesByPlugin(pluginKey);
 
 		Assertions.assertThat(messagesRecheck.size()).isEqualTo(1);
+	}
+	
+	@Test
+	public void ServiceCanUpdateMessage() throws JsonProcessingException {
+		UUID pluginKey = UUID.randomUUID();
+		UUID author = UUID.randomUUID();
+		
+		DataMapper dm = new DataMapper(null, true);
+		dm.setClientKey(author);
+		dm.setPluginKey(pluginKey);
+		dm.setData("OldContent");
+		serv.logMessage(dm);
+		
+		Assertions.assertThat(dm.getData()).isEqualTo("OldContent");
+		
+		serv.updateMessage(dm.getId(), "NewContent");
+		
+		DataMapper messageToFind = serv.retrieveMessagesByID(dm.getId()).get(0);
+		
+		Assertions.assertThat(messageToFind.getData()).isEqualTo("NewContent");
+		
 	}
 
 }

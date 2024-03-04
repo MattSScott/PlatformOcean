@@ -29,6 +29,11 @@ public class OceanService implements OceanServiceInterface {
 	public List<DataMapper> retrieveMessagesByPlugin(UUID pluginKey) {
 		return repo.findMessagesByPluginKey(pluginKey);
 	}
+	
+	@Override
+	public List<DataMapper> retrieveMessagesByID(UUID pluginId) {
+		return repo.findMessageById(pluginId);
+	}
 
 	@Override
 	public boolean matchRequestWithSender(UUID clientKey, UUID messageID) {

@@ -10,6 +10,8 @@ public interface OceanServiceInterface {
 	public String logMessage(DataMapper message);
 
 	public List<DataMapper> retrieveMessagesByPlugin(UUID pluginkey);
+	
+	public List<DataMapper> retrieveMessagesByID(UUID pluginId);
 
 	public boolean matchRequestWithSender(UUID clientKey, UUID messageID);
 	
