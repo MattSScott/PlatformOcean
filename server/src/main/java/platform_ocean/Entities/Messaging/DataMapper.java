@@ -12,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import platform_ocean.Controller.OceanMessageConverter;
 
 @Entity
 @Table(name = "DATA")
