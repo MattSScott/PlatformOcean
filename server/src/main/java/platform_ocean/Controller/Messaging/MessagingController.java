@@ -36,13 +36,14 @@ public class MessagingController implements MessagingControllerInterface {
 	@SendTo("/topic/{PluginKey}/receive")
 	public ResponseEntity<SimpleDataMapper> createMessage(@DestinationVariable("ClientKey") UUID clientKey,
 			@DestinationVariable("PluginKey") UUID pluginKey, @Payload DataMapper dataFromFrontend) {
-		
-		System.out.println(dataFromFrontend.getData());
 
 		dataFromFrontend.setClientKey(clientKey);
 		dataFromFrontend.setPluginKey(pluginKey);
 		if (dataFromFrontend.shouldPersist()) {
-			serv.logMessage(dataFromFrontend);
+			boolean created = serv.createMessage(dataFromFrontend);
+			if (!created) {
+				return ResponseEntity.status(HttpStatus.INSUFFICIENT_STORAGE).build();
+			}
 		}
 
 		SimpleDataMapper parsedData = dataFromFrontend.castToSimpleDataMapper(MessageProtocol.CREATE);
@@ -62,7 +63,11 @@ public class MessagingController implements MessagingControllerInterface {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
 
-		serv.deleteMessage(messageID);
+		boolean deleted = serv.deleteMessage(messageID);
+		if (!deleted) {
+			return ResponseEntity.status(HttpStatus.INSUFFICIENT_STORAGE).build();
+		}
+
 		SimpleDataMapper deleteConfirmed = new SimpleDataMapper(clientKey, null, messageID, MessageProtocol.DELETE);
 		return ResponseEntity.status(HttpStatus.OK).body(deleteConfirmed);
 	}
@@ -81,7 +86,10 @@ public class MessagingController implements MessagingControllerInterface {
 		}
 
 		String contentToChange = messageUpdateRequest.getData();
-		serv.updateMessage(idForChange, contentToChange);
+		boolean updated = serv.updateMessage(idForChange, contentToChange);
+		if (!updated) {
+			return ResponseEntity.status(HttpStatus.INSUFFICIENT_STORAGE).build();
+		}
 		SimpleDataMapper updateRequest = messageUpdateRequest.castToSimpleDataMapper(MessageProtocol.UPDATE);
 		return ResponseEntity.status(HttpStatus.OK).body(updateRequest);
 

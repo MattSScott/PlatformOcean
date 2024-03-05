@@ -7,13 +7,13 @@ import platform_ocean.Entities.Messaging.DataMapper;
 
 public interface OceanServiceInterface {
 
-	public String logMessage(DataMapper message);
-
 	public List<DataMapper> retrieveMessagesByPlugin(UUID pluginkey);
 	
 	public List<DataMapper> retrieveMessagesByID(UUID pluginId);
 
 	public boolean matchRequestWithSender(UUID clientKey, UUID messageID);
+
+	public boolean createMessage(DataMapper message);
 	
 	public boolean deleteMessage(UUID messageID);
 	

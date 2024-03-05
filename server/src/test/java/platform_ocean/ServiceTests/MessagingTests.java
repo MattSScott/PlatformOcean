@@ -30,7 +30,7 @@ public class MessagingTests {
 		DataMapper dm = new DataMapper(null, true);
 		dm.setClientKey(clientTest);
 		dm.setPluginKey(pluginTest);
-		serv.logMessage(dm);
+		serv.createMessage(dm);
 
 		UUID messageTest = dm.getId();
 
@@ -47,7 +47,7 @@ public class MessagingTests {
 		DataMapper dm = new DataMapper(null, true);
 		dm.setClientKey(clientTest);
 		dm.setPluginKey(pluginTest);
-		serv.logMessage(dm);
+		serv.createMessage(dm);
 
 		UUID messageTest = dm.getId();
 		UUID fakeSender = UUID.randomUUID();
@@ -65,7 +65,7 @@ public class MessagingTests {
 		DataMapper dm = new DataMapper(null, true);
 		dm.setClientKey(clientTest);
 		dm.setPluginKey(pluginTest);
-		serv.logMessage(dm);
+		serv.createMessage(dm);
 
 		UUID messageTest = dm.getId();
 
@@ -91,13 +91,13 @@ public class MessagingTests {
 		dm1.setClientKey(clientKey1);
 		dm1.setPluginKey(pluginKey);
 
-		serv.logMessage(dm1);
+		serv.createMessage(dm1);
 
 		DataMapper dm2 = new DataMapper(null, true);
 		dm2.setClientKey(clientKey2);
 		dm2.setPluginKey(pluginKey);
 
-		serv.logMessage(dm2);
+		serv.createMessage(dm2);
 
 		List<DataMapper> messages = serv.retrieveMessagesByPlugin(pluginKey);
 
@@ -114,13 +114,13 @@ public class MessagingTests {
 		dm1.setClientKey(clientKey1);
 		dm1.setPluginKey(pluginKey);
 
-		serv.logMessage(dm1);
+		serv.createMessage(dm1);
 
 		DataMapper dm2 = new DataMapper(null, true);
 		dm2.setClientKey(clientKey2);
 		dm2.setPluginKey(pluginKey);
 
-		serv.logMessage(dm2);
+		serv.createMessage(dm2);
 
 		List<DataMapper> messages = serv.retrieveMessagesByPlugin(pluginKey);
 
@@ -142,7 +142,7 @@ public class MessagingTests {
 		dm.setClientKey(author);
 		dm.setPluginKey(pluginKey);
 		dm.setData("OldContent");
-		serv.logMessage(dm);
+		serv.createMessage(dm);
 		
 		Assertions.assertThat(dm.getData()).isEqualTo("OldContent");
 		
@@ -163,7 +163,7 @@ public class MessagingTests {
 		dm.setClientKey(author);
 		dm.setPluginKey(pluginKey);
 		dm.setData("OldContent");
-		serv.logMessage(dm);
+		serv.createMessage(dm);
 		
 		Assertions.assertThat(dm.getData()).isEqualTo("OldContent");
 		

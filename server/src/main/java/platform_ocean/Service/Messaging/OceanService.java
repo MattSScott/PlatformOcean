@@ -16,20 +16,21 @@ public class OceanService implements OceanServiceInterface {
 	private MessageRepository repo;
 
 	@Override
-	public String logMessage(DataMapper message) {
+	public boolean createMessage(DataMapper message) {
 		try {
 			repo.save(message);
+			return true;
 		} catch (Exception e) {
-			return e.toString();
+			e.printStackTrace();
+			return false;
 		}
-		return "Message successfully logged";
 	}
 
 	@Override
 	public List<DataMapper> retrieveMessagesByPlugin(UUID pluginKey) {
 		return repo.findMessagesByPluginKey(pluginKey);
 	}
-	
+
 	@Override
 	public List<DataMapper> retrieveMessagesByID(UUID pluginId) {
 		return repo.findMessageById(pluginId);
@@ -54,7 +55,7 @@ public class OceanService implements OceanServiceInterface {
 		try {
 			repo.deleteById(messageID);
 			return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -72,7 +73,7 @@ public class OceanService implements OceanServiceInterface {
 			msg.setData(newContent);
 			repo.save(msg);
 			return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
