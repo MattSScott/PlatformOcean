@@ -153,5 +153,25 @@ public class MessagingTests {
 		Assertions.assertThat(messageToFind.getData()).isEqualTo("NewContent");
 		
 	}
+	
+	@Test
+	public void ServiceCanPreventUpdateMessage() throws JsonProcessingException {
+		UUID pluginKey = UUID.randomUUID();
+		UUID author = UUID.randomUUID();
+		
+		DataMapper dm = new DataMapper(null, true);
+		dm.setClientKey(author);
+		dm.setPluginKey(pluginKey);
+		dm.setData("OldContent");
+		serv.logMessage(dm);
+		
+		Assertions.assertThat(dm.getData()).isEqualTo("OldContent");
+		
+		serv.updateMessage(dm.getId(), "NewContent");
+		
+		DataMapper messageToFind = serv.retrieveMessagesByID(dm.getId()).get(0);
+		
+		Assertions.assertThat(messageToFind.getData()).isEqualTo("NewContent");
+	}
 
 }

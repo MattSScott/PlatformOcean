@@ -53,10 +53,12 @@ public class OceanService implements OceanServiceInterface {
 	public boolean deleteMessage(UUID messageID) {
 		try {
 			repo.deleteById(messageID);
+			return true;
+			
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
-		return true;
 	}
 
 	@Override
