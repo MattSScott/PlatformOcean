@@ -13,7 +13,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import platform_ocean.Entities.Messaging.DataMapper;
-import platform_ocean.Entities.Messaging.Payload;
 import platform_ocean.Repository.Messaging.MessageRepository;
 
 @ExtendWith(SpringExtension.class)
@@ -27,7 +26,7 @@ public class MessagingTests {
 	public void RepoCanMatchSenderAndMessageID() throws JsonProcessingException {
 		UUID clientTest = UUID.randomUUID();
 		UUID pluginTest = UUID.randomUUID();
-		DataMapper dm = new DataMapper(new Payload(null, true));
+		DataMapper dm = new DataMapper(null, true);
 		dm.setClientKey(clientTest);
 		dm.setPluginKey(pluginTest);
 		repo.save(dm);
@@ -46,7 +45,7 @@ public class MessagingTests {
 	public void RepoCanFailMatchSenderAndMessageID() throws JsonProcessingException {
 		UUID clientTest = UUID.randomUUID();
 		UUID pluginTest = UUID.randomUUID();
-		DataMapper dm = new DataMapper(new Payload(null, true));
+		DataMapper dm = new DataMapper(null, true);
 		dm.setClientKey(clientTest);
 		dm.setPluginKey(pluginTest);
 		repo.save(dm);
@@ -67,7 +66,7 @@ public class MessagingTests {
 
 		UUID clientTest = UUID.randomUUID();
 		UUID pluginTest = UUID.randomUUID();
-		DataMapper dm = new DataMapper(new Payload(null, true));
+		DataMapper dm = new DataMapper(null, true);
 		dm.setClientKey(clientTest);
 		dm.setPluginKey(pluginTest);
 		repo.save(dm);
@@ -90,11 +89,11 @@ public class MessagingTests {
 		UUID clientKey1 = UUID.randomUUID();
 		UUID clientKey2 = UUID.randomUUID();
 		UUID pluginKey = UUID.randomUUID();
-		DataMapper dm1 = new DataMapper(new Payload(null, true));
+		DataMapper dm1 = new DataMapper(null, true);
 		dm1.setClientKey(clientKey1);
 		dm1.setPluginKey(pluginKey);
 		repo.save(dm1);
-		DataMapper dm2 = new DataMapper(new Payload(null, true));
+		DataMapper dm2 = new DataMapper(null, true);
 		dm2.setClientKey(clientKey2);
 		dm2.setPluginKey(pluginKey);
 		repo.save(dm2);
@@ -114,11 +113,11 @@ public class MessagingTests {
 		UUID clientKey1 = UUID.randomUUID();
 		UUID clientKey2 = UUID.randomUUID();
 		UUID pluginKey = UUID.randomUUID();
-		DataMapper dm1 = new DataMapper(new Payload(null, true));
+		DataMapper dm1 = new DataMapper(null, true);
 		dm1.setClientKey(clientKey1);
 		dm1.setPluginKey(pluginKey);
 		repo.save(dm1);
-		DataMapper dm2 = new DataMapper(new Payload(null, true));
+		DataMapper dm2 = new DataMapper(null, true);
 		dm2.setClientKey(clientKey2);
 		dm2.setPluginKey(pluginKey);
 		repo.save(dm2);

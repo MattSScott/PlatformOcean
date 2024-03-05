@@ -14,6 +14,7 @@ import platform_ocean.Entities.Messaging.DataMapper;
 import platform_ocean.Entities.Messaging.DeleteRequest;
 import platform_ocean.Entities.Messaging.MessageProtocol;
 import platform_ocean.Entities.Messaging.SimpleDataMapper;
+import platform_ocean.Entities.Messaging.UpdatedDataMapper;
 import platform_ocean.Service.Messaging.OceanService;
 
 //@Controller
@@ -25,50 +26,63 @@ import platform_ocean.Service.Messaging.OceanService;
 @CrossOrigin
 public class MessagingController implements MessagingControllerInterface {
 
-//	private final SimpMessageSendingOperations messagingTemplate;
-//
-//	@Autowired
-//	public WebSocketController(SimpMessageSendingOperations messagingTemplate) {
-//		this.messagingTemplate = messagingTemplate;
-//	}
-
 	@Autowired
 	private OceanService serv;
 
 	@Override
-	public SimpleDataMapper parseDataFromFrontend(@Payload DataMapper dataFromFrontend) throws Exception {
-		return dataFromFrontend.castAndSendDataToFrontend();
-	}
-
-	@Override
 	@MessageMapping("/{ClientKey}/{PluginKey}/send")
 	@SendTo("/topic/{PluginKey}/receive")
-	public SimpleDataMapper distributeDataToFrontend(@DestinationVariable("ClientKey") UUID clientKey,
-			@DestinationVariable("PluginKey") UUID pluginKey, @Payload DataMapper dataFromFrontend) throws Exception {
+	public SimpleDataMapper createMessage(@DestinationVariable("ClientKey") UUID clientKey,
+			@DestinationVariable("PluginKey") UUID pluginKey, @Payload DataMapper dataFromFrontend) {
 
 		dataFromFrontend.setClientKey(clientKey);
 		dataFromFrontend.setPluginKey(pluginKey);
-		if (dataFromFrontend.getPayload().shouldPersist()) {
+		if (dataFromFrontend.shouldPersist()) {
 			serv.logMessage(dataFromFrontend);
 		}
 
-		return this.parseDataFromFrontend(dataFromFrontend);
+		return dataFromFrontend.castToSimpleDataMapper(MessageProtocol.CREATE);
 	}
 
+	@Override
 	@MessageMapping("{ClientKey}/{PluginKey}/delete")
 	@SendTo("/topic/{PluginKey}/receive")
 	public SimpleDataMapper deleteMessage(@DestinationVariable("ClientKey") UUID clientKey,
 			@DestinationVariable("PluginKey") UUID pluginKey, @Payload DeleteRequest messageDeleteRequest) {
-		
+
 		final UUID messageID = messageDeleteRequest.getMessageID();
-		boolean canDelete = serv.matchDeletionRequestToSender(clientKey, messageID);
+		boolean canDelete = serv.matchRequestWithSender(clientKey, messageID);
 
 		if (canDelete) {
 			serv.deleteMessage(messageID);
-			return new SimpleDataMapper(messageID, null, messageID, MessageProtocol.DELETE);
+			return new SimpleDataMapper(clientKey, null, messageID, MessageProtocol.DELETE);
 		}
-		
+
 		return null;
+
+	}
+
+	@Override
+	@MessageMapping("{ClientKey}/{PluginKey}/update")
+	@SendTo("/topic/{PluginKey}/receive")
+	public SimpleDataMapper updateMessage(@DestinationVariable("ClientKey") UUID clientKey,
+			@DestinationVariable("PluginKey") UUID pluginKey, @Payload UpdatedDataMapper messageUpdateRequest) {
+
+		UUID idForChange = messageUpdateRequest.getId();
+		boolean canUpdate = serv.matchRequestWithSender(clientKey, idForChange);
+
+		if (!canUpdate) {
+			return null;
+		}
+
+		try {
+			String contentToChange = messageUpdateRequest.getData();
+			serv.updateMessage(idForChange, contentToChange);
+			return messageUpdateRequest.castToSimpleDataMapper(MessageProtocol.UPDATE);
+		} catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
 
 	}
 

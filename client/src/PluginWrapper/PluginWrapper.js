@@ -52,7 +52,15 @@ class PluginWrapper extends React.Component {
   }
 
   handleUpdateMessage(data) {
-    return data;
+    this.setState((prevState) => ({
+      ...prevState,
+      dataHistory: prevState.dataHistory.map((entry) => {
+        if (entry.messageID !== data.messageID) {
+          return entry;
+        }
+        return data;
+      }),
+    }));
   }
 
   handleDeleteMessage(data) {
@@ -104,7 +112,7 @@ class PluginWrapper extends React.Component {
 
           this.setState(
             (prevState) =>
-              MessageProtcol == "CREATE" && {
+              MessageProtcol === "CREATE" && {
                 ...prevState,
                 data: ParsedDatagram,
                 dataHistory: [...this.state.dataHistory, ParsedDatagram],
@@ -149,9 +157,7 @@ class PluginWrapper extends React.Component {
   }
 
   formatDataAsJSON(dataStruct, shouldPersist) {
-    var payloadStruct = {
-      payload: { data: dataStruct, persist: shouldPersist },
-    };
+    var payloadStruct = { dataNode: dataStruct, persist: shouldPersist };
     return JSON.stringify(payloadStruct);
   }
 
@@ -164,6 +170,20 @@ class PluginWrapper extends React.Component {
         {},
         this.formatDataAsJSON(processedData, shouldPersist)
       );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  sendUpdateMessage(messageID, newMessage) {
+    const SenderRoutingAddress = `/app/${this.props.uniqueClientID}/${this.props.routingKey}/update`;
+    const UpdateStruct = { dataNode: newMessage, persist: true, id: messageID };
+    const UpdateJSON = JSON.stringify(UpdateStruct);
+
+    console.log(UpdateStruct);
+
+    try {
+      this.props.client.send(SenderRoutingAddress, {}, UpdateJSON);
     } catch (error) {
       console.log(error);
     }

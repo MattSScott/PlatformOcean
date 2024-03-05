@@ -18,4 +18,7 @@ public interface MessageRepository extends JpaRepository<DataMapper, UUID> {
 
 	@Query(value = "SELECT bin_to_uuid(client_key) from data where data.id = (:key)", nativeQuery = true)
 	List<UUID> findClientKeyById(@Param("key") UUID messageID);
+	
+	@Query(value = "SELECT * from data where data.id = (:key)", nativeQuery = true)
+	List<DataMapper> findMessageById(@Param("key") UUID messageID);
 }

@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import jakarta.persistence.Entity;
@@ -13,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
-import platform_ocean.Controller.OceanMessageConverter;
 
 @Entity
 @Table(name = "DATA")
@@ -22,12 +20,15 @@ public class DataMapper {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
-	private UUID id;
+	protected UUID id;
 
 	@Transient
-	private Payload payload;
+	private boolean persist;
 
-	private String data;
+	@Transient
+	protected JsonNode dataNode;
+
+	protected String data;
 
 	private UUID clientKey;
 
@@ -37,9 +38,14 @@ public class DataMapper {
 
 	}
 
-	public DataMapper(Payload payload) throws JsonProcessingException {
-		this.payload = payload;
-		this.data = this.serialiseJsonData(payload.getData());
+	public DataMapper(JsonNode dataNode, boolean persist) throws JsonProcessingException {
+		this.dataNode = dataNode;
+		this.persist = persist;
+		try {
+			this.data = dataNode.toString();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public UUID getId() {
@@ -62,26 +68,30 @@ public class DataMapper {
 		this.pluginKey = pluginKey;
 	}
 
-	public Payload getPayload() {
-		return payload;
+	public boolean shouldPersist() {
+		return this.persist;
 	}
 
-	public void setPayload(Payload payload) {
-		this.payload = payload;
+	public Object getDataNode() {
+		return dataNode;
 	}
 
 	public String getData() {
 		return data;
 	}
-
-	private String serialiseJsonData(JsonNode unserialisedData) throws JsonProcessingException {
-		ObjectMapper om = new ObjectMapper();
-		return om.writeValueAsString(unserialisedData);
+	
+	public void setData(String data) {
+		this.data = data;
 	}
 
+//	private String serialiseJsonData(JsonNode unserialisedData) throws JsonProcessingException {
+//		ObjectMapper om = new ObjectMapper();
+//		return om.writeValueAsString(unserialisedData);
+//	}
+
 	// Defines how class data is sent to the front-end
-	public SimpleDataMapper castAndSendDataToFrontend() {
-		SimpleDataMapper sdmCasting = new SimpleDataMapper(this.clientKey, this.data, this.id, MessageProtocol.CREATE);
+	public SimpleDataMapper castToSimpleDataMapper(MessageProtocol protocol) {
+		SimpleDataMapper sdmCasting = new SimpleDataMapper(this.clientKey, this.data, this.id, protocol);
 		return sdmCasting;
 	}
 

@@ -1,4 +1,4 @@
-package platform_ocean.Controller;
+package platform_ocean.Entities.Messaging;
 
 import java.io.IOException;
 
@@ -13,9 +13,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import platform_ocean.Entities.Messaging.DataMapper;
-import platform_ocean.Entities.Messaging.Payload;
-
 public class OceanMessageConverter extends JsonDeserializer<DataMapper> {
 
 	private static final long serialVersionUID = 1L;
@@ -27,19 +24,15 @@ public class OceanMessageConverter extends JsonDeserializer<DataMapper> {
 		ObjectMapper mapper = new ObjectMapper();
 
 		TreeNode node = parser.getCodec().readTree(parser);
-		TreeNode payloadNode = node.get("payload");
 
-		TreeNode dataFromPayload = payloadNode.get("data");
-		TreeNode persistFromPayload = payloadNode.get("persist");
+		TreeNode dataFromPayload = node.get("dataNode");
+		TreeNode persistFromPayload = node.get("persist");
 
 		JsonNode data = mapper.treeToValue(dataFromPayload, JsonNode.class);
 		JsonNode persist = mapper.treeToValue(persistFromPayload, JsonNode.class);
 
 		Boolean parsedPersist = persist.asBoolean();
-
-		Payload payload = new Payload(data, parsedPersist);
-
-		return new DataMapper(payload);
+		return new DataMapper(data, parsedPersist);
 	}
 
 	@Bean
