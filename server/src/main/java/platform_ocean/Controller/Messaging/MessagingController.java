@@ -90,6 +90,8 @@ public class MessagingController implements MessagingControllerInterface {
 		if (!updated) {
 			return ResponseEntity.status(HttpStatus.INSUFFICIENT_STORAGE).build();
 		}
+		messageUpdateRequest.setClientKey(clientKey);
+		messageUpdateRequest.setPluginKey(pluginKey);
 		SimpleDataMapper updateRequest = messageUpdateRequest.castToSimpleDataMapper(MessageProtocol.UPDATE);
 		return ResponseEntity.status(HttpStatus.OK).body(updateRequest);
 

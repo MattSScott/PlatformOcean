@@ -101,6 +101,11 @@ class PluginWrapper extends React.Component {
           const deserialiseJSONHeaders = JSON.parse(resp.body);
           const deserialiseJSON = deserialiseJSONHeaders.body;
 
+          console.log(
+            deserialiseJSONHeaders.statusCode,
+            deserialiseJSONHeaders.statusCodeValue
+          );
+
           const JSONsender = deserialiseJSON.sender;
           const JSONmessage = JSON.parse(deserialiseJSON.message);
           const JSONmessageID = deserialiseJSON.messageID;
