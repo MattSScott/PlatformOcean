@@ -148,7 +148,7 @@ class PluginWrapper extends React.Component {
     try {
       const HistoryRoutingAddress = `${this.context}/history/${this.props.routingKey}`;
       const RawFetchedHistory = await fetch(HistoryRoutingAddress);
-      const ParsedHistory = await RawFetchedHistory.json();
+      const ParsedHistory = await RawFetchedHistory.json().body;
 
       this.setState((prevState) => ({
         ...prevState,
