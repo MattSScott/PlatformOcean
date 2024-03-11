@@ -31,7 +31,7 @@ export default function PluginAdder() {
   const label = React.useRef();
 
   React.useEffect(() => {
-    setLabelWidth(`${label.current.offsetWidth + 40}px`); // 24 for caret icon
+    setLabelWidth(`${label.current.offsetWidth + 40}px`);
   }, [label]);
 
   const handleChange = (event) => {

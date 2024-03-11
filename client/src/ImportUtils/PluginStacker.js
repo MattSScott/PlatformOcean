@@ -85,6 +85,16 @@ export default class PluginStacker extends React.Component {
             >
               <ArrowBackIcon />
             </Button>
+            <p
+              style={{
+                marginLeft: "5px",
+                marginRight: "5px",
+                marginTop: 0,
+                marginBottom: 0,
+              }}
+            >
+              {this.state.currentIdx + 1}
+            </p>
             <Button
               variant="outlined"
               onClick={this.cycleRight}
