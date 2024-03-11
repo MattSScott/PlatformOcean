@@ -3,6 +3,7 @@ import Button from "@mui/material/Button";
 // import PluginStacker from "../ImportUtils/PluginStacker";
 import "./Renderer.css";
 import { ClientIDContext } from "../Contexts/ClientContext";
+import PluginAdder from "../PluginAdder/PluginAdder";
 
 class Renderer extends React.Component {
   constructor(props) {
@@ -28,6 +29,7 @@ class Renderer extends React.Component {
             Logout
           </Button>
         </div>
+        <PluginAdder />
         <div className="allComps">{this.props.loadedPlugins}</div>
       </>
     );
