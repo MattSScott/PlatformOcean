@@ -14,7 +14,6 @@ export default class Coords extends PluginWrapper {
 
   render() {
     let dHist = this.getDataHistory();
-    console.log(dHist);
     let dLen = dHist ? dHist.length : 0;
 
     let prevCirc = null;

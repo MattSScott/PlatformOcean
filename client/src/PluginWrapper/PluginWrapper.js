@@ -98,7 +98,13 @@ class PluginWrapper extends React.Component {
       const pluginSubscription = this.props.client.subscribe(
         SubscriberRoutingAddress,
         (resp) => {
-          const deserialiseJSON = JSON.parse(resp.body);
+          const deserialiseJSONHeaders = JSON.parse(resp.body);
+          const deserialiseJSON = deserialiseJSONHeaders.body;
+
+          console.log(
+            deserialiseJSONHeaders.statusCode,
+            deserialiseJSONHeaders.statusCodeValue
+          );
 
           const JSONsender = deserialiseJSON.sender;
           const JSONmessage = JSON.parse(deserialiseJSON.message);
