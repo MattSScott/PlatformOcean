@@ -1,0 +1,12 @@
+.popup-box {
+    position: fixed;
+    width: 1000px;
+    height: 500px;
+    background: white;
+    border: 1px solid black;
+    padding: 10px;
+    margin: auto;
+    z-index: 10;
+    left: 130px;
+    top: 100px;
+}

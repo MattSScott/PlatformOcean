@@ -11,7 +11,7 @@ export default class Subtitler2 extends PluginWrapper {
     isHost: false,
   };
 
-  handleMessageReceived(data) {
+  handleCreateMessage(data) {
     if (data.message.content === "host" && !this.isMe()) {
       this.setState((prevState) => ({
         ...prevState,
