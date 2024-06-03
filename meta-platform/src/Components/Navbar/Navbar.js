@@ -8,13 +8,13 @@ export default function Navbar({ logo }) {
       </div>
       <nav className="navbar">
         <div className="navItem">
-          <a href="/">HOME</a>
+          <a href="/">SOURCE</a>
         </div>
         <div className="navItem">
           <a href="/plugins">PLUGINS</a>
         </div>
         <div className="navItem">
-          <a href="/about">ABOUT</a>
+          <a href="/about">PLATFORMS</a>
         </div>
       </nav>
     </header>

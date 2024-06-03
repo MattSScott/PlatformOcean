@@ -1,5 +1,4 @@
 .circText {
-  position: relative;
   color: yellow;
   display: flex;
   width: 100%;
@@ -8,13 +7,14 @@
   text-align: center;
   align-items: center;
   font-size: 5px;
+  z-index: 10;
 }
 
 .centerImg {
-  width: 100%;
+  width: 60%;
   height: 100%;
-  scale: 75%;
-  display: flex;
+  /* scale: 75%; */
+  /* display: flex; */
   align-items: center;
   justify-content: center;
 }
