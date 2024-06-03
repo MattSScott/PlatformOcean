@@ -17,7 +17,7 @@ public class PlatformJsonEncoder {
 		List<PluginStore> allPlugs = repository.findAll();
 		HashMap<UUID, String> keyNameMap = new HashMap<UUID, String>();
 		for (PluginStore plugin : allPlugs) {
-			keyNameMap.put(plugin.getPLUGIN_KEY(), plugin.getPluginName());
+			keyNameMap.put(plugin.getPluginKey(), plugin.getPluginName());
 		}
 		return keyNameMap;
 	}

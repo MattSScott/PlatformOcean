@@ -7,46 +7,44 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "PLUGINS")
+@Table(name = PluginStore.TABLE_NAME)
 public class PluginStore {
 
+	public static final String TABLE_NAME = "PLUGINS";
+
 	@Id
-	private final UUID PLUGIN_KEY;
+	private final UUID pluginKey = UUID.randomUUID();
 
-	private final String developerName;
 	private final String pluginName;
-	private String filePath;
+	private final String pluginURL;
 
-	public PluginStore(String developer, String pluginName) {
-		this.PLUGIN_KEY = UUID.randomUUID();
-		this.developerName = developer;
+
+	public PluginStore(String pluginName, String url) {
 		this.pluginName = pluginName;
+		this.pluginURL = url;
 	}
 
 	public PluginStore() {
-		this.PLUGIN_KEY = UUID.randomUUID();
-		this.developerName = null;
 		this.pluginName = null;
+		this.pluginURL = null;
 	}
 
-	public UUID getPLUGIN_KEY() {
-		return PLUGIN_KEY;
-	}
-
-	public String getDeveloperName() {
-		return developerName;
+	public UUID getPluginKey() {
+		return pluginKey;
 	}
 
 	public String getPluginName() {
 		return pluginName;
 	}
-
-	public String getFilePath() {
-		return filePath;
+	public String getPluginURL() {
+		return pluginURL;
 	}
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+
+	public interface PluginData {
+		UUID getPluginKey();
+		String getPluginName();
+		String getPluginURL();
 	}
 
 }

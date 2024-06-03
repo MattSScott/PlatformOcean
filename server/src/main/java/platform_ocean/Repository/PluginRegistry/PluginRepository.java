@@ -11,7 +11,6 @@ import platform_ocean.Entities.PluginRegistry.PluginStore;
 @Repository
 public interface PluginRepository extends JpaRepository<PluginStore, UUID> {
 
-	@Override
-	List<PluginStore> findAll();
+	List<PluginStore.PluginData> findAllProjectedBy();
 
 }

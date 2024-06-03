@@ -1,5 +1,6 @@
 import React, { lazy } from "react";
 import PluginStacker from "./PluginStacker";
+import RemoteComponent from "../remoteImporterUtils/RemoteComponent";
 // import DataOperator from "./DataOperator";
 
 export default function PluginImporter(ChildComponent) {
@@ -17,13 +18,13 @@ export default function PluginImporter(ChildComponent) {
       this.loadPlugins(this.props.pluginDescriptors);
     }
 
-    async importPlugin(plugin) {
-      return lazy(() =>
-        import(`../plugins/${plugin}/${plugin}`).catch(() =>
-          import("../NullView/NullView")
-        )
-      );
-    }
+    // async importPlugin(plugin) {
+    //   return lazy(() =>
+    //     import(`../plugins/${plugin}/${plugin}`).catch(() =>
+    //       import("../NullView/NullView")
+    //     )
+    //   );
+    // }
 
     setPlugins(pluginsReturned) {
       const PluginMapping = {};
@@ -70,18 +71,34 @@ export default function PluginImporter(ChildComponent) {
     //   Promise.all(componentPromises).then(this.setPlugins);
     // }
 
-    async loadPlugins(pluginNames) {
-      const componentPromises = Object.entries(pluginNames).map(
-        async ([pluginKey, pluginName]) => {
-          try {
-            const Plugin = await this.importPlugin(pluginName);
-            return { name: pluginName, plugin: Plugin, key: pluginKey };
-          } catch (error) {
-            console.log(error);
-          }
+    // async loadPlugins(pluginNames) {
+    //   const componentPromises = Object.entries(pluginNames).map(
+    //     async ([pluginKey, pluginName]) => {
+    //       try {
+    //         const Plugin = await this.importPlugin(pluginName);
+    //         return { name: pluginName, plugin: Plugin, key: pluginKey };
+    //       } catch (error) {
+    //         console.log(error);
+    //       }
+    //     }
+    //   );
+    //   Promise.all(componentPromises).then(this.setPlugins);
+    // }
+
+    loadPlugins(pluginData) {
+      const components = Object.entries(pluginData).map(
+        ([pluginKey, pluginName, pluginUrl]) => {
+          const Plugin = (
+            <RemoteComponent
+              remoteUrl={pluginUrl}
+              scope={"PLUGIN"}
+              module={"./Plugin"}
+            />
+          );
+          return { name: pluginName, plugin: Plugin, key: pluginKey };
         }
       );
-      Promise.all(componentPromises).then(this.setPlugins);
+      this.setPlugins(components);
     }
 
     render() {

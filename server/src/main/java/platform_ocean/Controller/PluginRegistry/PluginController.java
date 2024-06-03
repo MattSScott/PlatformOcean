@@ -1,6 +1,7 @@
 package platform_ocean.Controller.PluginRegistry;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class PluginController implements PluginControllerInterface {
 	@Override
 	@GetMapping("/get")
 	@ResponseBody
-	public HashMap<UUID, String> retrievePlugins() {
+	public List<PluginStore.PluginData> retrievePlugins() {
 		return serv.retrievePlugins();
 	}
 
