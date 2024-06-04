@@ -53,11 +53,13 @@ export default class PluginStacker extends React.Component {
                     display: idx === this.state.currentIdx ? "" : "none",
                   }}
                 >
-                  <ToggleablePlugin
+                  {/* TODO: work out how to attach props */}
+                  {ToggleablePlugin}
+                  {/* <ToggleablePlugin
                     routingKey={key}
                     client={client}
                     uniqueClientID={clientID}
-                  />
+                  /> */}
                 </div>
               )}
             </ClientIDContext.Consumer>

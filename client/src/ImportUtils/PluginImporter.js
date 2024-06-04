@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React from "react";
 import PluginStacker from "./PluginStacker";
 import RemoteComponent from "../remoteImporterUtils/RemoteComponent";
 // import DataOperator from "./DataOperator";
@@ -27,6 +27,7 @@ export default function PluginImporter(ChildComponent) {
     // }
 
     setPlugins(pluginsReturned) {
+      console.log(pluginsReturned);
       const PluginMapping = {};
       for (const { name, plugin, key } of pluginsReturned) {
         if (name in PluginMapping) {
@@ -86,11 +87,12 @@ export default function PluginImporter(ChildComponent) {
     // }
 
     loadPlugins(pluginData) {
-      const components = Object.entries(pluginData).map(
-        ([pluginKey, pluginName, pluginUrl]) => {
+      console.log(pluginData);
+      const components = pluginData.map(
+        ({ pluginKey, pluginName, pluginURL }) => {
           const Plugin = (
             <RemoteComponent
-              remoteUrl={pluginUrl}
+              remoteUrl={pluginURL}
               scope={"PLUGIN"}
               module={"./Plugin"}
             />

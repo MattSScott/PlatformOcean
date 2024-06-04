@@ -1,6 +1,6 @@
 import React from "react";
 import ErrorBoundary from "./errorBoundary";
-import { consultPluginCache } from "./pluginCache";
+import { ConsultPluginCache } from "./pluginCache";
 
 const RemoteComponent = ({
   remoteUrl,
@@ -9,7 +9,7 @@ const RemoteComponent = ({
   fallback = null,
   ...props
 }) => {
-  const { Component } = consultPluginCache(remoteUrl, scope, module);
+  const { Component } = ConsultPluginCache(remoteUrl, scope, module);
   return (
     <ErrorBoundary>
       <React.Suspense fallback={fallback}>

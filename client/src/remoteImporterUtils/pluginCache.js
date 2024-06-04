@@ -5,7 +5,7 @@ import { loadComponent } from "./loadComponent";
 
 const componentCache = new Map();
 
-export const consultPluginCache = (remoteUrl, scope, module) => {
+export const ConsultPluginCache = (remoteUrl, scope, module) => {
   const key = `${remoteUrl}-${scope}-${module}`;
   const [Component, setComponent] = useState(null);
 
@@ -33,30 +33,4 @@ export const consultPluginCache = (remoteUrl, scope, module) => {
   }, []);
 
   return { Component };
-
-  //   console.log(componentCache);
-
-  //   useEffect(() => {
-  //     if (componentCache.has(key)) {
-  //       console.log("SETTING!");
-  //       setComponent(componentCache.get(key));
-  //     } else if (Component) {
-  //       setComponent(null);
-  //     }
-  //     // Only recalculate when key changes
-  //   }, [key]);
-
-  //   useEffect(() => {
-  //     if (!Component) {
-  //       console.log("SETTING?");
-  //       const Comp = React.lazy(
-  //         loadComponent(remoteName, remoteUrl, moduleName, scope)
-  //       );
-  //       componentCache.set(key, Comp);
-  //       setComponent(Comp);
-  //     }
-  //     // key includes all dependencies (scope/module)
-  //   }, [Component, key]);
-
-  //   return { Component };
 };
