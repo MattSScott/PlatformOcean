@@ -2,7 +2,7 @@ import React from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Button } from "@mui/material";
-import { ClientContext, ClientIDContext } from "../Contexts/ClientContext";
+// import { ClientContext, ClientIDContext } from "../Contexts/ClientContext";
 
 export default class PluginStacker extends React.Component {
   constructor() {
@@ -40,33 +40,46 @@ export default class PluginStacker extends React.Component {
   }
 
   render() {
-    const PluginArray = this.props.plugins.map(({ plugin, key }, idx) => {
-      const ToggleablePlugin = plugin;
-      return (
-        <ClientContext.Consumer key={key}>
-          {(client) => (
-            <ClientIDContext.Consumer>
-              {(clientID) => (
-                <div
-                  className="componentHouse"
-                  style={{
-                    display: idx === this.state.currentIdx ? "" : "none",
-                  }}
-                >
-                  {/* TODO: work out how to attach props */}
-                  {ToggleablePlugin}
-                  {/* <ToggleablePlugin
-                    routingKey={key}
-                    client={client}
-                    uniqueClientID={clientID}
-                  /> */}
-                </div>
-              )}
-            </ClientIDContext.Consumer>
-          )}
-        </ClientContext.Consumer>
-      );
-    });
+    // const PluginArray = this.props.plugins.map(({ plugin, key }, idx) => {
+    //   const ToggleablePlugin = plugin;
+    //   return (
+    //     <ClientContext.Consumer key={key}>
+    //       {(client) => (
+    //         <ClientIDContext.Consumer>
+    //           {(clientID) => (
+    //             // const EnhancedPlugin = DataOper
+    //             <div
+    //               className="componentHouse"
+    //               style={{
+    //                 display: idx === this.state.currentIdx ? "" : "none",
+    //               }}
+    //             >
+    //               {/* TODO: work out how to attach props */}
+    //               {ToggleablePlugin}
+    //               {/* <ToggleablePlugin
+    //                 routingKey={key}
+    //                 client={client}
+    //                 uniqueClientID={clientID}
+    //               /> */}
+    //             </div>
+    //           )}
+    //         </ClientIDContext.Consumer>
+    //       )}
+    //     </ClientContext.Consumer>
+    //   );
+    // });
+
+    const PluginArray = this.props.plugins.map((Plugin, idx) => (
+      <div
+        key={`stack_box_${idx}`}
+        className="componentHouse"
+        style={{
+          display: idx === this.state.currentIdx ? "" : "none",
+        }}
+      >
+        {Plugin}
+      </div>
+    ));
 
     return (
       <div>

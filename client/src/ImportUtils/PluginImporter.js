@@ -1,6 +1,7 @@
 import React from "react";
 import PluginStacker from "./PluginStacker";
-import RemoteComponent from "../remoteImporterUtils/RemoteComponent";
+// import RemoteComponent from "../remoteImporterUtils/RemoteComponent";
+import RemotePluginPipeline from "./RemotePluginPipeline";
 // import DataOperator from "./DataOperator";
 
 export default function PluginImporter(ChildComponent) {
@@ -29,11 +30,11 @@ export default function PluginImporter(ChildComponent) {
     setPlugins(pluginsReturned) {
       console.log(pluginsReturned);
       const PluginMapping = {};
-      for (const { name, plugin, key } of pluginsReturned) {
+      for (const { name, plugin } of pluginsReturned) {
         if (name in PluginMapping) {
-          PluginMapping[name].push({ plugin: plugin, key: key });
+          PluginMapping[name].push(plugin);
         } else {
-          PluginMapping[name] = [{ plugin: plugin, key: key }];
+          PluginMapping[name] = [plugin];
         }
       }
 
@@ -91,13 +92,17 @@ export default function PluginImporter(ChildComponent) {
       const components = pluginData.map(
         ({ pluginKey, pluginName, pluginURL }) => {
           const Plugin = (
-            <RemoteComponent
+            <RemotePluginPipeline
               remoteUrl={pluginURL}
               scope={"PLUGIN"}
               module={"./Plugin"}
+              pluginKey={pluginKey}
             />
           );
-          return { name: pluginName, plugin: Plugin, key: pluginKey };
+          return {
+            name: pluginName,
+            plugin: Plugin,
+          };
         }
       );
       this.setPlugins(components);

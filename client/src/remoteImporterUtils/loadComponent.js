@@ -7,7 +7,6 @@ export const loadComponent = (remoteUrl, scope, module) => async () => {
     `${remoteUrl.replace(/\/$/, "")}/remoteEntry.js`,
     scope
   );
-  // const fetchedContainer = await loadModule(remoteUrl);
   // eslint-disable-next-line no-undef
   await fetchedContainer.init(__webpack_share_scopes__.default);
   const container = window[scope];
