@@ -30,7 +30,7 @@ export const ConsultPluginCache = (remoteUrl, scope, module) => {
       componentCache.set(key, Comp);
       setComponent(Comp);
     }
-  }, []);
+  }, [key, remoteUrl, scope, module]);
 
   return Component;
 };
