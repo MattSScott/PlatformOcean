@@ -14,8 +14,8 @@ export default function PluginWrapper(WrappedComponent) {
     static contextType = NetworkIPContext;
 
     componentDidMount() {
-      this.fetchHistory();
-      this.subscribe();
+      WrappedComponent && this.fetchHistory();
+      WrappedComponent && this.subscribe();
     }
 
     componentWillUnmount() {
