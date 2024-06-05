@@ -1,8 +1,6 @@
 import React from "react";
 import PluginStacker from "./PluginStacker";
-// import RemoteComponent from "../remoteImporterUtils/RemoteComponent";
 import RemotePluginPipeline from "./RemotePluginPipeline";
-// import DataOperator from "./DataOperator";
 
 export default function PluginImporter(ChildComponent) {
   return class extends React.Component {
@@ -18,14 +16,6 @@ export default function PluginImporter(ChildComponent) {
     componentDidMount() {
       this.loadPlugins(this.props.pluginDescriptors);
     }
-
-    // async importPlugin(plugin) {
-    //   return lazy(() =>
-    //     import(`../plugins/${plugin}/${plugin}`).catch(() =>
-    //       import("../NullView/NullView")
-    //     )
-    //   );
-    // }
 
     setPlugins(pluginsReturned) {
       console.log(pluginsReturned);
@@ -49,43 +39,6 @@ export default function PluginImporter(ChildComponent) {
         loadedPlugins: PluginStackerArray,
       }));
     }
-
-    // async loadPlugins(pluginNames) {
-    //   const componentPromises = Object.entries(pluginNames).map(
-    //     async ([pluginKey, pluginName]) => {
-    //       try {
-    //         const Plugin = await this.importPlugin(pluginName);
-    //         const EnhancedPlugin = DataOperator(Plugin);
-    //         return (
-    //           <div className="componentHouse" key={pluginKey}>
-    //             <EnhancedPlugin
-    //               client={this.props.client}
-    //               routingKey={pluginKey}
-    //               uniqueClientID={this.props.clientID}
-    //             />
-    //           </div>
-    //         );
-    //       } catch (error) {
-    //         console.log(error);
-    //       }
-    //     }
-    //   );
-    //   Promise.all(componentPromises).then(this.setPlugins);
-    // }
-
-    // async loadPlugins(pluginNames) {
-    //   const componentPromises = Object.entries(pluginNames).map(
-    //     async ([pluginKey, pluginName]) => {
-    //       try {
-    //         const Plugin = await this.importPlugin(pluginName);
-    //         return { name: pluginName, plugin: Plugin, key: pluginKey };
-    //       } catch (error) {
-    //         console.log(error);
-    //       }
-    //     }
-    //   );
-    //   Promise.all(componentPromises).then(this.setPlugins);
-    // }
 
     loadPlugins(pluginData) {
       console.log(pluginData);
