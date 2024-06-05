@@ -12,11 +12,9 @@ export default function RemotePluginPipeline({
   ...props
 }) {
   // get remote component from url
-  const { Component } = ConsultPluginCache(remoteUrl, scope, module);
-  console.log(Component);
+  const RemoteComponent = ConsultPluginCache(remoteUrl, scope, module);
   // inject dist. functionality
-  const DistributedRemoteComponent = PluginWrapper(Component);
-  console.log(DistributedRemoteComponent);
+  const DistributedRemoteComponent = PluginWrapper(RemoteComponent);
 
   return (
     <ErrorBoundary>

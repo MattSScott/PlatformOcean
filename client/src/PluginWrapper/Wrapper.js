@@ -1,6 +1,6 @@
 import React from "react";
 import "../Renderer/Renderer.css";
-// import NullView from "../NullView/NullView";
+import FetchingPlugin from "./FetchingPlugin";
 import { NetworkIPContext } from "../Contexts/ServerIPContext";
 
 export default function PluginWrapper(WrappedComponent) {
@@ -212,7 +212,7 @@ export default function PluginWrapper(WrappedComponent) {
 
     render() {
       return (
-        <React.Suspense>
+        <React.Suspense fallback={<FetchingPlugin />}>
           {WrappedComponent && (
             <WrappedComponent
               {...this.props}

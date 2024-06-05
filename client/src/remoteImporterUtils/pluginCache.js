@@ -32,5 +32,5 @@ export const ConsultPluginCache = (remoteUrl, scope, module) => {
     }
   }, []);
 
-  return { Component };
+  return Component;
 };
