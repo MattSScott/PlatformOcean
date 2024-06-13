@@ -1,9 +1,15 @@
 import React from "react";
 import "../Renderer/Renderer.css";
 import FetchingPlugin from "./FetchingPlugin";
-import { NetworkIPContext } from "../Contexts/ServerIPContext";
+import { useNetworkIPContext } from "../Contexts/ServerIPContext";
+import { useCallbackContext } from "./CallbackSystemContext";
 
 export default function PluginWrapper(WrappedComponent) {
+  const { callbacks, updateCallbacks } = useCallbackContext();
+  const NetworkIP = useNetworkIPContext();
+
+  console.log(callbacks, NetworkIP);
+
   return class extends React.Component {
     state = {
       data: null,
@@ -11,11 +17,12 @@ export default function PluginWrapper(WrappedComponent) {
       topicSubscription: null,
     };
 
-    static contextType = NetworkIPContext;
+    // static contextType = NetworkIPContext;
 
     componentDidMount() {
       WrappedComponent && this.fetchHistory();
       WrappedComponent && this.subscribe();
+      WrappedComponent && this.initialiseDefaultCallbacks();
     }
 
     componentWillUnmount() {
@@ -32,20 +39,44 @@ export default function PluginWrapper(WrappedComponent) {
       return this.state.dataHistory ? this.state.dataHistory : [];
     }
 
+    // runMessageProtocol(message, protocol) {
+    //   switch (protocol) {
+    //     case "CREATE":
+    //       this.handleCreateMessage(message);
+    //       return;
+    //     case "UPDATE":
+    //       this.handleUpdateMessage(message);
+    //       return;
+    //     case "DELETE":
+    //       this.handleDeleteMessage(message);
+    //       return;
+    //     default:
+    //       return;
+    //   }
+    // }
+
     runMessageProtocol(message, protocol) {
       switch (protocol) {
         case "CREATE":
-          this.handleCreateMessage(message);
+          callbacks.handleCreateMessage(message);
           return;
         case "UPDATE":
-          this.handleUpdateMessage(message);
+          callbacks.handleUpdateMessage(message);
           return;
         case "DELETE":
-          this.handleDeleteMessage(message);
+          callbacks.handleDeleteMessage(message);
           return;
         default:
           return;
       }
+    }
+
+    initialiseDefaultCallbacks() {
+      updateCallbacks({
+        handleCreateMessage: this.handleCreateMessage,
+        handleUpdateMessage: this.handleUpdateMessage,
+        handleDeleteMessage: this.handleDeleteMessage,
+      });
     }
 
     handleCreateMessage(data) {
@@ -147,7 +178,7 @@ export default function PluginWrapper(WrappedComponent) {
       }
 
       try {
-        const HistoryRoutingAddress = `${this.context}/history/${this.props.routingKey}`;
+        const HistoryRoutingAddress = `${NetworkIP}/history/${this.props.routingKey}`;
         const RawFetchedHistory = await fetch(HistoryRoutingAddress);
         const ParsedHistory = await RawFetchedHistory.json();
 
@@ -223,6 +254,7 @@ export default function PluginWrapper(WrappedComponent) {
               sendCreateMessage={this.sendCreateMessage}
               sendUpdateMessage={this.sendUpdateMessage}
               sendDeleteMessage={this.sendDeleteMessage}
+              updateCallbacks={updateCallbacks}
             />
           )}
         </React.Suspense>
