@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 
-// Create a context for the callback functions
-const CallbackContext = createContext();
+const CallbackContext = createContext({});
 
 export const useCallbackContext = () => {
   return useContext(CallbackContext);

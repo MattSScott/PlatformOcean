@@ -1,6 +1,7 @@
 import React from "react";
 import PluginStacker from "./PluginStacker";
 import RemotePluginPipeline from "./RemotePluginPipeline";
+import { CallbackProvider } from "../PluginWrapper/CallbackSystemContext";
 
 export default function PluginImporter(ChildComponent) {
   return class extends React.Component {
@@ -45,12 +46,14 @@ export default function PluginImporter(ChildComponent) {
       const components = pluginData.map(
         ({ pluginKey, pluginName, pluginURL }) => {
           const Plugin = (
-            <RemotePluginPipeline
-              remoteUrl={pluginURL}
-              scope={"PLUGIN"}
-              module={"./Plugin"}
-              pluginKey={pluginKey}
-            />
+            <CallbackProvider>
+              <RemotePluginPipeline
+                remoteUrl={pluginURL}
+                scope={"PLUGIN"}
+                module={"./Plugin"}
+                pluginKey={pluginKey}
+              />
+            </CallbackProvider>
           );
           return {
             name: pluginName,
