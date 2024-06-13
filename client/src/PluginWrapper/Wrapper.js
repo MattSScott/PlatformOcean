@@ -271,6 +271,9 @@ import { useCallbackContext } from "./CallbackSystemContext";
 // }
 
 export default function PluginWrapper(WrappedComponent) {
+  //   if (!WrappedComponent) {
+  //     return (props) => <FetchingPlugin {...props} />;
+  //   }
   function WrappedPlugin(props) {
     const { callbacks, updateCallbacks } = useCallbackContext();
     const NetworkIP = useNetworkIPContext();
@@ -281,18 +284,15 @@ export default function PluginWrapper(WrappedComponent) {
       topicSubscription: null,
     });
 
-    console.log(state);
-
     useEffect(() => {
-      if (!WrappedComponent) {
-        return;
-      }
       const subscription = subscribe();
+      console.log("SUBBED!");
       fetchHistory();
       initialiseDefaultCallbacks();
 
       return () => {
         subscription.unsubscribe();
+        console.log("UNSUBBED!");
       };
     }, []);
 
