@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "../Renderer/Renderer.css";
 import FetchingPlugin from "./FetchingPlugin";
 import { useNetworkIPContext } from "../Contexts/ServerIPContext";
@@ -284,91 +284,26 @@ export default function PluginWrapper(WrappedComponent) {
       topicSubscription: null,
     });
 
-    useEffect(() => {
-      const subscription = subscribe();
-      console.log("SUBBED!");
-      fetchHistory();
-      initialiseDefaultCallbacks();
+    const runMessageProtocol = useCallback(
+      (message, protocol) => {
+        switch (protocol) {
+          case "CREATE":
+            callbacks.handleCreateMessage(message);
+            return;
+          case "UPDATE":
+            callbacks.handleUpdateMessage(message);
+            return;
+          case "DELETE":
+            callbacks.handleDeleteMessage(message);
+            return;
+          default:
+            return;
+        }
+      },
+      [callbacks]
+    );
 
-      return () => {
-        subscription.unsubscribe();
-        console.log("UNSUBBED!");
-      };
-    }, []);
-
-    function getData(preprocessor = (x) => x) {
-      return state.data ? preprocessor(state.data.message) : null;
-    }
-
-    function getDataHistory() {
-      return state.dataHistory ? state.dataHistory : [];
-    }
-
-    function runMessageProtocol(message, protocol) {
-      switch (protocol) {
-        case "CREATE":
-          callbacks.handleCreateMessage(message);
-          return;
-        case "UPDATE":
-          callbacks.handleUpdateMessage(message);
-          return;
-        case "DELETE":
-          callbacks.handleDeleteMessage(message);
-          return;
-        default:
-          return;
-      }
-    }
-
-    function initialiseDefaultCallbacks() {
-      updateCallbacks({
-        handleCreateMessage: handleCreateMessage,
-        handleUpdateMessage: handleUpdateMessage,
-        handleDeleteMessage: handleDeleteMessage,
-      });
-    }
-
-    function handleCreateMessage(data) {
-      return data;
-    }
-
-    function handleUpdateMessage(data) {
-      setState((prevState) => ({
-        ...prevState,
-        dataHistory: prevState.dataHistory.map((entry) => {
-          if (entry.messageID !== data.messageID) {
-            return entry;
-          }
-          return data;
-        }),
-      }));
-    }
-
-    function handleDeleteMessage(data) {
-      setState((prevState) => ({
-        ...prevState,
-        dataHistory: prevState.dataHistory.filter(
-          (entry) => entry.messageID !== data.messageID
-        ),
-      }));
-    }
-
-    function getSender() {
-      return state.data ? state.data.sender : null;
-    }
-
-    function getUser() {
-      return props.uniqueClientID;
-    }
-
-    function isMe() {
-      if (state.data) {
-        return state.data.sender === props.uniqueClientID;
-      }
-      return false;
-    }
-
-    function subscribe() {
+    const subscribe = useCallback(() => {
       const SubscriberRoutingAddress = `/topic/${props.routingKey}/receive`;
 
       if (state.topicSubscription) {
@@ -402,7 +337,7 @@ export default function PluginWrapper(WrappedComponent) {
                 MessageProtcol === "CREATE" && {
                   ...prevState,
                   data: ParsedDatagram,
-                  dataHistory: [...state.dataHistory, ParsedDatagram],
+                  dataHistory: [...prevState.dataHistory, ParsedDatagram],
                 },
               () => {
                 runMessageProtocol(ParsedDatagram, MessageProtcol);
@@ -419,13 +354,47 @@ export default function PluginWrapper(WrappedComponent) {
         return pluginSubscription;
       } catch (error) {
         console.log(error);
+        return null;
       }
-    }
+    }, [props, state.topicSubscription]);
 
-    async function fetchHistory() {
-      if (state.dataHistory) {
-        return;
+    const initialiseDefaultCallbacks = useCallback(() => {
+      function handleCreateMessage(data) {
+        return data;
       }
+
+      function handleUpdateMessage(data) {
+        setState((prevState) => ({
+          ...prevState,
+          dataHistory: prevState.dataHistory.map((entry) => {
+            if (entry.messageID !== data.messageID) {
+              return entry;
+            }
+            return data;
+          }),
+        }));
+      }
+
+      function handleDeleteMessage(data) {
+        setState((prevState) => ({
+          ...prevState,
+          dataHistory: prevState.dataHistory.filter(
+            (entry) => entry.messageID !== data.messageID
+          ),
+        }));
+      }
+
+      updateCallbacks({
+        handleCreateMessage: handleCreateMessage,
+        handleUpdateMessage: handleUpdateMessage,
+        handleDeleteMessage: handleDeleteMessage,
+      });
+    }, [updateCallbacks]);
+
+    const fetchHistory = useCallback(async () => {
+      //   if (state.dataHistory) {
+      //     return;
+      //   }
 
       try {
         const HistoryRoutingAddress = `${NetworkIP}/history/${props.routingKey}`;
@@ -442,7 +411,135 @@ export default function PluginWrapper(WrappedComponent) {
       } catch (error) {
         console.log(error);
       }
+    }, [NetworkIP, props.routingKey]);
+
+    useEffect(() => {
+      const subscription = subscribe();
+      console.log("SUBBED!");
+      fetchHistory();
+      initialiseDefaultCallbacks();
+
+      return () => {
+        subscription && subscription.unsubscribe();
+        console.log("UNSUBBED!");
+      };
+    }, [subscribe, initialiseDefaultCallbacks, fetchHistory]);
+
+    function getData(preprocessor = (x) => x) {
+      return state.data ? preprocessor(state.data.message) : null;
     }
+
+    function getDataHistory() {
+      return state.dataHistory ? state.dataHistory : [];
+    }
+
+    // function runMessageProtocol(message, protocol) {
+    //   switch (protocol) {
+    //     case "CREATE":
+    //       callbacks.handleCreateMessage(message);
+    //       return;
+    //     case "UPDATE":
+    //       callbacks.handleUpdateMessage(message);
+    //       return;
+    //     case "DELETE":
+    //       callbacks.handleDeleteMessage(message);
+    //       return;
+    //     default:
+    //       return;
+    //   }
+    // }
+
+    function getSender() {
+      return state.data ? state.data.sender : null;
+    }
+
+    function getUser() {
+      return props.uniqueClientID;
+    }
+
+    function isMe() {
+      if (state.data) {
+        return state.data.sender === props.uniqueClientID;
+      }
+      return false;
+    }
+
+    // function subscribe() {
+    //   const SubscriberRoutingAddress = `/topic/${props.routingKey}/receive`;
+
+    //   if (state.topicSubscription) {
+    //     return;
+    //   }
+
+    //   try {
+    //     const pluginSubscription = props.client.subscribe(
+    //       SubscriberRoutingAddress,
+    //       (resp) => {
+    //         const deserialiseJSONHeaders = JSON.parse(resp.body);
+    //         const deserialiseJSON = deserialiseJSONHeaders.body;
+
+    //         console.log(
+    //           deserialiseJSONHeaders.statusCode,
+    //           deserialiseJSONHeaders.statusCodeValue
+    //         );
+
+    //         const JSONsender = deserialiseJSON.sender;
+    //         const JSONmessage = JSON.parse(deserialiseJSON.message);
+    //         const JSONmessageID = deserialiseJSON.messageID;
+    //         const MessageProtcol = deserialiseJSON.protocol;
+    //         const ParsedDatagram = {
+    //           sender: JSONsender,
+    //           message: JSONmessage,
+    //           messageID: JSONmessageID,
+    //         };
+
+    //         setState(
+    //           (prevState) =>
+    //             MessageProtcol === "CREATE" && {
+    //               ...prevState,
+    //               data: ParsedDatagram,
+    //               dataHistory: [...state.dataHistory, ParsedDatagram],
+    //             },
+    //           () => {
+    //             runMessageProtocol(ParsedDatagram, MessageProtcol);
+    //           }
+    //         );
+    //       },
+    //       { id: `sub-${props.uniqueClientID}-${props.routingKey}` }
+    //     );
+
+    //     setState((prevState) => ({
+    //       ...prevState,
+    //       topicSubscription: pluginSubscription,
+    //     }));
+    //     return pluginSubscription;
+    //   } catch (error) {
+    //     console.log(error);
+    //     return null;
+    //   }
+    // }
+
+    // async function fetchHistory() {
+    //   if (state.dataHistory) {
+    //     return;
+    //   }
+
+    //   try {
+    //     const HistoryRoutingAddress = `${NetworkIP}/history/${props.routingKey}`;
+    //     const RawFetchedHistory = await fetch(HistoryRoutingAddress);
+    //     const ParsedHistory = await RawFetchedHistory.json();
+
+    //     setState((prevState) => ({
+    //       ...prevState,
+    //       dataHistory: ParsedHistory.map((el) => ({
+    //         ...el,
+    //         message: JSON.parse(el.message),
+    //       })),
+    //     }));
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // }
 
     function formatDataAsJSON(dataStruct, shouldPersist) {
       var payloadStruct = { dataNode: dataStruct, persist: shouldPersist };
