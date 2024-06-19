@@ -402,7 +402,6 @@ export default function PluginWrapper(WrappedComponent) {
                 MessageProtcol === "CREATE" && {
                   ...prevState,
                   data: ParsedDatagram,
-                  dataHistory: [...state.dataHistory, ParsedDatagram],
                   dataHistory: [...prevState.dataHistory, ParsedDatagram],
                 }
             );
