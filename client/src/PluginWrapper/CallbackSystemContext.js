@@ -8,9 +8,9 @@ export const useCallbackContext = () => {
 
 export const CallbackProvider = ({ children }) => {
   const [callbacks, setCallbacks] = useState({
-    handleCreateMessage: null,
-    handleUpdateMessage: null,
-    handleDeleteMessage: null,
+    handleCreateMessage: () => {},
+    handleUpdateMessage: () => {},
+    handleDeleteMessage: () => {},
   });
 
   const updateCallbacks = (newCallbacks) => {
