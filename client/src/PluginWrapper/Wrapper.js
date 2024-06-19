@@ -403,11 +403,10 @@ export default function PluginWrapper(WrappedComponent) {
                   ...prevState,
                   data: ParsedDatagram,
                   dataHistory: [...state.dataHistory, ParsedDatagram],
-                },
-              () => {
-                runMessageProtocol(ParsedDatagram, MessageProtcol);
-              }
+                  dataHistory: [...prevState.dataHistory, ParsedDatagram],
+                }
             );
+            runMessageProtocol(ParsedDatagram, MessageProtcol);
           },
           { id: `sub-${props.uniqueClientID}-${props.routingKey}` }
         );
@@ -495,7 +494,6 @@ export default function PluginWrapper(WrappedComponent) {
       <React.Suspense fallback={<FetchingPlugin />}>
         {WrappedComponent && (
           <WrappedComponent
-            {...props}
             getData={getData}
             getDataHistory={getDataHistory}
             getSender={getSender}
