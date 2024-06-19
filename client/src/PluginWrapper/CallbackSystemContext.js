@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useRef,
+  //   useState,
+  //   useCallback,
+} from "react";
 
 const CallbackContext = createContext({});
 
@@ -7,19 +13,51 @@ export const useCallbackContext = () => {
 };
 
 export const CallbackProvider = ({ children }) => {
-  const [callbacks, setCallbacks] = useState({
-    handleCreateMessage: null,
-    handleUpdateMessage: null,
-    handleDeleteMessage: null,
+  const callbacksRef = useRef({
+    handleCreateMessage: () => {},
+    handleUpdateMessage: () => {},
+    handleDeleteMessage: () => {},
   });
 
   const updateCallbacks = (newCallbacks) => {
-    setCallbacks((prev) => ({ ...prev, ...newCallbacks }));
+    callbacksRef.current = {
+      ...callbacksRef.current,
+      ...newCallbacks,
+    };
   };
 
+  console.log(callbacksRef.current.handleCreateMessage);
+
   return (
-    <CallbackContext.Provider value={{ callbacks, updateCallbacks }}>
+    <CallbackContext.Provider
+      value={{ callbacks: callbacksRef.current, updateCallbacks }}
+    >
       {children}
     </CallbackContext.Provider>
   );
 };
+
+// export const CallbackProvider = ({ children }) => {
+//   const [callbacks, setCallbacks] = useState({
+//     handleCreateMessage: () => {},
+//     handleUpdateMessage: () => {},
+//     handleDeleteMessage: () => {},
+//   });
+
+//   //   const updateCallbacks = (newCallbacks) => {
+//   //     setCallbacks((prevCallbacks) => ({ ...prevCallbacks, ...newCallbacks }));
+//   //   };
+
+//   const updateCallbacks = useCallback((newCallbacks) => {
+//     setCallbacks((prevCallbacks) => ({
+//       ...prevCallbacks,
+//       ...newCallbacks,
+//     }));
+//   }, []);
+
+//   return (
+//     <CallbackContext.Provider value={{ callbacks, updateCallbacks }}>
+//       {children}
+//     </CallbackContext.Provider>
+//   );
+// };
