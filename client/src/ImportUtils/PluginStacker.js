@@ -2,6 +2,7 @@ import React from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Button } from "@mui/material";
+import "./pluginStyle.css";
 
 export default class PluginStacker extends React.Component {
   constructor() {
