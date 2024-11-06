@@ -17,7 +17,7 @@ class Renderer extends React.Component {
 
   render() {
     return (
-      <>
+      <div className="renderer">
         <div className="logout">
           <PluginAdder />
           <ClientDataContext.Consumer>
@@ -30,7 +30,7 @@ class Renderer extends React.Component {
           </Button>
         </div>
         <div className="allComps">{this.props.loadedPlugins}</div>
-      </>
+      </div>
     );
   }
 }
