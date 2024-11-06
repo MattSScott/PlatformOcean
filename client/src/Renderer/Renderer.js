@@ -2,7 +2,7 @@ import React from "react";
 import Button from "@mui/material/Button";
 // import PluginStacker from "../ImportUtils/PluginStacker";
 import "./Renderer.css";
-import { ClientIDContext } from "../Contexts/ClientContext";
+import { ClientDataContext } from "../Contexts/ClientContext";
 
 class Renderer extends React.Component {
   constructor(props) {
@@ -19,11 +19,11 @@ class Renderer extends React.Component {
     return (
       <>
         <div className="logout">
-          <ClientIDContext.Consumer>
-            {(clientID) => (
+          <ClientDataContext.Consumer>
+            {({ clientID }) => (
               <p>Signed in as: {`${clientID.substring(0, 8)}...`}</p>
             )}
-          </ClientIDContext.Consumer>
+          </ClientDataContext.Consumer>
           <Button variant="contained" onClick={this.triggerLogout}>
             Logout
           </Button>

@@ -4,7 +4,7 @@ import Renderer from "../Renderer/Renderer";
 import * as Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import PluginImporter from "../ImportUtils/PluginImporter";
-import { ClientContext, ClientIDContext } from "../Contexts/ClientContext";
+import { ClientDataContext } from "../Contexts/ClientContext";
 import { NetworkIPContext } from "../Contexts/ServerIPContext";
 // import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
 
@@ -123,20 +123,24 @@ class Gateway extends React.Component {
             clientID={this.state.clientID}
           />
         )} */}
-        <ClientContext.Provider value={this.state.client}>
-          <ClientIDContext.Provider value={this.state.clientID}>
-            <NetworkIPContext.Provider value={this.networkAddress}>
-              {this.state.client && this.state.pluginDescriptors ? (
-                RoutingMechanism
-              ) : (
-                <div>
-                  <p>Establishing Connection to Server...</p>
-                  <button onClick={this.clientConnector}>Retry Now</button>
-                </div>
-              )}
-            </NetworkIPContext.Provider>
-          </ClientIDContext.Provider>
-        </ClientContext.Provider>
+        {/* <ClientContext.Provider value={this.state.client}>
+          <ClientIDContext.Provider value={this.state.clientID}> */}
+        <ClientDataContext.Provider
+          value={{ client: this.state.client, clientID: this.state.clientID }}
+        >
+          <NetworkIPContext.Provider value={this.networkAddress}>
+            {this.state.client && this.state.pluginDescriptors ? (
+              RoutingMechanism
+            ) : (
+              <div>
+                <p>Establishing Connection to Server...</p>
+                <button onClick={this.clientConnector}>Retry Now</button>
+              </div>
+            )}
+          </NetworkIPContext.Provider>
+        </ClientDataContext.Provider>
+        {/* </ClientIDContext.Provider>
+        </ClientContext.Provider> */}
       </div>
     );
   }

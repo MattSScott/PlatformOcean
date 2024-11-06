@@ -1,6 +1,7 @@
-import React, { lazy } from "react";
+import React from "react";
 import PluginStacker from "./PluginStacker";
-// import DataOperator from "./DataOperator";
+import RemotePluginPipeline from "./RemotePluginPipeline";
+import { CallbackProvider } from "../PluginWrapper/CallbackSystemContext";
 
 export default function PluginImporter(ChildComponent) {
   return class extends React.Component {
@@ -17,21 +18,14 @@ export default function PluginImporter(ChildComponent) {
       this.loadPlugins(this.props.pluginDescriptors);
     }
 
-    async importPlugin(plugin) {
-      return lazy(() =>
-        import(`../plugins/${plugin}/${plugin}`).catch(() =>
-          import("../NullView/NullView")
-        )
-      );
-    }
-
     setPlugins(pluginsReturned) {
+      console.log(pluginsReturned);
       const PluginMapping = {};
-      for (const { name, plugin, key } of pluginsReturned) {
+      for (const { name, plugin } of pluginsReturned) {
         if (name in PluginMapping) {
-          PluginMapping[name].push({ plugin: plugin, key: key });
+          PluginMapping[name].push(plugin);
         } else {
-          PluginMapping[name] = [{ plugin: plugin, key: key }];
+          PluginMapping[name] = [plugin];
         }
       }
 
@@ -47,41 +41,27 @@ export default function PluginImporter(ChildComponent) {
       }));
     }
 
-    // async loadPlugins(pluginNames) {
-    //   const componentPromises = Object.entries(pluginNames).map(
-    //     async ([pluginKey, pluginName]) => {
-    //       try {
-    //         const Plugin = await this.importPlugin(pluginName);
-    //         const EnhancedPlugin = DataOperator(Plugin);
-    //         return (
-    //           <div className="componentHouse" key={pluginKey}>
-    //             <EnhancedPlugin
-    //               client={this.props.client}
-    //               routingKey={pluginKey}
-    //               uniqueClientID={this.props.clientID}
-    //             />
-    //           </div>
-    //         );
-    //       } catch (error) {
-    //         console.log(error);
-    //       }
-    //     }
-    //   );
-    //   Promise.all(componentPromises).then(this.setPlugins);
-    // }
-
-    async loadPlugins(pluginNames) {
-      const componentPromises = Object.entries(pluginNames).map(
-        async ([pluginKey, pluginName]) => {
-          try {
-            const Plugin = await this.importPlugin(pluginName);
-            return { name: pluginName, plugin: Plugin, key: pluginKey };
-          } catch (error) {
-            console.log(error);
-          }
+    loadPlugins(pluginData) {
+      console.log(pluginData);
+      const components = pluginData.map(
+        ({ pluginKey, pluginName, pluginURL }) => {
+          const Plugin = (
+            <CallbackProvider>
+              <RemotePluginPipeline
+                remoteUrl={pluginURL}
+                scope={"PLUGIN"}
+                module={"./Plugin"}
+                pluginKey={pluginKey}
+              />
+            </CallbackProvider>
+          );
+          return {
+            name: pluginName,
+            plugin: Plugin,
+          };
         }
       );
-      Promise.all(componentPromises).then(this.setPlugins);
+      this.setPlugins(components);
     }
 
     render() {
