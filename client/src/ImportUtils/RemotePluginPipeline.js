@@ -1,5 +1,4 @@
 import React from "react";
-import { CallbackProvider } from "../PluginWrapper/CallbackSystemContext";
 import { useClientDataContext } from "../Contexts/ClientContext";
 import { ConsultPluginCache } from "../remoteImporterUtils/pluginCache";
 import PluginWrapper from "../PluginWrapper/Wrapper";
@@ -21,35 +20,12 @@ export default function RemotePluginPipeline({
 
   return (
     <ErrorBoundary>
-      {/* <CallbackProvider> */}
       <DistributedRemoteComponent
         {...props}
         routingKey={pluginKey}
         client={client}
         uniqueClientID={clientID}
       />
-      {/* </CallbackProvider> */}
     </ErrorBoundary>
   );
-
-  // return (
-  //   <ErrorBoundary>
-  //     <React.Suspense>
-  //       <ClientContext.Consumer key={pluginKey}>
-  //         {(client) => (
-  //           <ClientIDContext.Consumer>
-  //             {(clientID) => (
-  //               <DistributedRemoteComponent
-  //                 {...props}
-  //                 routingKey={pluginKey}
-  //                 client={client}
-  //                 uniqueClientID={clientID}
-  //               />
-  //             )}
-  //           </ClientIDContext.Consumer>
-  //         )}
-  //       </ClientContext.Consumer>
-  //     </React.Suspense>
-  //   </ErrorBoundary>
-  // );
 }

@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import "../Renderer/Renderer.css";
 import FetchingPlugin from "./FetchingPlugin";
 import { useNetworkIPContext } from "../Contexts/ServerIPContext";
-import { useCallbackContext } from "./CallbackSystemContext";
 
 export default function PluginWrapper(WrappedComponent) {
   function WrappedPlugin(props) {
-    const { callbacks, updateCallbacks } = useCallbackContext();
     const NetworkIP = useNetworkIPContext();
 
     const [state, setState] = useState({
@@ -14,13 +12,10 @@ export default function PluginWrapper(WrappedComponent) {
       dataHistory: null,
     });
 
-    console.log(callbacks.handleCreateMessage);
-    runMessageProtocol(null, null);
-
     useEffect(() => {
       let subscription = null;
       if (WrappedComponent) {
-        initialiseDefaultCallbacks();
+        // initialiseDefaultCallbacks();
         subscription = subscribe(runMessageProtocol);
         console.log("SUBBED!");
         fetchHistory();
@@ -42,55 +37,61 @@ export default function PluginWrapper(WrappedComponent) {
     }
 
     function runMessageProtocol(message, protocol) {
-      console.log(callbacks.handleCreateMessage);
       switch (protocol) {
         case "CREATE":
-          callbacks.handleCreateMessage(message);
+          handleCreateMessage(message);
           return;
         case "UPDATE":
-          callbacks.handleUpdateMessage(message);
+          handleUpdateMessage(message);
           return;
         case "DELETE":
-          callbacks.handleDeleteMessage(message);
+          handleDeleteMessage(message);
           return;
         default:
           return;
       }
     }
 
-    function initialiseDefaultCallbacks() {
-      const handleCreateMessage = (data) => {
-        console.log("BRUH!");
-        return data;
-      };
+    // function initialiseDefaultCallbacks() {
+    //   const handleCreateMessage = (data) => {
+    //     return data;
+    //   };
 
-      const handleUpdateMessage = (data) => {
-        setState((prevState) => ({
-          ...prevState,
-          dataHistory: prevState.dataHistory.map((entry) => {
-            if (entry.messageID !== data.messageID) {
-              return entry;
-            }
-            return data;
-          }),
-        }));
-      };
+    const handleCreateMessage = (data) => {
+      setState((prevState) => ({
+        ...prevState,
+        data: data,
+        dataHistory: [...prevState.dataHistory, data],
+      }));
+    };
 
-      const handleDeleteMessage = (data) => {
-        setState((prevState) => ({
-          ...prevState,
-          dataHistory: prevState.dataHistory.filter(
-            (entry) => entry.messageID !== data.messageID
-          ),
-        }));
-      };
+    const handleUpdateMessage = (data) => {
+      setState((prevState) => ({
+        ...prevState,
+        dataHistory: prevState.dataHistory.map((entry) => {
+          if (entry.messageID !== data.messageID) {
+            return entry;
+          }
+          return data;
+        }),
+      }));
+    };
 
-      updateCallbacks({
-        handleCreateMessage: handleCreateMessage,
-        handleUpdateMessage: handleUpdateMessage,
-        handleDeleteMessage: handleDeleteMessage,
-      });
-    }
+    const handleDeleteMessage = (data) => {
+      setState((prevState) => ({
+        ...prevState,
+        dataHistory: prevState.dataHistory.filter(
+          (entry) => entry.messageID !== data.messageID
+        ),
+      }));
+    };
+
+    //   updateCallbacks({
+    //     handleCreateMessage: handleCreateMessage,
+    //     handleUpdateMessage: handleUpdateMessage,
+    //     handleDeleteMessage: handleDeleteMessage,
+    //   });
+    // }
 
     function getSender() {
       return state.data ? state.data.sender : null;
@@ -136,15 +137,6 @@ export default function PluginWrapper(WrappedComponent) {
               messageID: JSONmessageID,
             };
 
-            setState(
-              (prevState) =>
-                MessageProtcol === "CREATE" && {
-                  ...prevState,
-                  data: ParsedDatagram,
-                  dataHistory: [...prevState.dataHistory, ParsedDatagram],
-                }
-            );
-            console.log(callbacks.handleCreateMessage);
             runMessageProtocol(ParsedDatagram, MessageProtcol);
           },
           { id: `sub-${props.uniqueClientID}-${props.routingKey}` }
@@ -239,7 +231,6 @@ export default function PluginWrapper(WrappedComponent) {
             sendCreateMessage={sendCreateMessage}
             sendUpdateMessage={sendUpdateMessage}
             sendDeleteMessage={sendDeleteMessage}
-            updateCallbacks={updateCallbacks}
           />
         )}
       </React.Suspense>
