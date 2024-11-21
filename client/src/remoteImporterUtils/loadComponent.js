@@ -9,8 +9,7 @@ export const loadComponent = (remoteUrl, scope, module) => async () => {
   );
   // eslint-disable-next-line no-undef
   await fetchedContainer.init(__webpack_share_scopes__.default);
-  const container = window[scope];
-  const factory = await container.get(module);
+  const factory = await fetchedContainer.get(module);
   const Module = factory();
   return Module;
 };
