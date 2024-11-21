@@ -31,60 +31,70 @@
 
 // export default fetchRemote;
 
-// const fetchRemote = async (url, scope) => {
-//   const response = await fetch(url);
-//   if (!response.ok) {
-//     throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-//   }
+// const transferIframeStyles = (iframe) => {
+//   const iframeHead = iframe.contentDocument.head;
+//   const parentHead = document.head;
 
-//   const someImport = await import(/* webpackIgnore:true */ url);
+//   // Watch for future style/link insertions using MutationObserver
+//   const observer = new MutationObserver((mutations) => {
+//     console.log("SOmethin?");
 
-//   console.log(someImport);
+//     mutations.forEach((mutation) => {
+//       mutation.addedNodes.forEach((node) => {
+//         console.log("C??");
+//         if (
+//           node.tagName === "STYLE" ||
+//           (node.tagName === "LINK" && node.rel === "stylesheet")
+//         ) {
+//           parentHead.appendChild(node.cloneNode(true));
+//         }
+//       });
+//     });
+//   });
 
-//   return someImport;
-
-//   const scriptContent = await response.text();
-
-//   // console.log(scriptContent);
-
-//   // Create a unique sandbox for this remote
-//   const sandbox = {};
-//   const sandboxedFunction = new Function("window", scriptContent);
-
-//   // console.log(sandboxedFunction);
-
-//   // Execute the script in the sandbox
-//   sandboxedFunction(sandbox);
-
-//   console.log(window[scope], sandbox);
-
-//   const container = sandbox[scope];
-
-//   // Store the remote in the registry under a unique key
-//   if (!container) {
-//     throw new Error(`Remote scope "${scope}" not found in the sandbox`);
-//   }
-//   // Initialize the container with shared scope (if using shared modules)
-//   // eslint-disable-next-line no-undef
-//   await container.init(__webpack_share_scopes__.default);
-
-//   return container;
+//   observer.observe(iframeHead, { childList: true, subtree: true });
 // };
+
+const copyStylesFromIframeToMain = (iframe) => {
+  // Use MutationObserver to listen for style injections into iframe
+  const observer = new MutationObserver(() => {
+    const iframeStyles = iframe.contentDocument.querySelectorAll(
+      'style, link[rel="stylesheet"]'
+    );
+    if (iframeStyles.length > 0) {
+      console.log("HASHUASJ");
+
+      iframeStyles.forEach((style) => {
+        document.head.appendChild(style.cloneNode(true)); // Clone the style elements to move them to the main document
+      });
+      observer.disconnect(); // Stop observing after styles are copied
+    }
+  });
+
+  observer.observe(iframe.contentDocument.head, { childList: true });
+};
 
 const fetchRemote = async (url, scope) => {
   return new Promise((resolve, reject) => {
     // Create an iframe to isolate the remote context
     const iframe = document.createElement("iframe");
-    // iframe.style.display = "none"; // Hide the iframe
+    iframe.style.display = "none"; // Hide the iframe
+    iframe.sandbox.add("allow-scripts"); // Allows the iframe to run JavaScript
+    iframe.sandbox.add("allow-same-origin"); // Allows
     document.head.appendChild(iframe);
 
+    // console.log(iframe.contentDocument.head);
+
     // Load the remoteEntry.js script inside the iframe
-    const script = iframe.contentWindow.document.createElement("script");
+    const script = iframe.contentDocument.createElement("script");
     script.src = url;
 
     script.onload = () => {
+      console.log(iframe.contentDocument.head);
+      console.log(iframe.contentDocument.head.querySelectorAll("*"));
       const container = iframe.contentWindow[scope];
       if (container && container.init && container.get) {
+        copyStylesFromIframeToMain(iframe);
         resolve(container); // Return the container with init/get methods
       } else {
         reject(new Error(`Failed to find container for url: ${url}`));
@@ -93,7 +103,8 @@ const fetchRemote = async (url, scope) => {
 
     script.onerror = () =>
       reject(new Error(`Failed to load remote script: ${url}`));
-    iframe.contentWindow.document.head.appendChild(script);
+    // Call this function after the iframe has loaded
+    iframe.contentDocument.head.appendChild(script);
   });
 };
 
