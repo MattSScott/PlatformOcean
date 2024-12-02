@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+// import { Sandbox } from "./Sandbox";
 import { createPortal } from "react-dom";
 import { useClientDataContext } from "../Contexts/ClientContext";
 import { ConsultPluginCache } from "../remoteImporterUtils/pluginCache";
@@ -12,33 +13,45 @@ export default function RemotePluginPipeline({
   pluginKey,
   ...props
 }) {
-  // get remote component from url
-  const { RemoteComponent, moduleFrame } = ConsultPluginCache(
+  const [sandboxRef, setSandboxRef] = useState(null);
+  const mountNode = sandboxRef?.contentWindow?.document?.body;
+
+  // if (!mountNode) {
+  //   return <div>Me loading</div>;
+  // }
+
+  const RemoteComponent = ConsultPluginCache(
     remoteUrl,
     scope,
-    module
+    module,
+    sandboxRef
   );
-  console.log(RemoteComponent);
+
+  console.log(sandboxRef);
 
   // inject dist. functionality
   const DistributedRemoteComponent = PluginWrapper(RemoteComponent);
   // hook in client data
   const { client, clientID } = useClientDataContext();
 
-  const RenderablePlugin =
-    RemoteComponent &&
-    moduleFrame &&
-    createPortal(
-      <DistributedRemoteComponent
-        {...props}
-        routingKey={pluginKey}
-        client={client}
-        uniqueClientID={clientID}
-      />,
-      moduleFrame.contentDocument.body
-    );
-
+  // render it here...
   return (
-    <ErrorBoundary>{RenderablePlugin && <RenderablePlugin />}</ErrorBoundary>
+    // <Sandbox>
+    <ErrorBoundary>
+      <iframe ref={setSandboxRef} style={{ width: "100%", height: "100%" }}>
+        {mountNode &&
+          RemoteComponent &&
+          createPortal(
+            <DistributedRemoteComponent
+              {...props}
+              routingKey={pluginKey}
+              client={client}
+              uniqueClientID={clientID}
+            />,
+            mountNode
+          )}
+      </iframe>
+    </ErrorBoundary>
+    // </Sandbox>
   );
 }
