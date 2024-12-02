@@ -6,7 +6,10 @@ const componentCache = new Map();
 
 export const ConsultPluginCache = (remoteUrl, scope, module) => {
   const key = `${remoteUrl}-${scope}-${module}`;
-  const [Component, setComponent] = useState(null);
+  const [Component, setComponent] = useState({
+    RemoteComponent: null,
+    moduleFrame: null,
+  });
 
   useEffect(() => {
     if (componentCache.has(key)) {
@@ -14,9 +17,20 @@ export const ConsultPluginCache = (remoteUrl, scope, module) => {
       setComponent(componentCache.get(key));
     } else {
       console.log("LOADING!");
-      const Comp = React.lazy(loadComponent(remoteUrl, scope, module));
-      componentCache.set(key, Comp);
-      setComponent(Comp);
+      var moduleFrame = null;
+      const RemoteComponent = React.lazy(async () => {
+        const { Module, iframe } = await loadComponent(
+          remoteUrl,
+          scope,
+          module
+        );
+        console.log(Module, iframe);
+        moduleFrame = iframe;
+        return Module;
+      });
+      const ComponentIFramePair = { RemoteComponent, moduleFrame };
+      componentCache.set(key, ComponentIFramePair);
+      setComponent(ComponentIFramePair);
     }
   }, [key, remoteUrl, scope, module]);
 

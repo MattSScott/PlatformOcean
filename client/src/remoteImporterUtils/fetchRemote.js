@@ -55,24 +55,24 @@
 //   observer.observe(iframeHead, { childList: true, subtree: true });
 // };
 
-const copyStylesFromIframeToMain = (iframe) => {
-  // Use MutationObserver to listen for style injections into iframe
-  const observer = new MutationObserver(() => {
-    const iframeStyles = iframe.contentDocument.querySelectorAll(
-      'style, link[rel="stylesheet"]'
-    );
-    if (iframeStyles.length > 0) {
-      console.log("HASHUASJ");
+// const copyStylesFromIframeToMain = (iframe) => {
+//   // Use MutationObserver to listen for style injections into iframe
+//   const observer = new MutationObserver(() => {
+//     const iframeStyles = iframe.contentDocument.querySelectorAll(
+//       'style, link[rel="stylesheet"]'
+//     );
+//     if (iframeStyles.length > 0) {
+//       console.log("HASHUASJ");
 
-      iframeStyles.forEach((style) => {
-        document.head.appendChild(style.cloneNode(true)); // Clone the style elements to move them to the main document
-      });
-      observer.disconnect(); // Stop observing after styles are copied
-    }
-  });
+//       iframeStyles.forEach((style) => {
+//         document.head.appendChild(style.cloneNode(true)); // Clone the style elements to move them to the main document
+//       });
+//       observer.disconnect(); // Stop observing after styles are copied
+//     }
+//   });
 
-  observer.observe(iframe.contentDocument.head, { childList: true });
-};
+//   observer.observe(iframe.contentDocument.head, { childList: true });
+// };
 
 const fetchRemote = async (url, scope) => {
   return new Promise((resolve, reject) => {
@@ -94,8 +94,8 @@ const fetchRemote = async (url, scope) => {
       console.log(iframe.contentDocument.head.querySelectorAll("*"));
       const container = iframe.contentWindow[scope];
       if (container && container.init && container.get) {
-        copyStylesFromIframeToMain(iframe);
-        resolve(container); // Return the container with init/get methods
+        // copyStylesFromIframeToMain(iframe);
+        resolve({ container, iframe }); // Return the container with init/get methods
       } else {
         reject(new Error(`Failed to find container for url: ${url}`));
       }
