@@ -9,14 +9,9 @@ export const ConsultPluginCache = (remoteUrl, scope, module, sandbox) => {
   const [Component, setComponent] = useState(null);
 
   useEffect(() => {
-    console.log("less go");
-
     if (!sandbox) {
-      console.log("Didn't get it");
       return;
     }
-
-    console.log("Got it now");
 
     if (componentCache.has(key)) {
       console.log("SKIPPING!");

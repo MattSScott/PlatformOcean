@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-// import { Sandbox } from "./Sandbox";
+import React, { useState } from "react";
 import { createPortal } from "react-dom";
 import { useClientDataContext } from "../Contexts/ClientContext";
 import { ConsultPluginCache } from "../remoteImporterUtils/pluginCache";
@@ -16,10 +15,6 @@ export default function RemotePluginPipeline({
   const [sandboxRef, setSandboxRef] = useState(null);
   const mountNode = sandboxRef?.contentWindow?.document?.body;
 
-  // if (!mountNode) {
-  //   return <div>Me loading</div>;
-  // }
-
   const RemoteComponent = ConsultPluginCache(
     remoteUrl,
     scope,
@@ -27,18 +22,18 @@ export default function RemotePluginPipeline({
     sandboxRef
   );
 
-  console.log(sandboxRef);
-
   // inject dist. functionality
   const DistributedRemoteComponent = PluginWrapper(RemoteComponent);
   // hook in client data
   const { client, clientID } = useClientDataContext();
 
-  // render it here...
   return (
-    // <Sandbox>
     <ErrorBoundary>
-      <iframe ref={setSandboxRef} style={{ width: "100%", height: "100%" }}>
+      <iframe
+        ref={setSandboxRef}
+        style={{ width: "100%", height: "100%" }}
+        title={`iframe-${pluginKey}`}
+      >
         {mountNode &&
           RemoteComponent &&
           createPortal(
@@ -52,6 +47,5 @@ export default function RemotePluginPipeline({
           )}
       </iframe>
     </ErrorBoundary>
-    // </Sandbox>
   );
 }

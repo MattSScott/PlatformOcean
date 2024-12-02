@@ -9,9 +9,6 @@ export const loadComponent =
       scope,
       sandbox
     );
-    // console.log(container, iframe);
-    // eslint-disable-next-line no-undef
-    console.log("Shared scope:", __webpack_share_scopes__.default);
     // eslint-disable-next-line no-undef
     await container.init(__webpack_share_scopes__.default);
     const factory = await container.get(module);
