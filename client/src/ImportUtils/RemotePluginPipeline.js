@@ -13,6 +13,8 @@ export default function RemotePluginPipeline({
   pluginKey,
   ...props
 }) {
+  // hook in client data
+  const { client, clientID } = useClientDataContext();
   const [sandboxRef, setSandboxRef] = useState(null);
   const mountNode = sandboxRef?.contentWindow?.document?.body;
 
@@ -23,32 +25,42 @@ export default function RemotePluginPipeline({
     sandboxRef
   );
 
+  const Sandbox = (
+    <iframe
+      ref={setSandboxRef}
+      style={{
+        width: "100%",
+        height: "100%",
+        display: sandboxRef ? "" : "none",
+      }}
+      title={`iframe-${pluginKey}`}
+    />
+  );
+
+  if (!(RemoteComponent && mountNode)) {
+    return (
+      <>
+        <FetchingPlugin />
+        {Sandbox}
+      </>
+    );
+  }
+
   // inject dist. functionality
   const DistributedRemoteComponent = PluginWrapper(RemoteComponent);
-  // hook in client data
-  const { client, clientID } = useClientDataContext();
 
   return (
     <ErrorBoundary>
-      <iframe
-        ref={setSandboxRef}
-        style={{ width: "100%", height: "100%" }}
-        title={`iframe-${pluginKey}`}
-      >
-        <React.Suspense fallback={<FetchingPlugin />}>
-          {mountNode &&
-            RemoteComponent &&
-            createPortal(
-              <DistributedRemoteComponent
-                {...props}
-                routingKey={pluginKey}
-                client={client}
-                uniqueClientID={clientID}
-              />,
-              mountNode
-            )}
-        </React.Suspense>
-      </iframe>
+      {Sandbox}
+      {createPortal(
+        <DistributedRemoteComponent
+          {...props}
+          routingKey={pluginKey}
+          client={client}
+          uniqueClientID={clientID}
+        />,
+        mountNode
+      )}
     </ErrorBoundary>
   );
 }
