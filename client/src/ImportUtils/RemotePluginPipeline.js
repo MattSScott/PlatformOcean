@@ -5,6 +5,7 @@ import { ConsultPluginCache } from "../remoteImporterUtils/pluginCache";
 import PluginWrapper from "../PluginWrapper/Wrapper";
 import ErrorBoundary from "../remoteImporterUtils/errorBoundary";
 import FetchingPlugin from "../PluginWrapper/FetchingPlugin";
+import GeneratingSandbox from "./GeneratingSandbox";
 
 export default function RemotePluginPipeline({
   remoteUrl,
@@ -25,41 +26,36 @@ export default function RemotePluginPipeline({
     sandboxRef
   );
 
-  const Sandbox = (
-    <iframe
-      ref={setSandboxRef}
-      style={{
-        width: "100%",
-        height: "100%",
-        display: sandboxRef ? "inline" : "none",
-      }}
-      title={`iframe-${pluginKey}`}
-    />
-  );
-
-  if (!(RemoteComponent && mountNode)) {
-    return (
-      <>
-        <FetchingPlugin />
-        {Sandbox}
-      </>
-    );
-  }
-
   // inject dist. functionality
-  const DistributedRemoteComponent = PluginWrapper(RemoteComponent);
+  const DistributedRemoteComponent = RemoteComponent
+    ? PluginWrapper(RemoteComponent)
+    : null;
 
   return (
     <ErrorBoundary>
-      {Sandbox}
-      {createPortal(
-        <DistributedRemoteComponent
-          {...props}
-          routingKey={pluginKey}
-          client={client}
-          uniqueClientID={clientID}
-        />,
-        mountNode
+      <iframe
+        ref={setSandboxRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          display: sandboxRef ? "inline" : "none",
+        }}
+        title={`iframe-${pluginKey}`}
+      />
+      {DistributedRemoteComponent && mountNode ? (
+        createPortal(
+          <React.Suspense fallback={<FetchingPlugin />}>
+            <DistributedRemoteComponent
+              {...props}
+              routingKey={pluginKey}
+              client={client}
+              uniqueClientID={clientID}
+            />
+          </React.Suspense>,
+          mountNode
+        )
+      ) : (
+        <GeneratingSandbox />
       )}
     </ErrorBoundary>
   );
