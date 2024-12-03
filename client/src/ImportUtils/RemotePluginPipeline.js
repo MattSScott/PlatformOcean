@@ -31,7 +31,7 @@ export default function RemotePluginPipeline({
       style={{
         width: "100%",
         height: "100%",
-        display: sandboxRef ? "" : "none",
+        display: sandboxRef ? "inline" : "none",
       }}
       title={`iframe-${pluginKey}`}
     />
