@@ -12,7 +12,7 @@ export default function EndpointButton({ endpoint, owner, bindEndpoint }) {
       sx={{
         position: "relative",
         padding: "10px 20px",
-        margin: "50px",
+        margin: "20px",
         backgroundColor: "#4CAF50",
         color: "white",
         border: "none",

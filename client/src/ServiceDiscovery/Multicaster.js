@@ -59,7 +59,6 @@ export default function Multicaster({ bindEndpoint }) {
     try {
       const resp = await fetch(`${attemptedServerEndpoint}/discover`);
       const host = await resp?.text();
-      console.log(resp, host);
 
       if (resp && host) {
         setPotentialEndpoint(attemptedServerEndpoint);
@@ -102,22 +101,46 @@ export default function Multicaster({ bindEndpoint }) {
     } else if (hostStatus === ServerStatusState.INVALID) {
       return (
         <div style={{ marginTop: "50px" }}>
-          <Typography gutterBottom variant="h5">
-            Unable to find endpoint with address {`${manualIp}:${manualPort}`}.
+          <Typography
+            gutterBottom
+            variant="h5"
+            sx={{
+              marginBottom: "20px",
+              fontWeight: 700, // Bold weight
+              color: "rgb(1, 92, 159)", // A green color
+              letterSpacing: "0.5px", // Spacing between letters
+              textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)", // Subtle shadow for depth
+              backgroundColor: "rgba(231, 218, 218, 0.25)", // Background color
+              padding: "20px", // Padding for the background
+              borderRadius: "16px", // Rounded corners
+            }}
+          >
+            Unable to find endpoint with address {`${manualIp}:${manualPort}`}
           </Typography>
         </div>
       );
     } else {
       return (
         <div style={{ marginTop: "50px" }}>
-          <Typography variant="h5">Server found!</Typography>
-          <Typography variant="h5">
+          <Typography
+            variant="h5"
+            sx={{
+              marginBottom: "20px",
+              fontWeight: 700, // Bold weight
+              color: "rgb(1, 92, 159)", // A green color
+              letterSpacing: "0.5px", // Spacing between letters
+              textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)", // Subtle shadow for depth
+              backgroundColor: "rgba(231, 218, 218, 0.25)", // Background color
+              padding: "20px", // Padding for the background
+              borderRadius: "16px", // Rounded corners
+            }}
+          >
+            Server found!
+            <br />
             Address: {`${manualIp}:${manualPort}`}
-          </Typography>
-          <Typography variant="h5" gutterBottom>
+            <br />
             Name: "{potentialHost}"
-          </Typography>
-          <Typography gutterBottom variant="h5">
+            <br />
             Add to list of servers?
           </Typography>
           <Button
@@ -182,16 +205,15 @@ export default function Multicaster({ bindEndpoint }) {
           style={{
             margin: "20px",
             width: "70%",
-            height: "75%",
+            height: "70%",
             display: "flex",
             justifyContent: "center",
           }}
         >
           <List>
             {endpointList.map(([endpoint, owner], idx) => (
-              <ListItem>
+              <ListItem key={`endpoint-button-${idx}`}>
                 <EndpointButton
-                  key={`endpoint-button-${idx}`}
                   bindEndpoint={bindEndpoint}
                   endpoint={endpoint}
                   owner={owner}
@@ -225,8 +247,8 @@ export default function Multicaster({ bindEndpoint }) {
         >
           Connect Manually
         </Button>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+        <Grid container spacing={2} sx={{ margin: "20px" }}>
+          <Grid item xs={6} sx={{ paddingTop: 0 }}>
             <TextField
               label="Enter Server IP"
               variant="outlined"
@@ -236,7 +258,7 @@ export default function Multicaster({ bindEndpoint }) {
               style={{ fontSize: "1.25rem" }} // Larger font size for input field
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={6} sx={{ paddingTop: 0 }}>
             <TextField
               label="Enter Port"
               variant="outlined"
