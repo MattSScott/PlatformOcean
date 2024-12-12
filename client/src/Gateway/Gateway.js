@@ -6,7 +6,6 @@ import SockJS from "sockjs-client";
 import PluginImporter from "../ImportUtils/PluginImporter";
 import { ClientDataContext } from "../Contexts/ClientContext";
 import { NetworkIPContext } from "../Contexts/ServerIPContext";
-// import PluginSetUpdater from "../PluginSetUpdater/PluginSetUpdater";
 
 class Gateway extends React.Component {
   constructor(props) {
@@ -18,7 +17,7 @@ class Gateway extends React.Component {
     this.bindClient = this.bindClient.bind(this);
     this.retrievePluginKeys = this.retrievePluginDetails.bind(this);
     this.subscribeToPluginList = this.subscribeToPluginList.bind(this);
-    this.networkAddress = process.env.REACT_APP_SERVER_IP;
+    this.networkAddress = props.endpoint;
   }
 
   state = {
@@ -117,14 +116,6 @@ class Gateway extends React.Component {
 
     return (
       <div>
-        {/* {this.state.client && this.state.clientID && (
-          <PluginSetUpdater
-            client={this.state.client}
-            clientID={this.state.clientID}
-          />
-        )} */}
-        {/* <ClientContext.Provider value={this.state.client}>
-          <ClientIDContext.Provider value={this.state.clientID}> */}
         <ClientDataContext.Provider
           value={{ client: this.state.client, clientID: this.state.clientID }}
         >
@@ -139,8 +130,6 @@ class Gateway extends React.Component {
             )}
           </NetworkIPContext.Provider>
         </ClientDataContext.Provider>
-        {/* </ClientIDContext.Provider>
-        </ClientContext.Provider> */}
       </div>
     );
   }

@@ -28,7 +28,7 @@ public class NetworkInfoStore {
 
 		public PlatformIdentifier() throws UnknownHostException {
 			platformOwner = "Matt";
-			platformIP = getFullEndpointAddress();
+			platformIP = getFullServerAddress();
 		}
 
 	}

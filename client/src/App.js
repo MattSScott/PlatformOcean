@@ -1,11 +1,25 @@
+import React, { useState } from "react";
 import "./App.css";
 import Gateway from "./Gateway/Gateway";
+import Multicaster from "./ServiceDiscovery/Multicaster";
 
 function App() {
+  const [isDiscovering, setIsDiscovering] = useState(true);
+  const [endpoint, setEndpoint] = useState(null);
+
+  const bindEndpoint = (chosenEndpoint) => {
+    setIsDiscovering(false);
+    setEndpoint(chosenEndpoint);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <Gateway />
+        {isDiscovering ? (
+          <Multicaster bindEndpoint={bindEndpoint} />
+        ) : (
+          <Gateway endpoint={endpoint} />
+        )}
       </header>
     </div>
   );
