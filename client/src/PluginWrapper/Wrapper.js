@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "../Renderer/Renderer.css";
-import FetchingPlugin from "./FetchingPlugin";
 import { useNetworkIPContext } from "../Contexts/ServerIPContext";
 
 export default function PluginWrapper(WrappedComponent) {
@@ -220,20 +219,16 @@ export default function PluginWrapper(WrappedComponent) {
     }
 
     return (
-      <React.Suspense fallback={<FetchingPlugin />}>
-        {WrappedComponent && (
-          <WrappedComponent
-            getData={getData}
-            getDataHistory={getDataHistory}
-            getSender={getSender}
-            getUser={getUser}
-            isMe={isMe}
-            sendCreateMessage={sendCreateMessage}
-            sendUpdateMessage={sendUpdateMessage}
-            sendDeleteMessage={sendDeleteMessage}
-          />
-        )}
-      </React.Suspense>
+      <WrappedComponent
+        getData={getData}
+        getDataHistory={getDataHistory}
+        getSender={getSender}
+        getUser={getUser}
+        isMe={isMe}
+        sendCreateMessage={sendCreateMessage}
+        sendUpdateMessage={sendUpdateMessage}
+        sendDeleteMessage={sendDeleteMessage}
+      />
     );
   }
   return WrappedPlugin;
