@@ -1,5 +1,6 @@
 package platform_ocean.Config.NetworkWriter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -18,6 +19,7 @@ public class NetworkInfoStore {
 
 	public class PlatformIdentifier implements Serializable {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		public final String platformOwner;
@@ -25,9 +27,8 @@ public class NetworkInfoStore {
 		public final String platformIP;
 
 		public PlatformIdentifier() throws UnknownHostException {
-
 			platformOwner = "Matt";
-			platformIP = getFullGatewayAddress();
+			platformIP = getFullEndpointAddress();
 		}
 
 	}
@@ -36,18 +37,22 @@ public class NetworkInfoStore {
 	private String serverPort;
 
 	@Bean
+	public String getFullEndpointAddress() throws UnknownHostException {
+		String serverIP = InetAddress.getLocalHost().getHostAddress();
+		return String.format("http://%s/PlatformOcean", serverIP);
+	}
+
+	@Bean
 	public String getFullServerAddress() throws UnknownHostException {
 		String serverIP = InetAddress.getLocalHost().getHostAddress();
-		String fullServerAddress = String.format("http://%s:%s", serverIP, serverPort);
-		return fullServerAddress;
+        return String.format("http://%s:%s", serverIP, serverPort);
 	}
 
 	@Bean
 	public String getFullGatewayAddress() throws UnknownHostException {
 		String serverIP = InetAddress.getLocalHost().getHostAddress();
 		final int GATEWAY_PORT = 3000;
-		String fullServerAddress = String.format("http://%s:%s", serverIP, GATEWAY_PORT);
-		return fullServerAddress;
+        return String.format("http://%s:%s", serverIP, GATEWAY_PORT);
 	}
 
 	@Bean
@@ -59,7 +64,5 @@ public class NetworkInfoStore {
 		System.out.println(jsonStr);
 
 		return jsonStr.getBytes();
-
 	}
-
 }

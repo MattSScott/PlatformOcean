@@ -18,9 +18,7 @@ import java.net.DatagramPacket;
 @Component
 public class MulticastSubscriber extends Thread {
 
-	protected MulticastSocket socket = null;
-	protected NetworkInterface localNetwork = null;
-	protected byte[] buffer = new byte[256];
+    protected byte[] buffer = new byte[256];
 
 	@Autowired
 	private NetworkInfoStore networkData;
@@ -54,25 +52,22 @@ public class MulticastSubscriber extends Thread {
 //	}
 
 	@Async
-	private void respondToServiceDiscovery(String senderIP, NetworkInterface localNetwork) {
+    protected void respondToServiceDiscovery(String senderIP) {
 
 		try (DatagramSocket responseSocket = new DatagramSocket()) {
 
-			SocketAddress responseAddress = new InetSocketAddress(senderIP, 9001);
-
-//			System.out.println(responseAddress);
+            final int RESPONSE_PORT = 9002;
+            SocketAddress responseAddress = new InetSocketAddress(senderIP, RESPONSE_PORT);
 			responseSocket.connect(responseAddress);
 
 			byte[] networkDataBuffer = networkData.generateDiscoveryInfo();
 
 			DatagramPacket pack = new DatagramPacket(networkDataBuffer, networkDataBuffer.length);
-
 			responseSocket.send(pack);
 
 			System.out.println("Responded...");
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -81,27 +76,27 @@ public class MulticastSubscriber extends Thread {
 	@EventListener(ApplicationReadyEvent.class)
 	public void run() {
 
-		try (MulticastSocket socket = new MulticastSocket(9001)) {
+        final int MULTICASTER_PORT = 9001;
+        try (MulticastSocket socket = new MulticastSocket(MULTICASTER_PORT)) {
 
-			SocketAddress group = new InetSocketAddress("230.185.192.108", 9001);
+			SocketAddress group = new InetSocketAddress("230.185.192.108", MULTICASTER_PORT);
 			NetworkInterface localNetwork = socket.getNetworkInterface();
 			socket.joinGroup(group, localNetwork);
 
-			while (true) {
+			while (!Thread.currentThread().isInterrupted()) {
 				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 				socket.receive(packet);
 				String senderIP = packet.getAddress().getHostAddress();
-//				System.out.println(senderIP);
+				System.out.println(senderIP);
 				String received = new String(packet.getData(), 0, packet.getLength());
-//				System.out.println(received);
+				System.out.println(received);
 				if (received.equals("PlatformOceanDiscovery")) {
-					System.out.println("TEST");
-					this.respondToServiceDiscovery(senderIP, localNetwork);
+					this.respondToServiceDiscovery(senderIP);
 				}
 			}
+			socket.leaveGroup(group, localNetwork);
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+        } catch (IOException e) {
 			e.printStackTrace();
 		}
 
