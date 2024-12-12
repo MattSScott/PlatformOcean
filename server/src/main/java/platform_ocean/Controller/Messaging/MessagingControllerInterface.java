@@ -27,10 +27,10 @@ import platform_ocean.Entities.Messaging.UpdatedDataMapper;
 
 public interface MessagingControllerInterface {
 
-	public ResponseEntity<SimpleDataMapper> createMessage(UUID clientKey, UUID pluginKey, DataMapper dataFromFrontend);
+	ResponseEntity<SimpleDataMapper> createMessage(UUID clientKey, UUID pluginKey, DataMapper dataFromFrontend);
 
-	public ResponseEntity<SimpleDataMapper> deleteMessage(UUID clientKey, UUID pluginKey, DeleteRequest messageID);
+	ResponseEntity<SimpleDataMapper> deleteMessage(UUID clientKey, UUID pluginKey, DeleteRequest messageID);
 
-	public ResponseEntity<SimpleDataMapper> updateMessage(UUID clientKey, UUID pluginKey, UpdatedDataMapper udm);
+	ResponseEntity<SimpleDataMapper> updateMessage(UUID clientKey, UUID pluginKey, UpdatedDataMapper udm);
 
 }

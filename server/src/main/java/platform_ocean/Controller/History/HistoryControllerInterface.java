@@ -8,5 +8,5 @@ import org.springframework.http.ResponseEntity;
 import platform_ocean.Entities.Messaging.SimpleDataMapper;
 
 public interface HistoryControllerInterface {
-	public ResponseEntity<List<SimpleDataMapper>> retrieveDataHistory(UUID pluginKey);
+	ResponseEntity<List<SimpleDataMapper>> retrieveDataHistory(UUID pluginKey);
 }

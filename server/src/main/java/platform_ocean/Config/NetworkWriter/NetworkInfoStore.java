@@ -22,12 +22,12 @@ public class NetworkInfoStore {
 		@Serial
 		private static final long serialVersionUID = 1L;
 
-		public final String platformOwner;
+		public final String platformName;
 
 		public final String platformIP;
 
 		public PlatformIdentifier() throws UnknownHostException {
-			platformOwner = "Matt";
+			platformName = ServerDetailsParser.getServerName();
 			platformIP = getFullServerAddress();
 		}
 

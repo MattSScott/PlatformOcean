@@ -14,6 +14,9 @@ function App() {
 
   return (
     <div className="App">
+      <div style={{ margin: "20px", borderBottom: "1px solid #ddd" }}>
+        <h1>Platform Ocean!</h1>
+      </div>
       <header className="App-header">
         {isDiscovering ? (
           <Multicaster bindEndpoint={bindEndpoint} />
@@ -26,5 +29,3 @@ function App() {
 }
 
 export default App;
-
-// Example implementation: components.map( comp => client + uniqueKey, returns <SS client, uniqueKey> <COMP/> <SS/>)

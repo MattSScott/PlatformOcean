@@ -11,7 +11,7 @@ import platform_ocean.Entities.Surfer.SurferRegistrationRequest;
 @Service
 public interface SurferServiceInterface {
 
-	public class PasswordMatchFailureException extends Exception {
+	class PasswordMatchFailureException extends Exception {
 		private static final long serialVersionUID = 1L;
 
 		public PasswordMatchFailureException() {
@@ -22,7 +22,7 @@ public interface SurferServiceInterface {
 		}
 	}
 
-	public class OwnerExistsException extends Exception {
+	class OwnerExistsException extends Exception {
 		private static final long serialVersionUID = 1L;
 
 		public OwnerExistsException() {
@@ -33,7 +33,7 @@ public interface SurferServiceInterface {
 		}
 	}
 
-	public class UsernameExistsException extends Exception {
+	class UsernameExistsException extends Exception {
 		private static final long serialVersionUID = 1L;
 
 		public UsernameExistsException() {
@@ -44,12 +44,12 @@ public interface SurferServiceInterface {
 		}
 	}
 
-	public UUID registerSurfer(SurferRegistrationRequest request, boolean promote) throws UsernameExistsException;
+	UUID registerSurfer(SurferRegistrationRequest request, boolean promote) throws UsernameExistsException;
 
-	public UUID registerOwner(SurferRegistrationRequest request) throws OwnerExistsException, UsernameExistsException;
+	UUID registerOwner(SurferRegistrationRequest request) throws OwnerExistsException, UsernameExistsException;
 
-	public UUID retrieveSurfer(String username, String password)
+	UUID retrieveSurfer(String username, String password)
 			throws EntityNotFoundException, PasswordMatchFailureException;
 
-	public Map<UUID, String> retrieveAllSurfers();
+	Map<UUID, String> retrieveAllSurfers();
 }

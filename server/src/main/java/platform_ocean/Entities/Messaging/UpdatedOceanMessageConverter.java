@@ -21,7 +21,7 @@ public class UpdatedOceanMessageConverter extends JsonDeserializer<UpdatedDataMa
 	@Override
 	@Bean
 	public UpdatedDataMapper deserialize(JsonParser parser, DeserializationContext ctxt)
-			throws IOException, JacksonException {
+			throws IOException {
 
 		ObjectMapper mapper = new ObjectMapper();
 

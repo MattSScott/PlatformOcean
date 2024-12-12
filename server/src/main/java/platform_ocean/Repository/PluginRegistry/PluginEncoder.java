@@ -91,7 +91,7 @@ public class PluginEncoder {
 
 	}
 
-	public static void main(String args[]) throws IOException {
+	public static void main(String[] args) throws IOException {
 
 		byte[] encoding = PluginEncoder.encodePlugin("Coords");
 		PluginEncoder.decodePlugin(encoding);

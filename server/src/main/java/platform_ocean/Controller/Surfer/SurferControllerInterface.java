@@ -9,11 +9,11 @@ import platform_ocean.Entities.Surfer.SurferRegistrationRequest;
 
 public interface SurferControllerInterface {
 
-	public ResponseEntity<UUID> registerSurfer(SurferRegistrationRequest request);
+	ResponseEntity<UUID> registerSurfer(SurferRegistrationRequest request);
 
-	public ResponseEntity<UUID> registerOwner(SurferRegistrationRequest request);
+	ResponseEntity<UUID> registerOwner(SurferRegistrationRequest request);
 
-	public ResponseEntity<UUID> retrieveSurfer(SurferRegistrationRequest request);
+	ResponseEntity<UUID> retrieveSurfer(SurferRegistrationRequest request);
 
-	public ResponseEntity<Map<UUID, String>> retrieveAllSurfers();
+	ResponseEntity<Map<UUID, String>> retrieveAllSurfers();
 }

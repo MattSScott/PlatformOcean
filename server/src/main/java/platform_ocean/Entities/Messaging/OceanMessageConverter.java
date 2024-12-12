@@ -19,7 +19,7 @@ public class OceanMessageConverter extends JsonDeserializer<DataMapper> {
 
 	@Override
 	@Bean
-	public DataMapper deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException, JacksonException {
+	public DataMapper deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
 
 		ObjectMapper mapper = new ObjectMapper();
 
