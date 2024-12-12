@@ -1,6 +1,6 @@
 import React from "react";
 import Button from "@mui/material/Button";
-// import PluginStacker from "../ImportUtils/PluginStacker";
+import PluginAdder from "../PluginAdder/PluginAdder";
 import "./Renderer.css";
 import { ClientDataContext } from "../Contexts/ClientContext";
 
@@ -17,8 +17,9 @@ class Renderer extends React.Component {
 
   render() {
     return (
-      <>
+      <div className="renderer">
         <div className="logout">
+          <PluginAdder />
           <ClientDataContext.Consumer>
             {({ clientID }) => (
               <p>Signed in as: {`${clientID.substring(0, 8)}...`}</p>
@@ -29,7 +30,7 @@ class Renderer extends React.Component {
           </Button>
         </div>
         <div className="allComps">{this.props.loadedPlugins}</div>
-      </>
+      </div>
     );
   }
 }

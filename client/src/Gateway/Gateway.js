@@ -53,7 +53,7 @@ class Gateway extends React.Component {
       () => {
         this.retrievePluginDetails();
         // TODO: BUGGY!!
-        // this.subscribeToPluginList();
+        this.subscribeToPluginList();
       }
     );
   }
