@@ -252,8 +252,12 @@ export default function Multicaster({ bindEndpoint }) {
             <TextField
               label="Enter Server IP"
               variant="outlined"
+              type="text"
               value={manualIp}
-              onChange={(e) => setManualIp(e.target.value)}
+              onChange={(e) => {
+                setHostStatus(ServerStatusState.WAITING);
+                setManualIp(e.target.value);
+              }}
               fullWidth
               style={{ fontSize: "1.25rem" }} // Larger font size for input field
             />
@@ -262,8 +266,12 @@ export default function Multicaster({ bindEndpoint }) {
             <TextField
               label="Enter Port"
               variant="outlined"
+              type="number"
               value={manualPort}
-              onChange={(e) => setManualPort(e.target.value)}
+              onChange={(e) => {
+                setHostStatus(ServerStatusState.WAITING);
+                setManualPort(e.target.value);
+              }}
               fullWidth
               style={{ fontSize: "1.25rem" }} // Larger font size for input field
             />
