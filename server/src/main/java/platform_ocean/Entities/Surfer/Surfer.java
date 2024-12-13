@@ -1,5 +1,6 @@
 package platform_ocean.Entities.Surfer;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -29,6 +30,7 @@ public class Surfer implements UserDetails {
 	private Boolean locked = false;
 	@Enumerated(EnumType.STRING)
 	private Role role;
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public Surfer(String username, String password, Role role) {
@@ -102,6 +104,10 @@ public class Surfer implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
+	}
+
+	public void lockAccount() {
+		this.locked = true;
 	}
 
 }
