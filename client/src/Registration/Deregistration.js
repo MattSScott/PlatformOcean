@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export default function Deregistration({ unsetUserDetails }) {
   const triggerLogout = () => {
@@ -13,6 +14,7 @@ export default function Deregistration({ unsetUserDetails }) {
       color="error"
       onClick={triggerLogout}
     >
+      <LogoutIcon sx={{ marginRight: "10px" }} />
       Logout
     </Button>
   );

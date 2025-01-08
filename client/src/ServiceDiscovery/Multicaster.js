@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import WifiFindIcon from "@mui/icons-material/WifiFind";
+import SearchIcon from "@mui/icons-material/Search";
 import EndpointButton from "./EndpointButton";
 
 export default function Multicaster({ bindEndpoint }) {
@@ -110,7 +112,7 @@ export default function Multicaster({ bindEndpoint }) {
               color: "rgb(1, 92, 159)", // A green color
               letterSpacing: "0.5px", // Spacing between letters
               textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)", // Subtle shadow for depth
-              backgroundColor: "rgba(231, 218, 218, 0.25)", // Background color
+              // backgroundColor: "rgba(231, 218, 218, 0.25)", // Background color
               padding: "20px", // Padding for the background
               borderRadius: "16px", // Rounded corners
             }}
@@ -130,7 +132,7 @@ export default function Multicaster({ bindEndpoint }) {
               color: "rgb(1, 92, 159)", // A green color
               letterSpacing: "0.5px", // Spacing between letters
               textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)", // Subtle shadow for depth
-              backgroundColor: "rgba(231, 218, 218, 0.25)", // Background color
+              // backgroundColor: "rgba(231, 218, 218, 0.25)", // Background color
               padding: "20px", // Padding for the background
               borderRadius: "16px", // Rounded corners
             }}
@@ -200,6 +202,7 @@ export default function Multicaster({ bindEndpoint }) {
           onClick={discoverServers}
         >
           Discover Servers
+          <WifiFindIcon sx={{ marginLeft: "10px" }} />
         </Button>
         <Paper
           style={{
@@ -246,6 +249,7 @@ export default function Multicaster({ bindEndpoint }) {
           onClick={attemptManualConnection}
         >
           Connect Manually
+          <SearchIcon sx={{ marginLeft: "10px" }} />
         </Button>
         <Grid container spacing={2} sx={{ margin: "20px" }}>
           <Grid item xs={6} sx={{ paddingTop: 0 }}>

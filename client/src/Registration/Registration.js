@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
+  Typography,
   Box,
   IconButton,
   InputAdornment,
 } from "@mui/material";
+import LoginIcon from "@mui/icons-material/Login";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import "./Registration.css";
 
@@ -146,12 +148,10 @@ import "./Registration.css";
 // export default Registration;
 
 export default function Registration({ setUserDetails }) {
-  const [formEntry, setFormEntry] = useState({
-    username: null,
-    password: null,
-  });
-
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShow) => !prevShow);
@@ -168,21 +168,34 @@ export default function Registration({ setUserDetails }) {
     tryFindClient();
   }, []);
 
-  const setUsername = (e) => {
-    setFormEntry((prevState) => ({
-      ...prevState,
-      username: e.target.value,
-    }));
-  };
+  // const setUsername = (e) => {
+  //   setFormEntry((prevState) => ({
+  //     ...prevState,
+  //     username: e.target.value,
+  //   }));
+  // };
 
-  const setPassword = (e) => {
-    setFormEntry((prevState) => ({
-      ...prevState,
-      password: e.target.value,
-    }));
-  };
+  // const setPassword = (e) => {
+  //   setFormEntry((prevState) => ({
+  //     ...prevState,
+  //     password: e.target.value,
+  //   }));
+  // };
 
   const submitDetails = () => {
+    const trimmedUsername = username.trim();
+    const trimmedPassword = password.trim();
+
+    if (!trimmedUsername || !trimmedPassword) {
+      setError("Both username and password are required.");
+      return;
+    }
+
+    setError("");
+    const formEntry = {
+      username: trimmedUsername,
+      password: trimmedPassword,
+    };
     localStorage.setItem("userData", formEntry);
     setUserDetails(formEntry);
   };
@@ -210,7 +223,7 @@ export default function Registration({ setUserDetails }) {
           id="outlined-basic"
           label="Username"
           variant="outlined"
-          onChange={setUsername}
+          onChange={(e) => setUsername(e.target.value)}
         />
         <TextField
           type={showPassword ? "text" : "password"}
@@ -229,14 +242,7 @@ export default function Registration({ setUserDetails }) {
           id="outlined-basic"
           label="Password"
           variant="outlined"
-          onChange={setPassword}
-          // InputLabelProps={{
-          //   sx: {
-          //     top: "50%",
-          //     transform: "translateY(-50%)",
-          //     marginLeft: "10px",
-          //   },
-          // }}
+          onChange={(e) => setPassword(e.target.value)}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -248,10 +254,15 @@ export default function Registration({ setUserDetails }) {
           }}
         />
       </div>
+      {error && (
+        <Typography color="error" variant="h6" sx={{ marginTop: 1 }}>
+          {error}
+        </Typography>
+      )}
       <div
         style={{
           display: "flex",
-          marginTop: "10px",
+          // marginTop: "10px",
           alignContent: "center",
           alignItems: "center",
           justifyContent: "center",
@@ -260,13 +271,15 @@ export default function Registration({ setUserDetails }) {
         <Button
           sx={{
             marginTop: "16px",
+            width: "100%",
             fontSize: { xs: "1rem", sm: "1.25rem", md: "1.5rem" },
             padding: { xs: "10px 20px", sm: "12px 24px", md: "14px 28px" },
           }}
           variant="contained"
           onClick={submitDetails}
         >
-          Bind Login Details
+          <LoginIcon sx={{ marginRight: "10px" }} />
+          Log In
         </Button>
       </div>
     </div>
