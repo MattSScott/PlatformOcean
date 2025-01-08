@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
+import {
+  TextField,
+  Button,
+  Box,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import "./Registration.css";
-// import { NetworkIPContext } from "../Contexts/ServerIPContext";
 
 // class Registration extends React.Component {
 //   constructor(props) {
@@ -146,6 +151,12 @@ export default function Registration({ setUserDetails }) {
     password: null,
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShow) => !prevShow);
+  };
+
   useEffect(() => {
     const tryFindClient = () => {
       const userDetails = localStorage.getItem("userData");
@@ -202,6 +213,9 @@ export default function Registration({ setUserDetails }) {
           onChange={setUsername}
         />
         <TextField
+          type={showPassword ? "text" : "password"}
+          autoComplete="off"
+          autoCapitalize="off"
           sx={{
             marginTop: "10px",
             "& .MuiInputBase-root": {
@@ -216,6 +230,22 @@ export default function Registration({ setUserDetails }) {
           label="Password"
           variant="outlined"
           onChange={setPassword}
+          // InputLabelProps={{
+          //   sx: {
+          //     top: "50%",
+          //     transform: "translateY(-50%)",
+          //     marginLeft: "10px",
+          //   },
+          // }}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={togglePasswordVisibility} edge="end">
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
       </div>
       <div

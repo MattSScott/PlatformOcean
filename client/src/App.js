@@ -27,6 +27,7 @@ function App() {
         style={{
           margin: "20px",
           height: "10%",
+          width: "100%",
           borderBottom: "1px solid #ddd",
           display: "flex",
           alignItems: "center",

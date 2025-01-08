@@ -171,7 +171,7 @@ export default function Multicaster({ bindEndpoint }) {
         width: "100%",
         justifyContent: "space-between",
         height: "100%",
-        padding: "20px",
+        paddingTop: "20px",
         gap: "20px",
       }}
     >
