@@ -51,7 +51,6 @@ class Gateway extends React.Component {
       }),
       () => {
         this.retrievePluginDetails();
-        // TODO: BUGGY!!
         this.subscribeToPluginList();
       }
     );
@@ -62,8 +61,8 @@ class Gateway extends React.Component {
   }
 
   componentWillUnmount() {
-    if (this.client) {
-      this.client.disconnect();
+    if (this.state.client) {
+      this.state.client.disconnect();
     }
   }
 

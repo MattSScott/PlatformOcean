@@ -19,7 +19,7 @@ import WifiFindIcon from "@mui/icons-material/WifiFind";
 import SearchIcon from "@mui/icons-material/Search";
 import EndpointButton from "./EndpointButton";
 
-export default function Multicaster({ bindEndpoint }) {
+export default function Multicaster({ userData, bindEndpoint }) {
   const [endpointList, setEndpointList] = useState([]);
   const [manualIp, setManualIp] = useState("192.168.0.43");
   const [manualPort, setManualPort] = useState(8080);
@@ -217,6 +217,7 @@ export default function Multicaster({ bindEndpoint }) {
             {endpointList.map(([endpoint, owner], idx) => (
               <ListItem key={`endpoint-button-${idx}`}>
                 <EndpointButton
+                  userData={userData}
                   bindEndpoint={bindEndpoint}
                   endpoint={endpoint}
                   owner={owner}

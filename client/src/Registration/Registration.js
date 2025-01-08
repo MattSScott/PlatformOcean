@@ -3,7 +3,7 @@ import {
   TextField,
   Button,
   Typography,
-  Box,
+  // Box,
   IconButton,
   InputAdornment,
 } from "@mui/material";
@@ -166,21 +166,7 @@ export default function Registration({ setUserDetails }) {
       }
     };
     tryFindClient();
-  }, []);
-
-  // const setUsername = (e) => {
-  //   setFormEntry((prevState) => ({
-  //     ...prevState,
-  //     username: e.target.value,
-  //   }));
-  // };
-
-  // const setPassword = (e) => {
-  //   setFormEntry((prevState) => ({
-  //     ...prevState,
-  //     password: e.target.value,
-  //   }));
-  // };
+  }, [setUserDetails]);
 
   const submitDetails = () => {
     const trimmedUsername = username.trim();
@@ -188,6 +174,9 @@ export default function Registration({ setUserDetails }) {
 
     if (!trimmedUsername || !trimmedPassword) {
       setError("Both username and password are required.");
+      setTimeout(() => {
+        setError("");
+      }, 3000);
       return;
     }
 

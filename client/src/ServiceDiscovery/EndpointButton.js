@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@mui/material";
 
-export default function EndpointButton({ endpoint, owner, bindEndpoint }) {
+export default function EndpointButton({
+  userData,
+  endpoint,
+  owner,
+  bindEndpoint,
+}) {
   const performBind = () => {
     bindEndpoint(endpoint);
   };
+
+  useEffect(() => {
+    const fetchEndpointData = async () => {
+      try {
+        const RegistrationAddress = `${endpoint}/registry/get`;
+        const response = await fetch(RegistrationAddress, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(userData),
+        });
+
+        const UUID_Resp = await response.json();
+        console.log(UUID_Resp);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchEndpointData();
+  }, [endpoint, userData]);
 
   return (
     <Button

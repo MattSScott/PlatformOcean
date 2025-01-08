@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import "./App.css";
 import StyledHeader from "./StyledHeader";
 import Nexus from "./Nexus";
@@ -9,10 +9,10 @@ function App() {
   const [userIsBound, setUserIsBound] = useState(false);
   const [userDetailsObject, setUserDetailsObject] = useState(null);
 
-  const setUserDetails = (userData) => {
+  const setUserDetails = useCallback((userData) => {
     setUserIsBound(true);
     setUserDetailsObject(userData);
-  };
+  }, []);
 
   const unsetUserDetails = () => {
     setUserIsBound(false);
@@ -39,7 +39,7 @@ function App() {
       </div>
       <header className="App-header">
         {userIsBound ? (
-          <Nexus />
+          <Nexus userData={userDetailsObject} />
         ) : (
           <Registration setUserDetails={setUserDetails} />
         )}

@@ -3,7 +3,7 @@ import Gateway from "./Gateway/Gateway";
 import Multicaster from "./ServiceDiscovery/Multicaster";
 import { Button } from "@mui/material";
 
-export default function Nexus() {
+export default function Nexus({ userData }) {
   const [isDiscovering, setIsDiscovering] = useState(true);
   const [endpoint, setEndpoint] = useState(null);
 
@@ -20,7 +20,7 @@ export default function Nexus() {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {isDiscovering ? (
-        <Multicaster bindEndpoint={bindEndpoint} />
+        <Multicaster userData={userData} bindEndpoint={bindEndpoint} />
       ) : (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Button
