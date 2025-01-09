@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
+import JoinPlatformDialog from "./JoinPlatformDialog";
 
 export default function EndpointButton({
   userData,
@@ -15,8 +16,13 @@ export default function EndpointButton({
   };
 
   const [buttonHasLoaded, setButtonHasLoaded] = useState(false);
-  // const [buttonColour, setButtonColour] = useState("red");
   const [endpointState, setEndpointState] = useState(endpointStateMap.LOADING);
+  const [dialogOpen, setDialogOpen] = useState(false);
+
+  const handleDialogInput = (resp) => {
+    resp && submitUserRegistrationRequest();
+    setDialogOpen(false);
+  };
 
   const submitUserRegistrationRequest = async () => {
     const endpointURL = `${endpoint}/registry/add`;
@@ -29,27 +35,24 @@ export default function EndpointButton({
         },
         body: JSON.stringify(userData),
       });
-      console.log(response);
       if (response.status == 201) {
         alert("User successfully registered");
-        // setButtonColour("green");
         setEndpointState(endpointStateMap.MEMBER);
       } else if (response.status == 409) {
         throw new Error("Unable to submit registration request.");
       }
-      // const UUID_Resp = await response.json();
     } catch (error) {
       console.log(error);
-      alert("Unable to submit registration request.");
+      alert(error);
     }
   };
 
   const conditionalButtonAction = () => {
     if (endpointState === endpointStateMap.MEMBER) {
       bindEndpoint(endpoint);
+      // TODO: propagate user state back up
     } else if (endpointState === endpointStateMap.NON_MEMBER) {
-      // TODO: generate dialog box, then perform following:
-      submitUserRegistrationRequest();
+      setDialogOpen(true);
     } else if (endpointState === endpointStateMap.BANNED) {
       alert("You are banned from this platform.");
     } else {
@@ -70,7 +73,6 @@ export default function EndpointButton({
         });
 
         if (response.status === 401) {
-          // setButtonColour("orange");
           setEndpointState(endpointStateMap.NON_MEMBER);
           return;
         }
@@ -79,15 +81,12 @@ export default function EndpointButton({
           const UUID_Resp = await response.json();
           console.log(UUID_Resp);
           if (UUID_Resp.locked) {
-            // setButtonColour("red");
             setEndpointState(endpointStateMap.BANNED);
           } else {
-            // setButtonColour("green");
             setEndpointState(endpointStateMap.MEMBER);
           }
         }
       } catch (error) {
-        // setButtonColour("red");
         setEndpointState(endpointStateMap.LOADING);
         console.log(error);
       } finally {
@@ -101,56 +100,65 @@ export default function EndpointButton({
   }, [endpoint, userData]);
 
   return (
-    <Button
-      variant="contained"
-      sx={{
-        position: "relative",
-        padding: "10px 20px",
-        margin: "20px",
-        backgroundColor: endpointState,
-        color: "white",
-        border: "none",
-        borderRadius: "5px",
-        cursor: "pointer",
-        fontSize: "16px",
-        transition: "all 0.3s ease",
-        "&:hover": {
-          backgroundColor: endpointState, // Prevent hover background change
-        },
-      }}
-      onMouseEnter={(e) => {
-        const tooltip = e.target.querySelector(".endpoint-tooltip");
-        tooltip.style.opacity = 1;
-        tooltip.style.visibility = "visible";
-      }}
-      onMouseLeave={(e) => {
-        const tooltip = e.target.querySelector(".endpoint-tooltip");
-        tooltip.style.opacity = 0;
-        tooltip.style.visibility = "hidden";
-      }}
-      onClick={conditionalButtonAction}
-    >
-      {buttonHasLoaded ? `${platformOwner}'s Platform` : "Loading Platform..."}
-      <span
-        className="endpoint-tooltip"
-        style={{
-          position: "absolute",
-          bottom: "110%",
-          left: "50%",
-          transform: "translateX(-50%)",
-          backgroundColor: "#333",
+    <>
+      <Button
+        variant="contained"
+        sx={{
+          position: "relative",
+          padding: "10px 20px",
+          margin: "20px",
+          backgroundColor: endpointState,
           color: "white",
-          padding: "5px 10px",
+          border: "none",
           borderRadius: "5px",
-          opacity: 0,
-          pointerEvents: "none",
-          visibility: "hidden",
-          transition: "opacity 0.3s, visibility 0.3s",
-          zIndex: 1,
+          cursor: "pointer",
+          fontSize: "16px",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            backgroundColor: endpointState, // Prevent hover background change
+          },
         }}
+        onMouseEnter={(e) => {
+          const tooltip = e.target.querySelector(".endpoint-tooltip");
+          tooltip.style.opacity = 1;
+          tooltip.style.visibility = "visible";
+        }}
+        onMouseLeave={(e) => {
+          const tooltip = e.target.querySelector(".endpoint-tooltip");
+          tooltip.style.opacity = 0;
+          tooltip.style.visibility = "hidden";
+        }}
+        onClick={conditionalButtonAction}
       >
-        {endpoint}
-      </span>
-    </Button>
+        {buttonHasLoaded
+          ? `${platformOwner}'s Platform`
+          : "Loading Platform..."}
+        <span
+          className="endpoint-tooltip"
+          style={{
+            position: "absolute",
+            bottom: "110%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "#333",
+            color: "white",
+            padding: "5px 10px",
+            borderRadius: "5px",
+            opacity: 0,
+            pointerEvents: "none",
+            visibility: "hidden",
+            transition: "opacity 0.3s, visibility 0.3s",
+            zIndex: 1,
+          }}
+        >
+          {endpoint}
+        </span>
+      </Button>
+      <JoinPlatformDialog
+        platformOwner={platformOwner}
+        isOpen={dialogOpen}
+        handleClose={handleDialogInput}
+      />
+    </>
   );
 }
