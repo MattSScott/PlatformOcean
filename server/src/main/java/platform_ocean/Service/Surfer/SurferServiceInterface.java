@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import platform_ocean.Entities.Surfer.Surfer;
 import platform_ocean.Entities.Surfer.SurferRegistrationRequest;
 
 @Service
@@ -48,7 +49,7 @@ public interface SurferServiceInterface {
 
 	UUID registerOwner(SurferRegistrationRequest request) throws OwnerExistsException, UsernameExistsException;
 
-	UUID retrieveSurfer(String username, String password)
+	Surfer retrieveSurfer(String username, String password)
 			throws EntityNotFoundException, PasswordMatchFailureException;
 
 	Map<UUID, String> retrieveAllSurfers();

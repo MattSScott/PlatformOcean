@@ -13,7 +13,7 @@ public interface SurferControllerInterface {
 
 	ResponseEntity<UUID> registerOwner(SurferRegistrationRequest request);
 
-	ResponseEntity<UUID> retrieveSurfer(SurferRegistrationRequest request);
+	ResponseEntity<SimplifiedSurferData> retrieveSurfer(SurferRegistrationRequest request);
 
 	ResponseEntity<Map<UUID, String>> retrieveAllSurfers();
 }

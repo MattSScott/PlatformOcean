@@ -53,17 +53,17 @@ public class SurferService implements SurferServiceInterface, UserDetailsService
 	}
 
 	@Override
-	public UUID retrieveSurfer(String username, String password)
+	public Surfer retrieveSurfer(String username, String password)
 			throws EntityNotFoundException, PasswordMatchFailureException {
 
 		Surfer request = surferRepo.findByUsername(username)
 				.orElseThrow(() -> new EntityNotFoundException("Username not found. Try registering instead."));
 		String encodedPass = request.getPassword();
-		Boolean isMatch = encoder.getEncoder().matches(password, encodedPass);
+		boolean isMatch = encoder.getEncoder().matches(password, encodedPass);
 		if (!isMatch) {
 			throw new PasswordMatchFailureException("Password not recognised.");
 		}
-		return request.getUserID();
+		return request;
 	}
 
 	@Override

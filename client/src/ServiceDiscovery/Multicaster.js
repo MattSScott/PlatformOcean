@@ -220,7 +220,7 @@ export default function Multicaster({ userData, bindEndpoint }) {
                   userData={userData}
                   bindEndpoint={bindEndpoint}
                   endpoint={endpoint}
-                  owner={owner}
+                  platformOwner={owner}
                 />
               </ListItem>
             ))}

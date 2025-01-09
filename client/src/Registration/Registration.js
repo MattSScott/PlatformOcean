@@ -162,7 +162,7 @@ export default function Registration({ setUserDetails }) {
       const userDetails = localStorage.getItem("userData");
       console.log(userDetails);
       if (userDetails) {
-        setUserDetails(userDetails);
+        setUserDetails(JSON.parse(userDetails));
       }
     };
     tryFindClient();
@@ -185,7 +185,7 @@ export default function Registration({ setUserDetails }) {
       username: trimmedUsername,
       password: trimmedPassword,
     };
-    localStorage.setItem("userData", formEntry);
+    localStorage.setItem("userData", JSON.stringify(formEntry));
     setUserDetails(formEntry);
   };
 

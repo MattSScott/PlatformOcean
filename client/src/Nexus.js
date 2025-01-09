@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 export default function Nexus({ userData }) {
   const [isDiscovering, setIsDiscovering] = useState(true);
   const [endpoint, setEndpoint] = useState(null);
+  const [clientState, setClientState] = useState({});
 
   const bindEndpoint = (chosenEndpoint) => {
     setIsDiscovering(false);
@@ -20,7 +21,11 @@ export default function Nexus({ userData }) {
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {isDiscovering ? (
-        <Multicaster userData={userData} bindEndpoint={bindEndpoint} />
+        <Multicaster
+          userData={userData}
+          bindEndpoint={bindEndpoint}
+          setClientState={setClientState}
+        />
       ) : (
         <div style={{ display: "flex", justifyContent: "center" }}>
           <Button
