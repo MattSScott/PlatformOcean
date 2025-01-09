@@ -27,14 +27,19 @@ export default function Nexus({ userData }) {
           setClientState={setClientState}
         />
       ) : (
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            variant="contained"
-            style={{ position: "absolute", top: 0 }}
-            onClick={unbindEndpoint}
-          >
-            Return to Server Select
-          </Button>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            gap: "20px",
+          }}
+        >
+          <div>
+            <Button variant="contained" onClick={unbindEndpoint}>
+              Return to Server Select
+            </Button>
+          </div>
           <Gateway endpoint={endpoint} clientState={clientState} />
         </div>
       )}

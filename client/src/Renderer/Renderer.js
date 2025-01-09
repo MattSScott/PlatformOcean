@@ -4,16 +4,6 @@ import "./Renderer.css";
 import { ClientDataContext } from "../Contexts/ClientContext";
 
 class Renderer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.triggerLogout = this.triggerLogout.bind(this);
-  }
-
-  triggerLogout() {
-    this.props.setClientInfo(null);
-    localStorage.clear();
-  }
-
   render() {
     return (
       <div className="renderer">

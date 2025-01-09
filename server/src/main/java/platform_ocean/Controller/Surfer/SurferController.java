@@ -1,23 +1,17 @@
 package platform_ocean.Controller.Surfer;
 
-import java.util.Map;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
+import org.springframework.web.bind.annotation.*;
 import platform_ocean.Entities.Surfer.Surfer;
 import platform_ocean.Entities.Surfer.SurferRegistrationRequest;
 import platform_ocean.Service.Surfer.SurferService;
 import platform_ocean.Service.Surfer.SurferServiceInterface.UsernameExistsException;
+
+import java.util.Map;
+import java.util.UUID;
 
 @Controller
 @CrossOrigin
@@ -29,10 +23,13 @@ public class SurferController implements SurferControllerInterface {
 
     @PostMapping("/add")
     @ResponseBody
-    public ResponseEntity<UUID> registerSurfer(@RequestBody SurferRegistrationRequest request) {
+    public ResponseEntity<SimplifiedSurferData> registerSurfer(@RequestBody SurferRegistrationRequest request) {
         try {
-            UUID response = surferService.registerSurfer(request, false);
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            Surfer surferRequest = surferService.registerSurfer(request, false);
+            SimplifiedSurferData responseData = new SimplifiedSurferData(
+                    surferRequest.getUserID(), surferRequest.getRole().toString(), !surferRequest.isAccountNonLocked()
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseData);
         } catch (UsernameExistsException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -41,10 +38,13 @@ public class SurferController implements SurferControllerInterface {
 
     @PostMapping("/own")
     @ResponseBody
-    public ResponseEntity<UUID> registerOwner(@RequestBody SurferRegistrationRequest request) {
+    public ResponseEntity<SimplifiedSurferData> registerOwner(@RequestBody SurferRegistrationRequest request) {
         try {
-            UUID ownerId = surferService.registerOwner(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(ownerId);
+            Surfer owner = surferService.registerOwner(request);
+            SimplifiedSurferData responseData = new SimplifiedSurferData(
+                    owner.getUserID(), owner.getRole().toString(), !owner.isAccountNonLocked()
+            );
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseData);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -56,7 +56,7 @@ public class SurferController implements SurferControllerInterface {
     public ResponseEntity<SimplifiedSurferData> retrieveSurfer(@RequestBody SurferRegistrationRequest request) {
         try {
             Surfer surferRequest = surferService.retrieveSurfer(request.getUsername(), request.getPassword());
-			SimplifiedSurferData responseData = new SimplifiedSurferData(
+            SimplifiedSurferData responseData = new SimplifiedSurferData(
                     surferRequest.getUserID(), surferRequest.getRole().toString(), !surferRequest.isAccountNonLocked()
             );
             return ResponseEntity.status(HttpStatus.OK).body(responseData);
@@ -72,6 +72,4 @@ public class SurferController implements SurferControllerInterface {
         Map<UUID, String> surfers = surferService.retrieveAllSurfers();
         return ResponseEntity.status(HttpStatus.OK).body(surfers);
     }
-
-
 }

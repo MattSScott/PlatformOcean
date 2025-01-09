@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "@mui/material";
 import JoinPlatformDialog from "./JoinPlatformDialog";
 
@@ -9,12 +9,15 @@ export default function EndpointButton({
   bindEndpoint,
   setClientState,
 }) {
-  const endpointStateMap = {
-    LOADING: "grey",
-    NON_MEMBER: "orange",
-    MEMBER: "green",
-    BANNED: "red",
-  };
+  const endpointStateMap = useMemo(
+    () => ({
+      LOADING: "grey",
+      NON_MEMBER: "orange",
+      MEMBER: "green",
+      BANNED: "red",
+    }),
+    []
+  );
 
   const [buttonHasLoaded, setButtonHasLoaded] = useState(false);
   const [endpointState, setEndpointState] = useState(endpointStateMap.LOADING);
@@ -37,10 +40,12 @@ export default function EndpointButton({
         },
         body: JSON.stringify(userData),
       });
-      if (response.status == 201) {
+      if (response.status === 201) {
         alert("User successfully registered");
         setEndpointState(endpointStateMap.MEMBER);
-      } else if (response.status == 409) {
+        const USER_RESPONSE = await response.json();
+        setFetchedUser(USER_RESPONSE);
+      } else if (response.status === 409) {
         throw new Error("Unable to submit registration request.");
       }
     } catch (error) {
@@ -100,7 +105,7 @@ export default function EndpointButton({
     //   fetchEndpointData();
     // }, 2000);
     fetchEndpointData();
-  }, [endpoint, userData]);
+  }, [endpoint, userData, endpointStateMap]);
 
   return (
     <>
