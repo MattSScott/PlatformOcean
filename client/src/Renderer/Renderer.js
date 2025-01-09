@@ -1,38 +1,20 @@
-import React from "react";
-import Button from "@mui/material/Button";
+import React, { useContext } from "react";
 import PluginAdder from "../PluginAdder/PluginAdder";
 import "./Renderer.css";
 import { ClientDataContext } from "../Contexts/ClientContext";
+import { NetworkIPContext } from "../Contexts/ServerIPContext";
 
-class Renderer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.triggerLogout = this.triggerLogout.bind(this);
-  }
+export default function Renderer({ loadedPlugins }) {
+  const clientContext = useContext(ClientDataContext);
+  const networkAddress = useContext(NetworkIPContext);
 
-  triggerLogout() {
-    this.props.setClientInfo(null);
-    localStorage.clear();
-  }
-
-  render() {
-    return (
-      <div className="renderer">
-        <div className="logout">
-          <PluginAdder />
-          <ClientDataContext.Consumer>
-            {({ clientID }) => (
-              <p>Signed in as: {`${clientID.substring(0, 8)}...`}</p>
-            )}
-          </ClientDataContext.Consumer>
-          <Button variant="contained" onClick={this.triggerLogout}>
-            Logout
-          </Button>
-        </div>
-        <div className="allComps">{this.props.loadedPlugins}</div>
+  return (
+    <div className="renderer">
+      <div className="logout">
+        <PluginAdder networkAddress={networkAddress} />
+        <p>Signed in as: {`${clientContext.clientID.substring(0, 8)}...`}</p>
       </div>
-    );
-  }
+      <div className="allComps">{loadedPlugins}</div>
+    </div>
+  );
 }
-
-export default Renderer;

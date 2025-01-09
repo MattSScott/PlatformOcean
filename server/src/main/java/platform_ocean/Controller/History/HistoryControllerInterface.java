@@ -1,12 +1,11 @@
 package platform_ocean.Controller.History;
 
+import org.springframework.http.ResponseEntity;
+import platform_ocean.Entities.Messaging.SimpleDataMapper;
+
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.http.ResponseEntity;
-
-import platform_ocean.Entities.Messaging.SimpleDataMapper;
-
 public interface HistoryControllerInterface {
-	public ResponseEntity<List<SimpleDataMapper>> retrieveDataHistory(UUID pluginKey);
+    ResponseEntity<List<SimpleDataMapper>> retrieveDataHistory(UUID pluginKey);
 }

@@ -1,19 +1,18 @@
 package platform_ocean.Service.PluginRegistry;
 
-import java.util.List;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import platform_ocean.Entities.PluginRegistry.PluginStore;
 import platform_ocean.Repository.PluginRegistry.PluginRepository;
+
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class PluginService implements PluginServiceInterface {
 
-	@Autowired
-	private PluginRepository repo;
+    @Autowired
+    private PluginRepository repo;
 
 //	@Override
 //	public UUID registerPlugin(PluginStore plug) {
@@ -34,16 +33,16 @@ public class PluginService implements PluginServiceInterface {
 //		return plug.getPluginKey();
 //	}
 
-	@Override
-	public UUID registerPlugin(PluginStore plug) {
-		repo.save(plug);
-		return plug.getPluginKey();
-	}
+    @Override
+    public UUID registerPlugin(PluginStore plug) {
+        repo.save(plug);
+        return plug.getPluginKey();
+    }
 
 
-	public List<PluginStore.PluginData> retrievePlugins() {
-		return repo.findAllProjectedBy();
-	}
+    public List<PluginStore.PluginData> retrievePlugins() {
+        return repo.findAllProjectedBy();
+    }
 //	@Override
 //	public HashMap<UUID, String> retrievePlugins() {
 //		List<PluginStore> allPlugs = repo.findAll();

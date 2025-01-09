@@ -1,13 +1,12 @@
 package platform_ocean.Controller.Messaging;
 
-import java.util.UUID;
-
 import org.springframework.http.ResponseEntity;
-
 import platform_ocean.Entities.Messaging.DataMapper;
 import platform_ocean.Entities.Messaging.DeleteRequest;
 import platform_ocean.Entities.Messaging.SimpleDataMapper;
 import platform_ocean.Entities.Messaging.UpdatedDataMapper;
+
+import java.util.UUID;
 
 // Implement Interface<ReturnValue, DataMapperClass>
 //public interface WebSocketControllerInterface<U, T extends DataMapper<U>> {
@@ -27,10 +26,10 @@ import platform_ocean.Entities.Messaging.UpdatedDataMapper;
 
 public interface MessagingControllerInterface {
 
-	public ResponseEntity<SimpleDataMapper> createMessage(UUID clientKey, UUID pluginKey, DataMapper dataFromFrontend);
+    ResponseEntity<SimpleDataMapper> createMessage(UUID clientKey, UUID pluginKey, DataMapper dataFromFrontend);
 
-	public ResponseEntity<SimpleDataMapper> deleteMessage(UUID clientKey, UUID pluginKey, DeleteRequest messageID);
+    ResponseEntity<SimpleDataMapper> deleteMessage(UUID clientKey, UUID pluginKey, DeleteRequest messageID);
 
-	public ResponseEntity<SimpleDataMapper> updateMessage(UUID clientKey, UUID pluginKey, UpdatedDataMapper udm);
+    ResponseEntity<SimpleDataMapper> updateMessage(UUID clientKey, UUID pluginKey, UpdatedDataMapper udm);
 
 }

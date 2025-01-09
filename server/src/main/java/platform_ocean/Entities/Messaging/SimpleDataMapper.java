@@ -4,35 +4,35 @@ import java.util.UUID;
 
 public class SimpleDataMapper {
 
-	private final UUID sender;
-	private final String message;
-	private final UUID messageID;
-	private final MessageProtocol protocol;
+    private final UUID sender;
+    private final String message;
+    private final UUID messageID;
+    private final MessageProtocol protocol;
 
-	public SimpleDataMapper(UUID sender, String message, UUID messageID, MessageProtocol protocol) {
-		this.sender = sender;
-		this.message = message;
-		this.messageID = messageID;
-		this.protocol = protocol;
-	}
+    public SimpleDataMapper(UUID sender, String message, UUID messageID, MessageProtocol protocol) {
+        this.sender = sender;
+        this.message = message;
+        this.messageID = messageID;
+        this.protocol = protocol;
+    }
 
-	public UUID getSender() {
-		return sender;
-	}
-
-
-	public String getMessage() {
-		return message;
-	}
+    public UUID getSender() {
+        return sender;
+    }
 
 
-	public UUID getMessageID() {
-		return messageID;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public MessageProtocol getProtocol() {
-		return protocol;
-	}
-	
+
+    public UUID getMessageID() {
+        return messageID;
+    }
+
+    public MessageProtocol getProtocol() {
+        return protocol;
+    }
+
 
 }

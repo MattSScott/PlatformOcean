@@ -1,22 +1,22 @@
 package platform_ocean.Service.Messaging;
 
+import platform_ocean.Entities.Messaging.DataMapper;
+
 import java.util.List;
 import java.util.UUID;
 
-import platform_ocean.Entities.Messaging.DataMapper;
-
 public interface OceanServiceInterface {
 
-	public List<DataMapper> retrieveMessagesByPlugin(UUID pluginkey);
-	
-	public List<DataMapper> retrieveMessagesByID(UUID pluginId);
+    List<DataMapper> retrieveMessagesByPlugin(UUID pluginkey);
 
-	public boolean matchRequestWithSender(UUID clientKey, UUID messageID);
+    List<DataMapper> retrieveMessagesByID(UUID pluginId);
 
-	public boolean createMessage(DataMapper message);
-	
-	public boolean deleteMessage(UUID messageID);
-	
-	public boolean updateMessage(UUID messageID, String messageToUpdate);
-	
+    boolean matchRequestWithSender(UUID clientKey, UUID messageID);
+
+    boolean createMessage(DataMapper message);
+
+    boolean deleteMessage(UUID messageID);
+
+    boolean updateMessage(UUID messageID, String messageToUpdate);
+
 }
