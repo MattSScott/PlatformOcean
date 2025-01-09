@@ -35,7 +35,7 @@ export default function Nexus({ userData }) {
           >
             Return to Server Select
           </Button>
-          <Gateway endpoint={endpoint} />
+          <Gateway endpoint={endpoint} clientState={clientState} />
         </div>
       )}
     </div>

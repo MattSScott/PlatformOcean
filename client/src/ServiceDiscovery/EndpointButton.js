@@ -7,6 +7,7 @@ export default function EndpointButton({
   endpoint,
   platformOwner,
   bindEndpoint,
+  setClientState,
 }) {
   const endpointStateMap = {
     LOADING: "grey",
@@ -17,6 +18,7 @@ export default function EndpointButton({
 
   const [buttonHasLoaded, setButtonHasLoaded] = useState(false);
   const [endpointState, setEndpointState] = useState(endpointStateMap.LOADING);
+  const [fetchedUser, setFetchedUser] = useState({});
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleDialogInput = (resp) => {
@@ -50,7 +52,8 @@ export default function EndpointButton({
   const conditionalButtonAction = () => {
     if (endpointState === endpointStateMap.MEMBER) {
       bindEndpoint(endpoint);
-      // TODO: propagate user state back up
+      console.log(fetchedUser);
+      setClientState(fetchedUser);
     } else if (endpointState === endpointStateMap.NON_MEMBER) {
       setDialogOpen(true);
     } else if (endpointState === endpointStateMap.BANNED) {
@@ -78,13 +81,13 @@ export default function EndpointButton({
         }
 
         if (response.status === 200) {
-          const UUID_Resp = await response.json();
-          console.log(UUID_Resp);
-          if (UUID_Resp.locked) {
+          const USER_RESPONSE = await response.json();
+          if (USER_RESPONSE.locked) {
             setEndpointState(endpointStateMap.BANNED);
           } else {
             setEndpointState(endpointStateMap.MEMBER);
           }
+          setFetchedUser(USER_RESPONSE);
         }
       } catch (error) {
         setEndpointState(endpointStateMap.LOADING);
