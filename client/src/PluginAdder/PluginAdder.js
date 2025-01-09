@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 
-export default function PluginAdder() {
-  const networkAddress = process.env.REACT_APP_SERVER_IP;
+export default function PluginAdder({ networkAddress }) {
   const [pluginURL, setPluginURL] = useState("");
 
   const updatePluginText = (event) => {

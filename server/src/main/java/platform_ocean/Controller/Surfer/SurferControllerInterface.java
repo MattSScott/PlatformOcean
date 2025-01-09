@@ -1,19 +1,18 @@
 package platform_ocean.Controller.Surfer;
 
+import org.springframework.http.ResponseEntity;
+import platform_ocean.Entities.Surfer.SurferRegistrationRequest;
+
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.http.ResponseEntity;
-
-import platform_ocean.Entities.Surfer.SurferRegistrationRequest;
-
 public interface SurferControllerInterface {
 
-	ResponseEntity<UUID> registerSurfer(SurferRegistrationRequest request);
+    ResponseEntity<SimplifiedSurferData> registerSurfer(SurferRegistrationRequest request);
 
-	ResponseEntity<UUID> registerOwner(SurferRegistrationRequest request);
+    ResponseEntity<SimplifiedSurferData> registerOwner(SurferRegistrationRequest request);
 
-	ResponseEntity<UUID> retrieveSurfer(SurferRegistrationRequest request);
+    ResponseEntity<SimplifiedSurferData> retrieveSurfer(SurferRegistrationRequest request);
 
-	ResponseEntity<Map<UUID, String>> retrieveAllSurfers();
+    ResponseEntity<Map<UUID, String>> retrieveAllSurfers();
 }
