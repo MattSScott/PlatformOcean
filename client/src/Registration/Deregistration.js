@@ -9,7 +9,12 @@ export default function Deregistration({ unsetUserDetails }) {
 
   return (
     <Button
-      sx={{ left: "30%", marginBottom: "20px", fontSize: "1.2rem" }}
+      sx={{
+        position: "absolute",
+        right: "5%",
+        marginBottom: "20px",
+        fontSize: "1.2rem",
+      }}
       variant="contained"
       color="error"
       onClick={triggerLogout}

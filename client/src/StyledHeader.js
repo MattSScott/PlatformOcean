@@ -6,6 +6,7 @@ export default function StyledHeader() {
     <Typography
       variant="h2"
       sx={{
+        margin: "0 auto",
         marginBottom: "20px",
         fontWeight: 700,
         padding: "10px",

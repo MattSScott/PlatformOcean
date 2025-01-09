@@ -31,7 +31,8 @@ function App() {
           borderBottom: "1px solid #ddd",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center",
+          justifyContent: "space-between",
+          position: "relative",
         }}
       >
         <StyledHeader />
