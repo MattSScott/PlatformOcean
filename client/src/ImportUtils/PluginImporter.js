@@ -19,7 +19,6 @@ export default function PluginImporter(ChildComponent) {
     }
 
     setPlugins(pluginsReturned) {
-      console.log(pluginsReturned);
       const PluginMapping = {};
       for (const { name, plugin } of pluginsReturned) {
         if (name in PluginMapping) {
@@ -42,7 +41,6 @@ export default function PluginImporter(ChildComponent) {
     }
 
     loadPlugins(pluginData) {
-      console.log(pluginData);
       const components = pluginData.map(
         ({ pluginKey, pluginName, pluginURL }) => {
           const Plugin = (

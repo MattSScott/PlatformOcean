@@ -57,7 +57,6 @@ export default function EndpointButton({
   const conditionalButtonAction = () => {
     if (endpointState === endpointStateMap.MEMBER) {
       bindEndpoint(endpoint);
-      console.log(fetchedUser);
       setClientState(fetchedUser);
     } else if (endpointState === endpointStateMap.NON_MEMBER) {
       setDialogOpen(true);
