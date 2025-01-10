@@ -36,23 +36,12 @@ export default function PluginWrapper(WrappedComponent) {
 
     const subscribe = useCallback(() => {
       const SubscriberRoutingAddress = `/topic/${props.routingKey}/receive`;
-
-      //   if (state.topicSubscription) {
-      //     return;
-      //   }
-
       try {
         const pluginSubscription = client.subscribe(
           SubscriberRoutingAddress,
           (resp) => {
             const deserialiseJSONHeaders = JSON.parse(resp.body);
             const deserialiseJSON = deserialiseJSONHeaders.body;
-
-            // console.log(
-            //   deserialiseJSONHeaders.statusCode,
-            //   deserialiseJSONHeaders.statusCodeValue
-            // );
-
             const JSONsender = deserialiseJSON.sender;
             const JSONmessage = JSON.parse(deserialiseJSON.message);
             const JSONmessageID = deserialiseJSON.messageID;
@@ -62,7 +51,6 @@ export default function PluginWrapper(WrappedComponent) {
               message: JSONmessage,
               messageID: JSONmessageID,
             };
-
             runMessageProtocol(ParsedDatagram, MessageProtcol);
           },
           { id: `sub-${clientID}-${props.routingKey}` }
@@ -97,7 +85,6 @@ export default function PluginWrapper(WrappedComponent) {
 
     function sendCreateMessage(processedData, shouldPersist = true) {
       const SenderRoutingAddress = `/app/${clientID}/${props.routingKey}/send`;
-
       try {
         client.send(
           SenderRoutingAddress,
@@ -117,9 +104,6 @@ export default function PluginWrapper(WrappedComponent) {
         id: messageID,
       };
       const UpdateJSON = JSON.stringify(UpdateStruct);
-
-      console.log(UpdateStruct);
-
       try {
         client.send(SenderRoutingAddress, {}, UpdateJSON);
       } catch (error) {
