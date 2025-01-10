@@ -1,12 +1,28 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { useNetworkIPContext } from "../Contexts/ServerIPContext";
 
-export default function MessageProtcol() {
+export default function MessageProtcol(routingKey) {
   const [data, setData] = useState(null);
   const [dataHistory, setDataHistory] = useState([]);
+  const NetworkIP = useNetworkIPContext();
 
-  const setInitialDataHistory = useCallback((initialHistory) => {
-    setDataHistory(initialHistory);
-  }, []);
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const HistoryRoutingAddress = `${NetworkIP}/history/${routingKey}`;
+        const RawFetchedHistory = await fetch(HistoryRoutingAddress);
+        const ParsedHistory = await RawFetchedHistory.json();
+        const RemappedHistory = ParsedHistory.map((el) => ({
+          ...el,
+          message: JSON.parse(el.message),
+        }));
+        setDataHistory(RemappedHistory);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchHistory();
+  }, [NetworkIP, routingKey]);
 
   const runMessageProtocol = useCallback((message, protocol) => {
     const handleCreateMessage = (data) => {
@@ -46,5 +62,5 @@ export default function MessageProtcol() {
     }
   }, []);
 
-  return { data, dataHistory, setInitialDataHistory, runMessageProtocol };
+  return { data, dataHistory, runMessageProtocol };
 }
