@@ -1,99 +1,28 @@
-import React, { useEffect, useState } from "react";
-import "../Renderer/Renderer.css";
+import React, { useCallback, useEffect } from "react";
 import { useNetworkIPContext } from "../Contexts/ServerIPContext";
+import { useClientDataContext } from "../Contexts/ClientContext";
+import MessageProtcol from "./MessageProtocol";
+import "../Renderer/Renderer.css";
 
 export default function PluginWrapper(WrappedComponent) {
   function WrappedPlugin(props) {
     const NetworkIP = useNetworkIPContext();
+    const { client, clientID } = useClientDataContext();
+    const { data, dataHistory, setInitialDataHistory, runMessageProtocol } =
+      MessageProtcol();
 
-    const [state, setState] = useState({
-      data: null,
-      dataHistory: null,
-    });
-
-    useEffect(() => {
-      let subscription = null;
-      if (WrappedComponent) {
-        // initialiseDefaultCallbacks();
-        subscription = subscribe(runMessageProtocol);
-        console.log("SUBBED!");
-        fetchHistory();
-      }
-
-      return () => {
-        subscription && subscription.unsubscribe();
-        console.log("UNSUBBED!");
-      };
-      // eslint-disable-next-line
-    }, []);
+    console.log("AAAAH", client, clientID);
 
     function getData(preprocessor = (x) => x) {
-      return state.data ? preprocessor(state.data.message) : null;
+      return data && preprocessor(data.message);
     }
 
     function getDataHistory() {
-      return state.dataHistory ? state.dataHistory : [];
+      return dataHistory;
     }
-
-    function runMessageProtocol(message, protocol) {
-      switch (protocol) {
-        case "CREATE":
-          handleCreateMessage(message);
-          return;
-        case "UPDATE":
-          handleUpdateMessage(message);
-          return;
-        case "DELETE":
-          handleDeleteMessage(message);
-          return;
-        default:
-          return;
-      }
-    }
-
-    // function initialiseDefaultCallbacks() {
-    //   const handleCreateMessage = (data) => {
-    //     return data;
-    //   };
-
-    const handleCreateMessage = (data) => {
-      setState((prevState) => ({
-        ...prevState,
-        data: data,
-        dataHistory: [...prevState.dataHistory, data],
-      }));
-    };
-
-    const handleUpdateMessage = (data) => {
-      setState((prevState) => ({
-        ...prevState,
-        dataHistory: prevState.dataHistory.map((entry) => {
-          if (entry.messageID !== data.messageID) {
-            return entry;
-          }
-          return data;
-        }),
-      }));
-    };
-
-    const handleDeleteMessage = (data) => {
-      setState((prevState) => ({
-        ...prevState,
-        dataHistory: prevState.dataHistory.filter(
-          (entry) => entry.messageID !== data.messageID
-        ),
-      }));
-    };
-
-    //   updateCallbacks({
-    //     handleCreateMessage: handleCreateMessage,
-    //     handleUpdateMessage: handleUpdateMessage,
-    //     handleDeleteMessage: handleDeleteMessage,
-    //   });
-    // }
 
     function getSender() {
-      return state.data ? state.data.sender : null;
+      return data && data.sender;
     }
 
     function getUser() {
@@ -101,13 +30,13 @@ export default function PluginWrapper(WrappedComponent) {
     }
 
     function isMe() {
-      if (state.data) {
-        return state.data.sender === props.uniqueClientID;
+      if (data) {
+        return data.sender === props.uniqueClientID;
       }
       return false;
     }
 
-    function subscribe(runMessageProtocol) {
+    const subscribe = useCallback(() => {
       const SubscriberRoutingAddress = `/topic/${props.routingKey}/receive`;
 
       //   if (state.topicSubscription) {
@@ -151,25 +80,28 @@ export default function PluginWrapper(WrappedComponent) {
         console.log(error);
       }
       return null;
-    }
+    }, [
+      runMessageProtocol,
+      props.client,
+      props.uniqueClientID,
+      props.routingKey,
+    ]);
 
-    async function fetchHistory() {
+    const fetchHistory = useCallback(async () => {
       try {
         const HistoryRoutingAddress = `${NetworkIP}/history/${props.routingKey}`;
         const RawFetchedHistory = await fetch(HistoryRoutingAddress);
         const ParsedHistory = await RawFetchedHistory.json();
-
-        setState((prevState) => ({
-          ...prevState,
-          dataHistory: ParsedHistory.map((el) => ({
-            ...el,
-            message: JSON.parse(el.message),
-          })),
+        const RemappedHistory = ParsedHistory.map((el) => ({
+          ...el,
+          message: JSON.parse(el.message),
         }));
+
+        setInitialDataHistory(RemappedHistory);
       } catch (error) {
         console.log(error);
       }
-    }
+    }, [setInitialDataHistory, NetworkIP, props.routingKey]);
 
     function formatDataAsJSON(dataStruct, shouldPersist) {
       var payloadStruct = { dataNode: dataStruct, persist: shouldPersist };
@@ -217,6 +149,17 @@ export default function PluginWrapper(WrappedComponent) {
         console.log(error);
       }
     }
+
+    useEffect(() => {
+      const subscription = subscribe();
+      console.log("SUBBED!");
+      fetchHistory();
+
+      return () => {
+        subscription && subscription.unsubscribe();
+        console.log("UNSUBBED!");
+      };
+    }, [subscribe, fetchHistory]);
 
     return (
       <WrappedComponent
