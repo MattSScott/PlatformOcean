@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useClientDataContext } from "../Contexts/ClientContext";
 import MessageProtcol from "./MessageProtocol";
 import "../Renderer/Renderer.css";
@@ -8,6 +8,44 @@ export default function PluginWrapper(WrappedComponent) {
     const { client, clientID } = useClientDataContext();
     const { data, dataHistory, runMessageProtocol } =
       MessageProtcol(routingKey);
+
+    useEffect(() => {
+      const subscribe = () => {
+        const SubscriberRoutingAddress = `/topic/${routingKey}/receive`;
+        try {
+          const pluginSubscription = client.subscribe(
+            SubscriberRoutingAddress,
+            (resp) => {
+              const deserialiseJSONHeaders = JSON.parse(resp.body);
+              const deserialiseJSON = deserialiseJSONHeaders.body;
+              const JSONsender = deserialiseJSON.sender;
+              const JSONmessage = JSON.parse(deserialiseJSON.message);
+              const JSONmessageID = deserialiseJSON.messageID;
+              const MessageProtcol = deserialiseJSON.protocol;
+              const ParsedDatagram = {
+                sender: JSONsender,
+                message: JSONmessage,
+                messageID: JSONmessageID,
+              };
+              runMessageProtocol(ParsedDatagram, MessageProtcol);
+            },
+            { id: `sub-${clientID}-${routingKey}` }
+          );
+          return pluginSubscription;
+        } catch (error) {
+          console.log(error);
+        }
+        return null;
+      };
+
+      const subscription = subscribe();
+      console.log("SUBBED!");
+
+      return () => {
+        subscription && subscription.unsubscribe();
+        console.log("UNSUBBED!");
+      };
+    }, [runMessageProtocol, client, clientID, routingKey]);
 
     function getData(preprocessor = (x) => x) {
       return data && preprocessor(data.message);
@@ -31,34 +69,6 @@ export default function PluginWrapper(WrappedComponent) {
       }
       return false;
     }
-
-    const subscribe = useCallback(() => {
-      const SubscriberRoutingAddress = `/topic/${routingKey}/receive`;
-      try {
-        const pluginSubscription = client.subscribe(
-          SubscriberRoutingAddress,
-          (resp) => {
-            const deserialiseJSONHeaders = JSON.parse(resp.body);
-            const deserialiseJSON = deserialiseJSONHeaders.body;
-            const JSONsender = deserialiseJSON.sender;
-            const JSONmessage = JSON.parse(deserialiseJSON.message);
-            const JSONmessageID = deserialiseJSON.messageID;
-            const MessageProtcol = deserialiseJSON.protocol;
-            const ParsedDatagram = {
-              sender: JSONsender,
-              message: JSONmessage,
-              messageID: JSONmessageID,
-            };
-            runMessageProtocol(ParsedDatagram, MessageProtcol);
-          },
-          { id: `sub-${clientID}-${routingKey}` }
-        );
-        return pluginSubscription;
-      } catch (error) {
-        console.log(error);
-      }
-      return null;
-    }, [runMessageProtocol, client, clientID, routingKey]);
 
     function formatDataAsJSON(dataStruct, shouldPersist) {
       var payloadStruct = { dataNode: dataStruct, persist: shouldPersist };
@@ -102,16 +112,6 @@ export default function PluginWrapper(WrappedComponent) {
         console.log(error);
       }
     }
-
-    useEffect(() => {
-      const subscription = subscribe();
-      console.log("SUBBED!");
-
-      return () => {
-        subscription && subscription.unsubscribe();
-        console.log("UNSUBBED!");
-      };
-    }, [subscribe]);
 
     return (
       <WrappedComponent
