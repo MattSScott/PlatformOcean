@@ -11,8 +11,6 @@ export default function PluginWrapper(WrappedComponent) {
     const { data, dataHistory, setInitialDataHistory, runMessageProtocol } =
       MessageProtcol();
 
-    console.log("AAAAH", client, clientID);
-
     function getData(preprocessor = (x) => x) {
       return data && preprocessor(data.message);
     }
@@ -26,12 +24,12 @@ export default function PluginWrapper(WrappedComponent) {
     }
 
     function getUser() {
-      return props.uniqueClientID;
+      return clientID;
     }
 
     function isMe() {
       if (data) {
-        return data.sender === props.uniqueClientID;
+        return data.sender === clientID;
       }
       return false;
     }
@@ -44,7 +42,7 @@ export default function PluginWrapper(WrappedComponent) {
       //   }
 
       try {
-        const pluginSubscription = props.client.subscribe(
+        const pluginSubscription = client.subscribe(
           SubscriberRoutingAddress,
           (resp) => {
             const deserialiseJSONHeaders = JSON.parse(resp.body);
@@ -67,25 +65,14 @@ export default function PluginWrapper(WrappedComponent) {
 
             runMessageProtocol(ParsedDatagram, MessageProtcol);
           },
-          { id: `sub-${props.uniqueClientID}-${props.routingKey}` }
+          { id: `sub-${clientID}-${props.routingKey}` }
         );
-
-        // setState((prevState) => ({
-        //   ...prevState,
-        //   topicSubscription: pluginSubscription,
-        // }));
-
         return pluginSubscription;
       } catch (error) {
         console.log(error);
       }
       return null;
-    }, [
-      runMessageProtocol,
-      props.client,
-      props.uniqueClientID,
-      props.routingKey,
-    ]);
+    }, [runMessageProtocol, client, clientID, props.routingKey]);
 
     const fetchHistory = useCallback(async () => {
       try {
@@ -109,10 +96,10 @@ export default function PluginWrapper(WrappedComponent) {
     }
 
     function sendCreateMessage(processedData, shouldPersist = true) {
-      const SenderRoutingAddress = `/app/${props.uniqueClientID}/${props.routingKey}/send`;
+      const SenderRoutingAddress = `/app/${clientID}/${props.routingKey}/send`;
 
       try {
-        props.client.send(
+        client.send(
           SenderRoutingAddress,
           {},
           formatDataAsJSON(processedData, shouldPersist)
@@ -123,7 +110,7 @@ export default function PluginWrapper(WrappedComponent) {
     }
 
     function sendUpdateMessage(messageID, newMessage) {
-      const SenderRoutingAddress = `/app/${props.uniqueClientID}/${props.routingKey}/update`;
+      const SenderRoutingAddress = `/app/${clientID}/${props.routingKey}/update`;
       const UpdateStruct = {
         dataNode: newMessage,
         persist: true,
@@ -134,17 +121,17 @@ export default function PluginWrapper(WrappedComponent) {
       console.log(UpdateStruct);
 
       try {
-        props.client.send(SenderRoutingAddress, {}, UpdateJSON);
+        client.send(SenderRoutingAddress, {}, UpdateJSON);
       } catch (error) {
         console.log(error);
       }
     }
 
     function sendDeleteMessage(messageID) {
-      const SenderRoutingAddress = `/app/${props.uniqueClientID}/${props.routingKey}/delete`;
+      const SenderRoutingAddress = `/app/${clientID}/${props.routingKey}/delete`;
       const DeleteStruct = JSON.stringify({ messageID: messageID });
       try {
-        props.client.send(SenderRoutingAddress, {}, DeleteStruct);
+        client.send(SenderRoutingAddress, {}, DeleteStruct);
       } catch (error) {
         console.log(error);
       }

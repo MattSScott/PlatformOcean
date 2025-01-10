@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { useClientDataContext } from "../Contexts/ClientContext";
 import ErrorBoundary from "../remoteImporterUtils/errorBoundary";
 import SandboxStateController from "./SandboxStateController";
 import GeneratingSandbox from "./GeneratingSandbox";
@@ -13,7 +12,6 @@ export default function RemotePluginPipeline({
   ...props
 }) {
   // hook in client data
-  const { client, clientID } = useClientDataContext();
   const [sandboxRef, setSandboxRef] = useState(null);
   const mountNode = sandboxRef?.contentWindow?.document?.body;
 
@@ -38,12 +36,7 @@ export default function RemotePluginPipeline({
       />
       {mountNode ? (
         createPortal(
-          <DistributedRemoteComponent
-            {...props}
-            routingKey={pluginKey}
-            client={client}
-            uniqueClientID={clientID}
-          />,
+          <DistributedRemoteComponent {...props} routingKey={pluginKey} />,
           mountNode
         )
       ) : (
