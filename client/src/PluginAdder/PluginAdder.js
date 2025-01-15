@@ -10,7 +10,7 @@ export default function PluginAdder({ networkAddress }) {
 
   const sendPluginPayload = async () => {
     const body = {
-      pluginName: "pong",
+      pluginName: "toggler",
       pluginURL: pluginURL,
     };
 

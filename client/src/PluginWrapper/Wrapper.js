@@ -70,19 +70,14 @@ export default function PluginWrapper(WrappedComponent) {
       return false;
     }
 
-    function formatDataAsJSON(dataStruct, shouldPersist) {
-      var payloadStruct = { dataNode: dataStruct, persist: shouldPersist };
-      return JSON.stringify(payloadStruct);
-    }
-
     function sendCreateMessage(processedData, shouldPersist = true) {
       const SenderRoutingAddress = `/app/${clientID}/${routingKey}/send`;
+      const CreateStruct = JSON.stringify({
+        dataNode: processedData,
+        persist: shouldPersist,
+      });
       try {
-        client.send(
-          SenderRoutingAddress,
-          {},
-          formatDataAsJSON(processedData, shouldPersist)
-        );
+        client.send(SenderRoutingAddress, {}, CreateStruct);
       } catch (error) {
         console.log(error);
       }
@@ -90,14 +85,13 @@ export default function PluginWrapper(WrappedComponent) {
 
     function sendUpdateMessage(messageID, newMessage) {
       const SenderRoutingAddress = `/app/${clientID}/${routingKey}/update`;
-      const UpdateStruct = {
+      const UpdateStruct = JSON.stringify({
         dataNode: newMessage,
         persist: true,
         id: messageID,
-      };
-      const UpdateJSON = JSON.stringify(UpdateStruct);
+      });
       try {
-        client.send(SenderRoutingAddress, {}, UpdateJSON);
+        client.send(SenderRoutingAddress, {}, UpdateStruct);
       } catch (error) {
         console.log(error);
       }
