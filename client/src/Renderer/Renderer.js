@@ -3,12 +3,16 @@ import { Slider } from "@mui/material";
 import PluginAdder from "../PluginAdder/PluginAdder";
 import { useClientDataContext } from "../Contexts/ClientContext";
 import { NetworkIPContext } from "../Contexts/ServerIPContext";
+import PluginImporter from "../ImportUtils/PluginImporter";
+import PluginStacker from "../ImportUtils/PluginStacker";
 import "./Renderer.css";
 
-export default function Renderer({ loadedPlugins }) {
+export default function Renderer({ pluginDescriptors }) {
   const { clientID } = useClientDataContext();
   const networkAddress = useContext(NetworkIPContext);
   const [slider, setSlider] = useState(3);
+
+  const PluginStackerArray = PluginImporter(pluginDescriptors);
 
   const handleChange = (_event, newValue) => {
     setSlider(newValue);
@@ -37,7 +41,9 @@ export default function Renderer({ loadedPlugins }) {
           gap: "20px", // Spacing between items
         }}
       >
-        {loadedPlugins}
+        {Object.values(PluginStackerArray).map((pluginKeyPair, idx) => (
+          <PluginStacker plugins={pluginKeyPair} key={`stacker-${idx}`} />
+        ))}
       </div>
     </div>
   );
