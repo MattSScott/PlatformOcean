@@ -14,24 +14,6 @@ public class PluginService implements PluginServiceInterface {
     @Autowired
     private PluginRepository repo;
 
-//	@Override
-//	public UUID registerPlugin(PluginStore plug) {
-//		String fileName = plug.getPluginName();
-//		// TODO: check for duplicate plugins and increment name (NAME_x)
-//		String newDir = Paths.get("").toAbsolutePath().toString();
-//		String filePath = newDir + "/../plugins/" + fileName;
-//		// *** start mockup filesystem ***
-//		try {
-//			byte[] encodedPlugin = PluginEncoder.encodePlugin(fileName);
-//			PluginEncoder.decodePlugin(encodedPlugin);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		// *** end mockup filesystem ***
-//		plug.setFilePath(filePath);
-//		repo.save(plug);
-//		return plug.getPluginKey();
-//	}
 
     @Override
     public UUID registerPlugin(PluginStore plug) {
@@ -39,18 +21,8 @@ public class PluginService implements PluginServiceInterface {
         return plug.getPluginKey();
     }
 
-
     public List<PluginStore.PluginData> retrievePlugins() {
         return repo.findAllProjectedBy();
     }
-//	@Override
-//	public HashMap<UUID, String> retrievePlugins() {
-//		List<PluginStore> allPlugs = repo.findAll();
-//		HashMap<UUID, String> keyNameMap = new HashMap<UUID, String>();
-//		for (PluginStore plugin : allPlugs) {
-//			keyNameMap.put(plugin.getPluginKey(), plugin.getPluginName());
-//		}
-//		return keyNameMap;
-//	}
 
 }

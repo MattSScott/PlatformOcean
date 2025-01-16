@@ -1,13 +1,13 @@
 import React from "react";
 import PluginStacker from "./PluginStacker";
 import RemotePluginPipeline from "./RemotePluginPipeline";
-import { CallbackProvider } from "../PluginWrapper/CallbackSystemContext";
 
 export default function PluginImporter(ChildComponent) {
   return class extends React.Component {
     constructor(props) {
       super(props);
       this.setPlugins = this.setPlugins.bind(this);
+      this.baseURL = process.env.REACT_APP_FILE_SERVER_ADDRESS;
     }
 
     state = {
@@ -41,24 +41,22 @@ export default function PluginImporter(ChildComponent) {
     }
 
     loadPlugins(pluginData) {
-      const components = pluginData.map(
-        ({ pluginKey, pluginName, pluginURL }) => {
-          const Plugin = (
-            <CallbackProvider>
-              <RemotePluginPipeline
-                remoteUrl={pluginURL}
-                scope={"PLUGIN"}
-                module={"./Plugin"}
-                pluginKey={pluginKey}
-              />
-            </CallbackProvider>
-          );
-          return {
-            name: pluginName,
-            plugin: Plugin,
-          };
-        }
-      );
+      const components = pluginData.map(({ pluginKey, pluginName }) => {
+        const pluginURL = `${this.baseURL}/plugins/${pluginName}`;
+        console.log(pluginURL);
+        const Plugin = (
+          <RemotePluginPipeline
+            remoteUrl={pluginURL}
+            scope={"PLUGIN"}
+            module={"./Plugin"}
+            pluginKey={pluginKey}
+          />
+        );
+        return {
+          name: pluginName,
+          plugin: Plugin,
+        };
+      });
       this.setPlugins(components);
     }
 
