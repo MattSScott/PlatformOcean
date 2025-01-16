@@ -5,20 +5,9 @@
   flex-direction: column;
 }
 
-.allComps {
-  display: flex;
-  flex-direction: row;
-}
-
 .logout {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  gap: 80px;
-  /* margin-right: 10px;
-  margin-left: 10px; */
-}
-
-.logout button {
-  height: fit-content;
+  gap: 100px;
 }

@@ -1,40 +1,52 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import ErrorBoundary from "../remoteImporterUtils/errorBoundary";
 import SandboxStateController from "./SandboxStateController";
 import GeneratingSandbox from "./GeneratingSandbox";
 
 export default function RemotePluginPipeline({
-  remoteUrl,
+  pluginName,
   scope,
   module,
   pluginKey,
   ...props
 }) {
-  // hook in client data
-  const [sandboxRef, setSandboxRef] = useState(null);
-  const mountNode = sandboxRef?.contentWindow?.document?.body;
+  const sandboxRef = useRef(null);
+  const [isSandboxReady, setIsSandboxReady] = useState(false);
+
+  const sandboxCurrent = sandboxRef.current;
+
+  useEffect(() => {
+    const handleIframeLoad = () => {
+      if (sandboxCurrent && sandboxCurrent.contentDocument) {
+        setIsSandboxReady(true);
+      }
+    };
+    handleIframeLoad();
+  }, [sandboxCurrent]);
 
   const DistributedRemoteComponent = SandboxStateController(
-    remoteUrl,
+    pluginName,
     scope,
     module,
-    sandboxRef
+    sandboxCurrent
   );
+
+  const mountNode = sandboxCurrent?.contentDocument?.body;
 
   return (
     <ErrorBoundary>
       <iframe
-        ref={setSandboxRef}
+        ref={sandboxRef}
         style={{
           border: "none",
           width: "100%",
           height: "100%",
-          display: mountNode ? "inline" : "none",
+          display: mountNode && isSandboxReady ? "inline" : "none",
         }}
         title={`iframe-${pluginKey}`}
       />
-      {mountNode ? (
+      {mountNode && isSandboxReady ? (
         createPortal(
           <DistributedRemoteComponent {...props} routingKey={pluginKey} />,
           mountNode

@@ -4,8 +4,7 @@ import { loadComponent } from "./loadComponent";
 
 const componentCache = new Map();
 
-export const ConsultPluginCache = (remoteUrl, scope, module, sandbox) => {
-  const key = `${remoteUrl}-${scope}-${module}`;
+export const ConsultPluginCache = (pluginName, scope, module, sandbox) => {
   const [state, setState] = useState({
     component: null,
     isLoading: true,
@@ -13,7 +12,9 @@ export const ConsultPluginCache = (remoteUrl, scope, module, sandbox) => {
   });
 
   useEffect(() => {
-    if (!sandbox) {
+    const key = `${pluginName}-${scope}-${module}`;
+
+    if (!sandbox || !sandbox.contentDocument) {
       setState((prev) => ({
         ...prev,
         isLoading: true,
@@ -33,9 +34,10 @@ export const ConsultPluginCache = (remoteUrl, scope, module, sandbox) => {
 
     try {
       const DynamicComponent = React.lazy(
-        loadComponent(remoteUrl, scope, module, sandbox)
+        loadComponent(pluginName, scope, module, sandbox)
       );
-      componentCache.set(DynamicComponent);
+      // componentCache.set(key, DynamicComponent);
+
       setState({
         component: DynamicComponent,
         isLoading: false,
@@ -49,7 +51,7 @@ export const ConsultPluginCache = (remoteUrl, scope, module, sandbox) => {
         error: err,
       });
     }
-  }, [key, remoteUrl, scope, module, sandbox]);
+  }, [pluginName, scope, module, sandbox]);
 
   return state;
 };

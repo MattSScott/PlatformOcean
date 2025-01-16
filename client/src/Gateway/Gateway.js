@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Renderer from "../Renderer/Renderer";
-import PluginImporter from "../ImportUtils/PluginImporter";
 import { ClientDataContext } from "../Contexts/ClientContext";
 import { NetworkIPContext } from "../Contexts/ServerIPContext";
 import ClientGenerator from "./ClientGenerator";
@@ -37,8 +36,6 @@ export default function Gateway({ endpoint, clientState }) {
     return <p>Client State went wrong...</p>;
   }
 
-  const PluginBoundRenderer = PluginImporter(Renderer);
-
   return (
     <div>
       <ClientDataContext.Provider
@@ -46,7 +43,7 @@ export default function Gateway({ endpoint, clientState }) {
       >
         <NetworkIPContext.Provider value={endpoint}>
           {client && pluginDescriptors ? (
-            <PluginBoundRenderer pluginDescriptors={pluginDescriptors} />
+            <Renderer pluginDescriptors={pluginDescriptors} />
           ) : (
             <div>
               <p>Establishing Connection to Server...</p>

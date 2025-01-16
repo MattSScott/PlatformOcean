@@ -29,6 +29,17 @@ public class PluginController implements PluginControllerInterface {
     }
 
     @Override
+    @PostMapping("/remove")
+    @ResponseBody
+    public boolean removePlugin(@RequestBody UUID pluginID) {
+        boolean status = serv.removePlugin(pluginID);
+        if (status) {
+            messageSender.convertAndSend("/topic/newPlugins", serv.retrievePlugins());
+        }
+        return status;
+    }
+
+    @Override
     @GetMapping("/get")
     @ResponseBody
     public List<PluginStore.PluginData> retrievePlugins() {

@@ -1,74 +1,36 @@
-import React from "react";
-import PluginStacker from "./PluginStacker";
+import React, { useEffect, useState } from "react";
 import RemotePluginPipeline from "./RemotePluginPipeline";
-import { CallbackProvider } from "../PluginWrapper/CallbackSystemContext";
+import { WithDeleteButton } from "../PluginAdder/WithDeleteButton";
 
-export default function PluginImporter(ChildComponent) {
-  return class extends React.Component {
-    constructor(props) {
-      super(props);
-      this.setPlugins = this.setPlugins.bind(this);
-    }
+export default function PluginImporter(pluginDescriptors) {
+  const [pluginKeyPairs, setpluginKeyPairs] = useState({});
 
-    state = {
-      loadedPlugins: [],
+  useEffect(() => {
+    const addToDict = (dict, key, val) => {
+      if (key in dict) {
+        dict[key].push(val);
+      } else {
+        dict[key] = [val];
+      }
     };
 
-    componentDidMount() {
-      this.loadPlugins(this.props.pluginDescriptors);
-    }
+    const outputDict = {};
 
-    setPlugins(pluginsReturned) {
-      const PluginMapping = {};
-      for (const { name, plugin } of pluginsReturned) {
-        if (name in PluginMapping) {
-          PluginMapping[name].push(plugin);
-        } else {
-          PluginMapping[name] = [plugin];
-        }
-      }
-
-      const PluginStackerArray = Object.values(PluginMapping).map(
-        (pluginKeyPair, idx) => (
-          <PluginStacker plugins={pluginKeyPair} key={`stacker-${idx}`} />
-        )
-      );
-
-      this.setState((prevState) => ({
-        ...prevState,
-        loadedPlugins: PluginStackerArray,
-      }));
-    }
-
-    loadPlugins(pluginData) {
-      const components = pluginData.map(
-        ({ pluginKey, pluginName, pluginURL }) => {
-          const Plugin = (
-            <CallbackProvider>
-              <RemotePluginPipeline
-                remoteUrl={pluginURL}
-                scope={"PLUGIN"}
-                module={"./Plugin"}
-                pluginKey={pluginKey}
-              />
-            </CallbackProvider>
-          );
-          return {
-            name: pluginName,
-            plugin: Plugin,
-          };
-        }
-      );
-      this.setPlugins(components);
-    }
-
-    render() {
-      return (
-        <ChildComponent
-          {...this.props}
-          loadedPlugins={this.state.loadedPlugins}
+    for (const { pluginKey, pluginName } of pluginDescriptors) {
+      const PeristentRemotePlugin = React.memo(RemotePluginPipeline);
+      const DeletablePlugin = WithDeleteButton(PeristentRemotePlugin);
+      const FetchedPlugin = (
+        <DeletablePlugin
+          pluginName={pluginName}
+          scope={"PLUGIN"}
+          module={"./Plugin"}
+          pluginKey={pluginKey}
         />
       );
+      addToDict(outputDict, pluginName, FetchedPlugin);
     }
-  };
+    setpluginKeyPairs(outputDict);
+  }, [pluginDescriptors]);
+
+  return pluginKeyPairs;
 }

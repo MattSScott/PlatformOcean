@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 
 export default function PluginAdder({ networkAddress }) {
-  const [pluginURL, setPluginURL] = useState("");
+  const [pluginName, setPluginName] = useState("");
 
-  const updatePluginText = (event) => {
-    setPluginURL(event.target.value);
+  const updatePluginText = (e) => {
+    setPluginName(e.target.value);
   };
 
   const sendPluginPayload = async () => {
     const body = {
-      pluginName: "toggler",
-      pluginURL: pluginURL,
+      pluginName: pluginName,
     };
 
     // TODO: add checking for validity of send?
@@ -32,7 +31,7 @@ export default function PluginAdder({ networkAddress }) {
   return (
     <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
       <TextField
-        label="Plugin URL"
+        label="Plugin ID"
         variant="outlined"
         onChange={updatePluginText}
       />
