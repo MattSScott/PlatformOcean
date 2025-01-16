@@ -31,7 +31,7 @@ export default function PluginAdder({ networkAddress }) {
   return (
     <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
       <TextField
-        label="Plugin URL"
+        label="Plugin ID"
         variant="outlined"
         onChange={updatePluginText}
       />
