@@ -21,6 +21,16 @@ public class PluginService implements PluginServiceInterface {
         return plug.getPluginKey();
     }
 
+    @Override
+    public boolean removePlugin(UUID pluginKey) {
+        boolean pluginFound = repo.existsById(pluginKey);
+        if (pluginFound) {
+            repo.deleteById(pluginKey);
+            return true;
+        }
+        return false;
+    }
+
     public List<PluginStore.PluginData> retrievePlugins() {
         return repo.findAllProjectedBy();
     }

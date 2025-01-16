@@ -8,6 +8,8 @@ import java.util.UUID;
 public interface PluginControllerInterface {
     UUID registerPlugin(PluginStore plug);
 
+    boolean removePlugin(UUID pluginID);
+
     List<PluginStore.PluginData> retrievePlugins();
 
 }
