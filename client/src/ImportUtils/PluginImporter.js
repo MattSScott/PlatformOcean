@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import RemotePluginPipeline from "./RemotePluginPipeline";
+import { WithDeleteButton } from "../PluginAdder/WithDeleteButton";
 
 export default function PluginImporter(pluginDescriptors) {
   const [pluginKeyPairs, setpluginKeyPairs] = useState({});
@@ -16,8 +17,10 @@ export default function PluginImporter(pluginDescriptors) {
     const outputDict = {};
 
     for (const { pluginKey, pluginName } of pluginDescriptors) {
+      const PeristentRemotePlugin = React.memo(RemotePluginPipeline);
+      const DeletablePlugin = WithDeleteButton(PeristentRemotePlugin);
       const FetchedPlugin = (
-        <RemotePluginPipeline
+        <DeletablePlugin
           pluginName={pluginName}
           scope={"PLUGIN"}
           module={"./Plugin"}

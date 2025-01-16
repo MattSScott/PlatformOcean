@@ -9,7 +9,7 @@ export default function PluginStacker({ plugins }) {
   const cycleLength = plugins.length;
 
   const recalculateIdx = (idx, change) => {
-    const newIdx = idx + change;
+    let newIdx = idx + change;
     if (newIdx < 0) {
       newIdx += cycleLength;
     }
