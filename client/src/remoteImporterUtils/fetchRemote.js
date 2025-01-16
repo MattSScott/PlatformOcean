@@ -1,7 +1,7 @@
 const fetchRemote = (url, scope, sandbox) =>
   new Promise((resolve, reject) => {
     // We define a script tag to use the browser for fetching the remoteEntry.js file
-    if (!sandbox) {
+    if (!sandbox || !sandbox.contentDocument) {
       reject(
         new Error(`Sandbox not yet loaded, unable to attach remote script`)
       );

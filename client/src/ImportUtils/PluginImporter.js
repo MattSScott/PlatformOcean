@@ -7,7 +7,6 @@ export default function PluginImporter(ChildComponent) {
     constructor(props) {
       super(props);
       this.setPlugins = this.setPlugins.bind(this);
-      this.baseURL = process.env.REACT_APP_FILE_SERVER_ADDRESS;
     }
 
     state = {
@@ -42,11 +41,9 @@ export default function PluginImporter(ChildComponent) {
 
     loadPlugins(pluginData) {
       const components = pluginData.map(({ pluginKey, pluginName }) => {
-        const pluginURL = `${this.baseURL}/plugins/${pluginName}`;
-        console.log(pluginURL);
         const Plugin = (
           <RemotePluginPipeline
-            remoteUrl={pluginURL}
+            pluginName={pluginName}
             scope={"PLUGIN"}
             module={"./Plugin"}
             pluginKey={pluginKey}
