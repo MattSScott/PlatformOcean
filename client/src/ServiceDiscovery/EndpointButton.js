@@ -137,9 +137,7 @@ export default function EndpointButton({
         }}
         onClick={conditionalButtonAction}
       >
-        {buttonHasLoaded
-          ? `${platformOwner}'s Platform`
-          : "Loading Platform..."}
+        {buttonHasLoaded ? platformOwner : "Loading Platform..."}
         <span
           className="endpoint-tooltip"
           style={{

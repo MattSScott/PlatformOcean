@@ -147,7 +147,7 @@ export default function Multicaster({
             <br />
             Name: "{potentialHost}"
             <br />
-            Add to list of servers?
+            Add to list of platforms?
           </Typography>
           <Button
             onClick={noSubmitNewServer}
@@ -205,7 +205,7 @@ export default function Multicaster({
           }}
           onClick={discoverServers}
         >
-          Discover Servers
+          Discover Platforms
           <WifiFindIcon sx={{ marginLeft: "10px" }} />
         </Button>
         <Paper
@@ -260,7 +260,7 @@ export default function Multicaster({
         <Grid container spacing={2} sx={{ margin: "20px" }}>
           <Grid item xs={6} sx={{ paddingTop: 0 }}>
             <TextField
-              label="Enter Server IP"
+              label="Enter Platform IP"
               variant="outlined"
               type="text"
               value={manualIp}
@@ -274,7 +274,7 @@ export default function Multicaster({
           </Grid>
           <Grid item xs={6} sx={{ paddingTop: 0 }}>
             <TextField
-              label="Enter Port"
+              label="Enter Platform Port"
               variant="outlined"
               type="number"
               value={manualPort}

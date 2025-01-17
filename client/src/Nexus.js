@@ -37,7 +37,7 @@ export default function Nexus({ userData }) {
         >
           <div>
             <Button variant="contained" onClick={unbindEndpoint}>
-              Return to Server Select
+              Return to Platform Select
             </Button>
           </div>
           <Gateway endpoint={endpoint} clientState={clientState} />
