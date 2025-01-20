@@ -1,8 +1,6 @@
 package platform_ocean.Entities.PluginRegistry;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
@@ -13,41 +11,32 @@ public class PluginStore {
     public static final String TABLE_NAME = "PLUGINS";
 
     @Id
-    private final UUID pluginKey = UUID.randomUUID();
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID pluginKey;
 
-    private final String pluginName;
-    private final String pluginURL;
+    private final UUID pluginName;
 
-
-    public PluginStore(String pluginName, String url) {
+    public PluginStore(UUID pluginName) {
         this.pluginName = pluginName;
-        this.pluginURL = url;
     }
 
     public PluginStore() {
         this.pluginName = null;
-        this.pluginURL = null;
     }
 
     public UUID getPluginKey() {
         return pluginKey;
     }
 
-    public String getPluginName() {
+    public UUID getPluginName() {
         return pluginName;
-    }
-
-    public String getPluginURL() {
-        return pluginURL;
     }
 
 
     public interface PluginData {
         UUID getPluginKey();
 
-        String getPluginName();
-
-        String getPluginURL();
+        UUID getPluginName();
     }
 
 }

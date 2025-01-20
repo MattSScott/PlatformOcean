@@ -1,218 +1,107 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useClientDataContext } from "../Contexts/ClientContext";
+import MessageProtcol from "./MessageProtocol";
 import "../Renderer/Renderer.css";
-import { useNetworkIPContext } from "../Contexts/ServerIPContext";
 
 export default function PluginWrapper(WrappedComponent) {
-  function WrappedPlugin(props) {
-    const NetworkIP = useNetworkIPContext();
-
-    const [state, setState] = useState({
-      data: null,
-      dataHistory: null,
-    });
+  function WrappedPlugin({ routingKey }) {
+    const { client, clientID } = useClientDataContext();
+    const { data, dataHistory, runMessageProtocol } =
+      MessageProtcol(routingKey);
 
     useEffect(() => {
-      let subscription = null;
-      if (WrappedComponent) {
-        // initialiseDefaultCallbacks();
-        subscription = subscribe(runMessageProtocol);
-        console.log("SUBBED!");
-        fetchHistory();
-      }
+      const subscribe = () => {
+        const SubscriberRoutingAddress = `/topic/${routingKey}/receive`;
+        try {
+          const pluginSubscription = client.subscribe(
+            SubscriberRoutingAddress,
+            (resp) => {
+              const deserialiseJSONHeaders = JSON.parse(resp.body);
+              const deserialiseJSON = deserialiseJSONHeaders.body;
+              const JSONsender = deserialiseJSON.sender;
+              const JSONmessage = JSON.parse(deserialiseJSON.message);
+              const JSONmessageID = deserialiseJSON.messageID;
+              const MessageProtcol = deserialiseJSON.protocol;
+              const ParsedDatagram = {
+                sender: JSONsender,
+                message: JSONmessage,
+                messageID: JSONmessageID,
+              };
+              runMessageProtocol(ParsedDatagram, MessageProtcol);
+            },
+            { id: `sub-${clientID}-${routingKey}` }
+          );
+          return pluginSubscription;
+        } catch (error) {
+          console.log(error);
+        }
+        return null;
+      };
+
+      const subscription = subscribe();
+      console.log("SUBBED!");
 
       return () => {
         subscription && subscription.unsubscribe();
         console.log("UNSUBBED!");
       };
-      // eslint-disable-next-line
-    }, []);
+    }, [runMessageProtocol, client, clientID, routingKey]);
 
     function getData(preprocessor = (x) => x) {
-      return state.data ? preprocessor(state.data.message) : null;
+      return data && preprocessor(data.message);
     }
 
     function getDataHistory() {
-      return state.dataHistory ? state.dataHistory : [];
+      return dataHistory;
     }
-
-    function runMessageProtocol(message, protocol) {
-      switch (protocol) {
-        case "CREATE":
-          handleCreateMessage(message);
-          return;
-        case "UPDATE":
-          handleUpdateMessage(message);
-          return;
-        case "DELETE":
-          handleDeleteMessage(message);
-          return;
-        default:
-          return;
-      }
-    }
-
-    // function initialiseDefaultCallbacks() {
-    //   const handleCreateMessage = (data) => {
-    //     return data;
-    //   };
-
-    const handleCreateMessage = (data) => {
-      setState((prevState) => ({
-        ...prevState,
-        data: data,
-        dataHistory: [...prevState.dataHistory, data],
-      }));
-    };
-
-    const handleUpdateMessage = (data) => {
-      setState((prevState) => ({
-        ...prevState,
-        dataHistory: prevState.dataHistory.map((entry) => {
-          if (entry.messageID !== data.messageID) {
-            return entry;
-          }
-          return data;
-        }),
-      }));
-    };
-
-    const handleDeleteMessage = (data) => {
-      setState((prevState) => ({
-        ...prevState,
-        dataHistory: prevState.dataHistory.filter(
-          (entry) => entry.messageID !== data.messageID
-        ),
-      }));
-    };
-
-    //   updateCallbacks({
-    //     handleCreateMessage: handleCreateMessage,
-    //     handleUpdateMessage: handleUpdateMessage,
-    //     handleDeleteMessage: handleDeleteMessage,
-    //   });
-    // }
 
     function getSender() {
-      return state.data ? state.data.sender : null;
+      return data && data.sender;
     }
 
     function getUser() {
-      return props.uniqueClientID;
+      return clientID;
     }
 
     function isMe() {
-      if (state.data) {
-        return state.data.sender === props.uniqueClientID;
+      if (data) {
+        return data.sender === clientID;
       }
       return false;
     }
 
-    function subscribe(runMessageProtocol) {
-      const SubscriberRoutingAddress = `/topic/${props.routingKey}/receive`;
-
-      //   if (state.topicSubscription) {
-      //     return;
-      //   }
-
-      try {
-        const pluginSubscription = props.client.subscribe(
-          SubscriberRoutingAddress,
-          (resp) => {
-            const deserialiseJSONHeaders = JSON.parse(resp.body);
-            const deserialiseJSON = deserialiseJSONHeaders.body;
-
-            // console.log(
-            //   deserialiseJSONHeaders.statusCode,
-            //   deserialiseJSONHeaders.statusCodeValue
-            // );
-
-            const JSONsender = deserialiseJSON.sender;
-            const JSONmessage = JSON.parse(deserialiseJSON.message);
-            const JSONmessageID = deserialiseJSON.messageID;
-            const MessageProtcol = deserialiseJSON.protocol;
-            const ParsedDatagram = {
-              sender: JSONsender,
-              message: JSONmessage,
-              messageID: JSONmessageID,
-            };
-
-            runMessageProtocol(ParsedDatagram, MessageProtcol);
-          },
-          { id: `sub-${props.uniqueClientID}-${props.routingKey}` }
-        );
-
-        // setState((prevState) => ({
-        //   ...prevState,
-        //   topicSubscription: pluginSubscription,
-        // }));
-
-        return pluginSubscription;
-      } catch (error) {
-        console.log(error);
-      }
-      return null;
-    }
-
-    async function fetchHistory() {
-      try {
-        const HistoryRoutingAddress = `${NetworkIP}/history/${props.routingKey}`;
-        const RawFetchedHistory = await fetch(HistoryRoutingAddress);
-        const ParsedHistory = await RawFetchedHistory.json();
-
-        setState((prevState) => ({
-          ...prevState,
-          dataHistory: ParsedHistory.map((el) => ({
-            ...el,
-            message: JSON.parse(el.message),
-          })),
-        }));
-      } catch (error) {
-        console.log(error);
-      }
-    }
-
-    function formatDataAsJSON(dataStruct, shouldPersist) {
-      var payloadStruct = { dataNode: dataStruct, persist: shouldPersist };
-      return JSON.stringify(payloadStruct);
-    }
-
     function sendCreateMessage(processedData, shouldPersist = true) {
-      const SenderRoutingAddress = `/app/${props.uniqueClientID}/${props.routingKey}/send`;
-
+      const SenderRoutingAddress = `/app/${clientID}/${routingKey}/send`;
+      const CreateStruct = JSON.stringify({
+        dataNode: processedData,
+        persist: shouldPersist,
+      });
       try {
-        props.client.send(
-          SenderRoutingAddress,
-          {},
-          formatDataAsJSON(processedData, shouldPersist)
-        );
+        client.send(SenderRoutingAddress, {}, CreateStruct);
       } catch (error) {
         console.log(error);
       }
     }
 
     function sendUpdateMessage(messageID, newMessage) {
-      const SenderRoutingAddress = `/app/${props.uniqueClientID}/${props.routingKey}/update`;
-      const UpdateStruct = {
+      const SenderRoutingAddress = `/app/${clientID}/${routingKey}/update`;
+      const UpdateStruct = JSON.stringify({
         dataNode: newMessage,
         persist: true,
         id: messageID,
-      };
-      const UpdateJSON = JSON.stringify(UpdateStruct);
-
-      console.log(UpdateStruct);
-
+      });
       try {
-        props.client.send(SenderRoutingAddress, {}, UpdateJSON);
+        client.send(SenderRoutingAddress, {}, UpdateStruct);
       } catch (error) {
         console.log(error);
       }
     }
 
     function sendDeleteMessage(messageID) {
-      const SenderRoutingAddress = `/app/${props.uniqueClientID}/${props.routingKey}/delete`;
+      const SenderRoutingAddress = `/app/${clientID}/${routingKey}/delete`;
       const DeleteStruct = JSON.stringify({ messageID: messageID });
       try {
-        props.client.send(SenderRoutingAddress, {}, DeleteStruct);
+        client.send(SenderRoutingAddress, {}, DeleteStruct);
       } catch (error) {
         console.log(error);
       }

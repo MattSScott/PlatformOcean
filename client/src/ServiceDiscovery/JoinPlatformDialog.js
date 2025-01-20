@@ -37,7 +37,9 @@ export default function JoinPlatformDialog({
           fontSize: "1.8rem",
           textAlign: "center",
         }}
-      >{`${platformOwner}'s Platform`}</DialogTitle>
+      >
+        {platformOwner}
+      </DialogTitle>
       <DialogContent>
         <DialogContentText
           id="alert-dialog-description"

@@ -19,8 +19,6 @@ function App() {
     setUserDetailsObject(null);
   };
 
-  console.log(userDetailsObject);
-
   return (
     <div className="App">
       <div

@@ -3,4 +3,3 @@
 .vscode/settings.json
 *node_modules
 client/build/*
-client/.env

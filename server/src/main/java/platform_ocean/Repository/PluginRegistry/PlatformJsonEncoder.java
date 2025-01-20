@@ -12,9 +12,9 @@ public class PlatformJsonEncoder {
     @Autowired
     static PluginRepository repository;
 
-    public static HashMap<UUID, String> generatePlatformJSON() {
+    public static HashMap<UUID, UUID> generatePlatformJSON() {
         List<PluginStore> allPlugs = repository.findAll();
-        HashMap<UUID, String> keyNameMap = new HashMap<UUID, String>();
+        HashMap<UUID, UUID> keyNameMap = new HashMap<>();
         for (PluginStore plugin : allPlugs) {
             keyNameMap.put(plugin.getPluginKey(), plugin.getPluginName());
         }

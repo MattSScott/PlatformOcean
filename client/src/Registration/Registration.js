@@ -22,7 +22,6 @@ export default function Registration({ setUserDetails }) {
   useEffect(() => {
     const tryFindClient = () => {
       const userDetails = localStorage.getItem("userData");
-      console.log(userDetails);
       if (userDetails) {
         setUserDetails(JSON.parse(userDetails));
       }

@@ -1,57 +1,54 @@
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useClientDataContext } from "../Contexts/ClientContext";
-import { ConsultPluginCache } from "../remoteImporterUtils/pluginCache";
-import PluginWrapper from "../PluginWrapper/Wrapper";
 import ErrorBoundary from "../remoteImporterUtils/errorBoundary";
-import FetchingPlugin from "../PluginWrapper/FetchingPlugin";
+import SandboxStateController from "./SandboxStateController";
 import GeneratingSandbox from "./GeneratingSandbox";
 
 export default function RemotePluginPipeline({
-  remoteUrl,
+  pluginName,
   scope,
   module,
   pluginKey,
   ...props
 }) {
-  // hook in client data
-  const { client, clientID } = useClientDataContext();
-  const [sandboxRef, setSandboxRef] = useState(null);
-  const mountNode = sandboxRef?.contentWindow?.document?.body;
+  const sandboxRef = useRef(null);
+  const [isSandboxReady, setIsSandboxReady] = useState(false);
 
-  const RemoteComponent = ConsultPluginCache(
-    remoteUrl,
+  const sandboxCurrent = sandboxRef.current;
+
+  useEffect(() => {
+    const handleIframeLoad = () => {
+      if (sandboxCurrent && sandboxCurrent.contentDocument) {
+        setIsSandboxReady(true);
+      }
+    };
+    handleIframeLoad();
+  }, [sandboxCurrent]);
+
+  const DistributedRemoteComponent = SandboxStateController(
+    pluginName,
     scope,
     module,
-    sandboxRef
+    sandboxCurrent
   );
 
-  // inject dist. functionality
-  const DistributedRemoteComponent = RemoteComponent
-    ? PluginWrapper(RemoteComponent)
-    : null;
+  const mountNode = sandboxCurrent?.contentDocument?.body;
 
   return (
     <ErrorBoundary>
       <iframe
-        ref={setSandboxRef}
+        ref={sandboxRef}
         style={{
+          border: "none",
           width: "100%",
           height: "100%",
-          display: sandboxRef ? "inline" : "none",
+          display: mountNode && isSandboxReady ? "inline" : "none",
         }}
         title={`iframe-${pluginKey}`}
       />
-      {DistributedRemoteComponent && mountNode ? (
+      {mountNode && isSandboxReady ? (
         createPortal(
-          <React.Suspense fallback={<FetchingPlugin />}>
-            <DistributedRemoteComponent
-              {...props}
-              routingKey={pluginKey}
-              client={client}
-              uniqueClientID={clientID}
-            />
-          </React.Suspense>,
+          <DistributedRemoteComponent {...props} routingKey={pluginKey} />,
           mountNode
         )
       ) : (
