@@ -1,6 +1,13 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 import JoinPlatformDialog from "./JoinPlatformDialog";
+
+const endpointStateMap = {
+  LOADING: "grey",
+  NON_MEMBER: "orange",
+  MEMBER: "green",
+  BANNED: "red",
+};
 
 export default function EndpointButton({
   userData,
@@ -9,16 +16,6 @@ export default function EndpointButton({
   bindEndpoint,
   setClientState,
 }) {
-  const endpointStateMap = useMemo(
-    () => ({
-      LOADING: "grey",
-      NON_MEMBER: "orange",
-      MEMBER: "green",
-      BANNED: "red",
-    }),
-    []
-  );
-
   const [buttonHasLoaded, setButtonHasLoaded] = useState(false);
   const [endpointState, setEndpointState] = useState(endpointStateMap.LOADING);
   const [fetchedUser, setFetchedUser] = useState({});
@@ -104,7 +101,7 @@ export default function EndpointButton({
     //   fetchEndpointData();
     // }, 2000);
     fetchEndpointData();
-  }, [endpoint, userData, endpointStateMap]);
+  }, [endpoint, userData]);
 
   return (
     <>
