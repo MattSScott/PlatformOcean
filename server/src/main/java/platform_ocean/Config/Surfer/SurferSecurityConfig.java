@@ -23,9 +23,9 @@ public class SurferSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().disable().authorizeHttpRequests()
-                .requestMatchers("/PlatformOcean/**", "/registry/**", "/history/**", "/plugins/**", "/discover")
-                .permitAll();
+        http.csrf().disable().cors().disable().authorizeHttpRequests().anyRequest().permitAll().and()
+                .headers()
+                .frameOptions().sameOrigin();
         return http.build();
     }
 
