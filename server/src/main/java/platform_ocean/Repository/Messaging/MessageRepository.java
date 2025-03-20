@@ -2,22 +2,19 @@ package platform_ocean.Repository.Messaging;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import platform_ocean.Entities.Messaging.DataMapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface MessageRepository extends JpaRepository<DataMapper, UUID> {
 
-    @Query(value = "SELECT * from data where plugin_key = (:key)", nativeQuery = true)
-    List<DataMapper> findMessagesByPluginKey(@Param("key") UUID pluginKey);
+    List<DataMapper> findByPluginKey(UUID pluginKey);
 
-    @Query(value = "SELECT bin_to_uuid(client_key) from data where data.id = (:key)", nativeQuery = true)
-    List<UUID> findClientKeyById(@Param("key") UUID messageID);
+    @Query("select dm.clientKey from DataMapper dm where dm.id = ?1")
+    Optional<UUID> findClientKeyById(UUID id);
 
-    @Query(value = "SELECT * from data where data.id = (:key)", nativeQuery = true)
-    List<DataMapper> findMessageById(@Param("key") UUID messageID);
 }

@@ -3,13 +3,14 @@ package platform_ocean.Service.Messaging;
 import platform_ocean.Entities.Messaging.DataMapper;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface OceanServiceInterface {
 
     List<DataMapper> retrieveMessagesByPlugin(UUID pluginkey);
 
-    List<DataMapper> retrieveMessagesByID(UUID pluginId);
+    Optional<DataMapper> retrieveMessagesByID(UUID pluginId);
 
     boolean matchRequestWithSender(UUID clientKey, UUID messageID);
 
