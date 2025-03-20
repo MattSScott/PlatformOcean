@@ -10,10 +10,13 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.context.annotation.Bean;
 
 import java.io.IOException;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.UUID;
 
-public class UpdatedOceanMessageConverter extends JsonDeserializer<UpdatedDataMapper> {
+public class UpdatedOceanMessageConverter extends JsonDeserializer<UpdatedDataMapper> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -33,7 +36,7 @@ public class UpdatedOceanMessageConverter extends JsonDeserializer<UpdatedDataMa
         JsonNode persist = mapper.treeToValue(persistFromPayload, JsonNode.class);
         JsonNode id = mapper.treeToValue(idFromPayload, JsonNode.class);
 
-        Boolean parsedPersist = persist.asBoolean();
+        boolean parsedPersist = persist.asBoolean();
         UUID parsedId = UUID.fromString(id.textValue());
         return new UpdatedDataMapper(data, parsedPersist, parsedId);
     }

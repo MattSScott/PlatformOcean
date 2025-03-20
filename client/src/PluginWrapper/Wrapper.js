@@ -83,13 +83,14 @@ export default function PluginWrapper(WrappedComponent) {
       }
     }
 
-    function sendUpdateMessage(messageID, newMessage) {
+    function sendUpdateMessage(newMessage, messageID) {
       const SenderRoutingAddress = `/app/${clientID}/${routingKey}/update`;
       const UpdateStruct = JSON.stringify({
         dataNode: newMessage,
         persist: true,
         id: messageID,
       });
+      console.log(UpdateStruct, messageID);
       try {
         client.send(SenderRoutingAddress, {}, UpdateStruct);
       } catch (error) {
