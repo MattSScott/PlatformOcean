@@ -1,31 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Gateway from "./Gateway/Gateway";
 import Multicaster from "./ServiceDiscovery/Multicaster";
 import { Button } from "@mui/material";
 
 export default function Nexus({ userData }) {
   const [isDiscovering, setIsDiscovering] = useState(true);
-  const [endpoint, setEndpoint] = useState(null);
-  const [clientState, setClientState] = useState({});
+  const [endpointDetails, setEndpointDetails] = useState(null);
+
+  useEffect(() => {
+    const tryPrelaunchPlatform = () => {
+      const endpointDetails = localStorage.getItem("endpointData");
+      if (endpointDetails) {
+        setEndpointDetails(JSON.parse(endpointDetails));
+        setIsDiscovering(false);
+      }
+    };
+    tryPrelaunchPlatform();
+  }, []);
 
   const bindEndpoint = (chosenEndpoint) => {
     setIsDiscovering(false);
-    setEndpoint(chosenEndpoint);
+    localStorage.setItem("endpointData", JSON.stringify(chosenEndpoint));
+    setEndpointDetails(chosenEndpoint);
   };
 
   const unbindEndpoint = () => {
     setIsDiscovering(true);
-    setEndpoint(null);
+    localStorage.removeItem("endpointData");
+    setEndpointDetails(null);
   };
 
   return (
     <div style={{ width: "100%", height: "100%" }}>
       {isDiscovering ? (
-        <Multicaster
-          userData={userData}
-          bindEndpoint={bindEndpoint}
-          setClientState={setClientState}
-        />
+        <Multicaster userData={userData} bindEndpoint={bindEndpoint} />
       ) : (
         <div
           style={{
@@ -41,8 +49,8 @@ export default function Nexus({ userData }) {
             </Button>
           </div>
           <Gateway
-            endpoint={endpoint}
-            clientState={clientState}
+            endpoint={endpointDetails.endpoint}
+            clientState={endpointDetails.clientState}
             username={userData.username}
           />
         </div>

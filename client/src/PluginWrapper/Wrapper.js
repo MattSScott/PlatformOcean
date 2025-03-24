@@ -112,7 +112,7 @@ export default function PluginWrapper(WrappedComponent) {
         getDataHistory={getDataHistory}
         getSender={getSender}
         getUser={getUser}
-        username={username}
+        nickname={username}
         isMe={isMe}
         sendCreateMessage={sendCreateMessage}
         sendUpdateMessage={sendUpdateMessage}
