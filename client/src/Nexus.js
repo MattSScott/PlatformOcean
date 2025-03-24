@@ -40,7 +40,11 @@ export default function Nexus({ userData }) {
               Return to Platform Select
             </Button>
           </div>
-          <Gateway endpoint={endpoint} clientState={clientState} />
+          <Gateway
+            endpoint={endpoint}
+            clientState={clientState}
+            username={userData.username}
+          />
         </div>
       )}
     </div>

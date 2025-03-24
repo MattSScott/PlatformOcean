@@ -5,7 +5,7 @@ import "../Renderer/Renderer.css";
 
 export default function PluginWrapper(WrappedComponent) {
   function WrappedPlugin({ routingKey }) {
-    const { client, clientID } = useClientDataContext();
+    const { client, clientID, username } = useClientDataContext();
     const { data, dataHistory, runMessageProtocol } =
       MessageProtcol(routingKey);
 
@@ -39,11 +39,9 @@ export default function PluginWrapper(WrappedComponent) {
       };
 
       const subscription = subscribe();
-      console.log("SUBBED!");
 
       return () => {
         subscription && subscription.unsubscribe();
-        console.log("UNSUBBED!");
       };
     }, [runMessageProtocol, client, clientID, routingKey]);
 
@@ -114,6 +112,7 @@ export default function PluginWrapper(WrappedComponent) {
         getDataHistory={getDataHistory}
         getSender={getSender}
         getUser={getUser}
+        username={username}
         isMe={isMe}
         sendCreateMessage={sendCreateMessage}
         sendUpdateMessage={sendUpdateMessage}
