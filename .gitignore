@@ -4,3 +4,4 @@
 *node_modules
 client/build/*
 *.db
+server/PlatformOceanServer-1.0.dmg
