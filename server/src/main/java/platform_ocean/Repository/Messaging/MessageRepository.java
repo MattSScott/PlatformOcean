@@ -17,4 +17,6 @@ public interface MessageRepository extends JpaRepository<DataMapper, UUID> {
     @Query("select dm.clientKey from DataMapper dm where dm.id = ?1")
     Optional<UUID> findClientKeyById(UUID id);
 
+    void deleteByPluginKey(UUID pluginKey);
+
 }
