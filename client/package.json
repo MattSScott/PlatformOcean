@@ -65,8 +65,10 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
+    "start:react": "node scripts/start.js",
+    "build:react": "node scripts/build.js",
+    "start:electron": "npm run build:react && electron main.js",
+    "test:electron": "electron main.js",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
@@ -143,7 +145,10 @@
       "react-app"
     ]
   },
+  "homepage": "./",
   "devDependencies": {
+    "electron": "^35.0.3",
+    "electron-builder": "^25.1.8",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4"
   }
