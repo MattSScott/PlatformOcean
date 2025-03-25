@@ -21,6 +21,10 @@ public class SurferService implements SurferServiceInterface, UserDetailsService
     @Autowired
     private SurferPasswordEncoder encoder;
 
+    public long getNumSurfers() {
+        return surferRepo.count();
+    }
+
     @Override
     public Surfer registerSurfer(SurferRegistrationRequest request, boolean promote) throws UsernameExistsException {
 

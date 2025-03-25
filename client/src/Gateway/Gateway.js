@@ -39,7 +39,12 @@ export default function Gateway({ endpoint, clientState, username }) {
   return (
     <div>
       <ClientDataContext.Provider
-        value={{ client: client, clientID: clientState.id, username: username }}
+        value={{
+          client: client,
+          clientID: clientState?.id,
+          clientRole: clientState?.role,
+          username: username,
+        }}
       >
         <NetworkIPContext.Provider value={endpoint}>
           {client && pluginDescriptors ? (
