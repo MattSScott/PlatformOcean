@@ -69,6 +69,7 @@
     "build:react": "node scripts/build.js",
     "start:electron": "npm run build:react && electron main.js",
     "test:electron": "electron main.js",
+    "build:electron": "npm run build:react && electron-builder main.js",
     "test": "node scripts/test.js"
   },
   "eslintConfig": {
