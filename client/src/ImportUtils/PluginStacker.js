@@ -30,6 +30,10 @@ export default function PluginStacker({ plugins }) {
       className="componentHouse"
       style={{
         display: idx === currentIdx ? "" : "none",
+        boxShadow:
+          cycleLength > 1
+            ? "5px -5px 10px rgba(0, 0, 0, 0.6), 5px 5px 15px rgba(0, 0, 0, 0.4)"
+            : "none",
       }}
     >
       {Plugin}

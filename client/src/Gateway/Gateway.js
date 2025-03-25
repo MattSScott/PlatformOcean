@@ -4,7 +4,7 @@ import { ClientDataContext } from "../Contexts/ClientContext";
 import { NetworkIPContext } from "../Contexts/ServerIPContext";
 import ClientGenerator from "./ClientGenerator";
 
-export default function Gateway({ endpoint, clientState }) {
+export default function Gateway({ endpoint, clientState, username }) {
   const client = ClientGenerator(endpoint);
   const [pluginDescriptors, setPluginDescriptors] = useState([]);
 
@@ -39,7 +39,12 @@ export default function Gateway({ endpoint, clientState }) {
   return (
     <div>
       <ClientDataContext.Provider
-        value={{ client: client, clientID: clientState.id }}
+        value={{
+          client: client,
+          clientID: clientState?.id,
+          clientRole: clientState?.role,
+          username: username,
+        }}
       >
         <NetworkIPContext.Provider value={endpoint}>
           {client && pluginDescriptors ? (

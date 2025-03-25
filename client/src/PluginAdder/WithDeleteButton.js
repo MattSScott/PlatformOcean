@@ -2,9 +2,12 @@ import React, { useState } from "react";
 import { Button } from "@mui/material";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import { useNetworkIPContext } from "../Contexts/ServerIPContext";
+import { useClientDataContext } from "../Contexts/ClientContext";
 
 export function WithDeleteButton(Plugin) {
   return function PluginWithButton(props) {
+    const { clientRole } = useClientDataContext();
+    const isOwner = clientRole === "OWNER";
     const [isHovered, setIsHovered] = useState(false);
     const NetworkIP = useNetworkIPContext();
     const handleMouseEnter = () => setIsHovered(true);
@@ -30,7 +33,7 @@ export function WithDeleteButton(Plugin) {
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {isHovered && (
+        {isOwner && isHovered && (
           <Button
             variant="contained"
             color="error"

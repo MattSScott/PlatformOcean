@@ -14,7 +14,6 @@ export default function EndpointButton({
   endpoint,
   platformOwner,
   bindEndpoint,
-  setClientState,
 }) {
   const [buttonHasLoaded, setButtonHasLoaded] = useState(false);
   const [endpointState, setEndpointState] = useState(endpointStateMap.LOADING);
@@ -53,8 +52,10 @@ export default function EndpointButton({
 
   const conditionalButtonAction = () => {
     if (endpointState === endpointStateMap.MEMBER) {
-      bindEndpoint(endpoint);
-      setClientState(fetchedUser);
+      bindEndpoint({
+        endpoint: endpoint,
+        clientState: fetchedUser,
+      });
     } else if (endpointState === endpointStateMap.NON_MEMBER) {
       setDialogOpen(true);
     } else if (endpointState === endpointStateMap.BANNED) {

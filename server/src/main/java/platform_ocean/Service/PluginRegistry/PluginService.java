@@ -1,5 +1,6 @@
 package platform_ocean.Service.PluginRegistry;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import platform_ocean.Entities.PluginRegistry.PluginStore;
@@ -18,13 +19,6 @@ public class PluginService implements PluginServiceInterface {
     @Autowired
     private MessageRepository msgRepo;
 
-//    private void tidyPluginMessages(UUID pluginId) {
-//        boolean pluginFound = msgRepo.existsByPluginKey(pluginId);
-//        if (pluginFound) {
-//            msgRepo.existsByPluginKey(pluginId);
-//        }
-//    }
-
 
     @Override
     public UUID registerPlugin(PluginStore plug) {
@@ -33,10 +27,12 @@ public class PluginService implements PluginServiceInterface {
     }
 
     @Override
+    @Transactional
     public boolean removePlugin(UUID pluginKey) {
         boolean pluginFound = repo.existsById(pluginKey);
         if (pluginFound) {
             repo.deleteById(pluginKey);
+            msgRepo.deleteByPluginKey(pluginKey);
             return true;
         }
         return false;

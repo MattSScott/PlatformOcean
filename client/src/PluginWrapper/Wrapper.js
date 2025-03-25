@@ -5,7 +5,7 @@ import "../Renderer/Renderer.css";
 
 export default function PluginWrapper(WrappedComponent) {
   function WrappedPlugin({ routingKey }) {
-    const { client, clientID } = useClientDataContext();
+    const { client, clientID, username } = useClientDataContext();
     const { data, dataHistory, runMessageProtocol } =
       MessageProtcol(routingKey);
 
@@ -39,11 +39,9 @@ export default function PluginWrapper(WrappedComponent) {
       };
 
       const subscription = subscribe();
-      console.log("SUBBED!");
 
       return () => {
         subscription && subscription.unsubscribe();
-        console.log("UNSUBBED!");
       };
     }, [runMessageProtocol, client, clientID, routingKey]);
 
@@ -83,13 +81,14 @@ export default function PluginWrapper(WrappedComponent) {
       }
     }
 
-    function sendUpdateMessage(messageID, newMessage) {
+    function sendUpdateMessage(newMessage, messageID) {
       const SenderRoutingAddress = `/app/${clientID}/${routingKey}/update`;
       const UpdateStruct = JSON.stringify({
         dataNode: newMessage,
         persist: true,
         id: messageID,
       });
+      console.log(UpdateStruct, messageID);
       try {
         client.send(SenderRoutingAddress, {}, UpdateStruct);
       } catch (error) {
@@ -113,6 +112,7 @@ export default function PluginWrapper(WrappedComponent) {
         getDataHistory={getDataHistory}
         getSender={getSender}
         getUser={getUser}
+        nickname={username}
         isMe={isMe}
         sendCreateMessage={sendCreateMessage}
         sendUpdateMessage={sendUpdateMessage}

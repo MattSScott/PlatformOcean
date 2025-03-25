@@ -11,6 +11,7 @@ import platform_ocean.Entities.Messaging.DataMapper;
 import platform_ocean.Service.Messaging.OceanService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -146,9 +147,13 @@ public class MessagingTests {
 
         serv.updateMessage(dm.getId(), "NewContent");
 
-        DataMapper messageToFind = serv.retrieveMessagesByID(dm.getId()).get(0);
+        Optional<DataMapper> messageToFind = serv.retrieveMessagesByID(dm.getId());
 
-        Assertions.assertThat(messageToFind.getData()).isEqualTo("NewContent");
+        Assertions.assertThat(messageToFind.isPresent()).isTrue();
+
+        DataMapper foundMessage = messageToFind.get();
+
+        Assertions.assertThat(foundMessage.getData()).isEqualTo("NewContent");
 
     }
 
@@ -167,9 +172,13 @@ public class MessagingTests {
 
         serv.updateMessage(dm.getId(), "NewContent");
 
-        DataMapper messageToFind = serv.retrieveMessagesByID(dm.getId()).get(0);
+        Optional<DataMapper> messageToFind = serv.retrieveMessagesByID(dm.getId());
 
-        Assertions.assertThat(messageToFind.getData()).isEqualTo("NewContent");
+        Assertions.assertThat(messageToFind.isPresent()).isTrue();
+
+        DataMapper foundMessage = messageToFind.get();
+
+        Assertions.assertThat(foundMessage.getData()).isEqualTo("NewContent");
     }
 
 }

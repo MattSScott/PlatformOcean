@@ -25,7 +25,8 @@ public class SurferController implements SurferControllerInterface {
     @ResponseBody
     public ResponseEntity<SimplifiedSurferData> registerSurfer(@RequestBody SurferRegistrationRequest request) {
         try {
-            Surfer surferRequest = surferService.registerSurfer(request, false);
+            boolean onlySingleSurferExists = surferService.getNumSurfers() == 0;
+            Surfer surferRequest = surferService.registerSurfer(request, onlySingleSurferExists);
             SimplifiedSurferData responseData = new SimplifiedSurferData(
                     surferRequest.getUserID(), surferRequest.getRole().toString(), !surferRequest.isAccountNonLocked()
             );

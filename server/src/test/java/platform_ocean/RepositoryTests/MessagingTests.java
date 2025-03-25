@@ -11,6 +11,7 @@ import platform_ocean.Entities.Messaging.DataMapper;
 import platform_ocean.Repository.Messaging.MessageRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
@@ -31,11 +32,11 @@ public class MessagingTests {
 
         UUID messageTest = dm.getId();
 
-        List<UUID> clientsFound = repo.findClientKeyById(messageTest);
+        Optional<UUID> clientsFound = repo.findClientKeyById(messageTest);
 
-        Assertions.assertThat(clientsFound.size()).isEqualTo(1);
+        Assertions.assertThat(clientsFound.isPresent()).isTrue();
 
-        UUID matchingClient = clientsFound.get(0);
+        UUID matchingClient = clientsFound.get();
         Assertions.assertThat(matchingClient).isEqualTo(clientTest);
     }
 
@@ -50,11 +51,11 @@ public class MessagingTests {
 
         UUID messageTest = dm.getId();
 
-        List<UUID> clientsFound = repo.findClientKeyById(messageTest);
+        Optional<UUID> clientsFound = repo.findClientKeyById(messageTest);
 
-        Assertions.assertThat(clientsFound.size()).isEqualTo(1);
+        Assertions.assertThat(clientsFound.isPresent()).isTrue();
 
-        UUID matchingClient = clientsFound.get(0);
+        UUID matchingClient = clientsFound.get();
         UUID falseClient = UUID.randomUUID();
         Assertions.assertThat(matchingClient).isNotEqualTo(falseClient);
     }
@@ -71,15 +72,15 @@ public class MessagingTests {
 
         UUID messageTest = dm.getId();
 
-        List<UUID> clientsFound = repo.findClientKeyById(messageTest);
+        Optional<UUID> clientsFound = repo.findClientKeyById(messageTest);
 
-        Assertions.assertThat(clientsFound.size()).isEqualTo(1);
+        Assertions.assertThat(clientsFound.isPresent()).isTrue();
 
         repo.deleteById(messageTest);
 
-        List<UUID> newClientsFound = repo.findClientKeyById(messageTest);
+        Optional<UUID> newClientsFound = repo.findClientKeyById(messageTest);
 
-        Assertions.assertThat(newClientsFound.size()).isEqualTo(0);
+        Assertions.assertThat(newClientsFound.isEmpty()).isTrue();
     }
 
     @Test
@@ -101,7 +102,7 @@ public class MessagingTests {
 
         Assertions.assertThat(messageKey1).isEqualTo(messageKey2);
 
-        List<DataMapper> messagesFound = repo.findMessagesByPluginKey(messageKey1);
+        List<DataMapper> messagesFound = repo.findByPluginKey(messageKey1);
 
         Assertions.assertThat(messagesFound.size()).isEqualTo(2);
     }
@@ -127,7 +128,7 @@ public class MessagingTests {
 
         UUID fakeMessageKey = UUID.randomUUID();
 
-        List<DataMapper> messagesFound = repo.findMessagesByPluginKey(fakeMessageKey);
+        List<DataMapper> messagesFound = repo.findByPluginKey(fakeMessageKey);
 
         Assertions.assertThat(messagesFound.size()).isEqualTo(0);
     }

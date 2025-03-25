@@ -36,11 +36,7 @@ const fetchWithTimeout = async (endpointURL, timeout) => {
   }
 };
 
-export default function Multicaster({
-  userData,
-  bindEndpoint,
-  setClientState,
-}) {
+export default function Multicaster({ userData, bindEndpoint }) {
   const [endpointList, setEndpointList] = useState([]);
   const [manualIp, setManualIp] = useState("192.168.0.43");
   const [manualPort, setManualPort] = useState(8080);
@@ -70,9 +66,8 @@ export default function Multicaster({
   };
 
   const attemptManualConnection = async () => {
-    // Check if both fields are filled
     if (!manualIp || !manualPort) {
-      setDialogOpen(true); // Open the dialog if validation fails
+      setDialogOpen(true);
       return;
     }
 
@@ -130,13 +125,12 @@ export default function Multicaster({
             variant="h5"
             sx={{
               marginBottom: "20px",
-              fontWeight: 700, // Bold weight
-              color: "rgb(1, 92, 159)", // A green color
-              letterSpacing: "0.5px", // Spacing between letters
-              textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)", // Subtle shadow for depth
-              // backgroundColor: "rgba(231, 218, 218, 0.25)", // Background color
-              padding: "20px", // Padding for the background
-              borderRadius: "16px", // Rounded corners
+              fontWeight: 700,
+              color: "rgb(1, 92, 159)",
+              letterSpacing: "0.5px",
+              textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)",
+              padding: "20px",
+              borderRadius: "16px",
             }}
           >
             Unable to find endpoint with address {`${manualIp}:${manualPort}`}
@@ -150,13 +144,12 @@ export default function Multicaster({
             variant="h5"
             sx={{
               marginBottom: "20px",
-              fontWeight: 700, // Bold weight
-              color: "rgb(1, 92, 159)", // A green color
-              letterSpacing: "0.5px", // Spacing between letters
-              textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)", // Subtle shadow for depth
-              // backgroundColor: "rgba(231, 218, 218, 0.25)", // Background color
-              padding: "20px", // Padding for the background
-              borderRadius: "16px", // Rounded corners
+              fontWeight: 700,
+              color: "rgb(1, 92, 159)",
+              letterSpacing: "0.5px",
+              textShadow: "1px 1px 4px rgba(0, 0, 0, 0.2)",
+              padding: "20px",
+              borderRadius: "16px",
             }}
           >
             Server found!
@@ -213,7 +206,6 @@ export default function Multicaster({
       >
         <Button
           color="primary"
-          // fullWidth
           variant="contained"
           sx={{
             width: "fit-content",
@@ -243,7 +235,6 @@ export default function Multicaster({
                   bindEndpoint={bindEndpoint}
                   endpoint={endpoint}
                   platformOwner={owner}
-                  setClientState={setClientState}
                 />
               </ListItem>
             ))}
