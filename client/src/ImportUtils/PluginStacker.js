@@ -59,6 +59,13 @@ export default function PluginStacker({ plugins }) {
           >
             <ArrowBackIcon />
           </Button>
+          <h3
+            style={{
+              margin: "0 10px 0 10px",
+            }}
+          >
+            {currentIdx + 1}
+          </h3>
           <Button
             variant="outlined"
             onClick={cycleRight}
