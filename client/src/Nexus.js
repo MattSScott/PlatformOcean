@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Gateway from "./Gateway/Gateway";
 import Multicaster from "./ServiceDiscovery/Multicaster";
 import { Button } from "@mui/material";
