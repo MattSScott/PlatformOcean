@@ -27,6 +27,7 @@ export default function Nexus({ userData }) {
   const unbindEndpoint = () => {
     setIsDiscovering(true);
     localStorage.removeItem("endpointData");
+    localStorage.removeItem("userData");
     setEndpointDetails(null);
   };
 
