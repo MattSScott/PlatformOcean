@@ -18,8 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import WifiFindIcon from "@mui/icons-material/WifiFind";
 import SearchIcon from "@mui/icons-material/Search";
 import EndpointButton from "./EndpointButton";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
+import DiscoveryToggle from "./DiscoveryToggle";
 
 const fetchWithTimeout = async (endpointURL, timeout) => {
   const controller = new AbortController();
@@ -38,24 +37,19 @@ const fetchWithTimeout = async (endpointURL, timeout) => {
   }
 };
 
+const ServerStatusState = {
+  WAITING: 0,
+  LOADING: 1,
+  VALID: 2,
+  INVALID: 3,
+};
+
 export default function Multicaster({ userData, bindEndpoint }) {
   const [endpointList, setEndpointList] = useState([]);
   const [manualIp, setManualIp] = useState("192.168.0.43");
   const [manualPort, setManualPort] = useState(8080);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [localDiscovery, setLocalDiscovery] = useState(true);
-
-  const toggleLocalDiscovery = (event) => {
-    setLocalDiscovery(event.target.checked);
-  };
-
-  const ServerStatusState = {
-    WAITING: 0,
-    LOADING: 1,
-    VALID: 2,
-    INVALID: 3,
-  };
-
   const [hostStatus, setHostStatus] = useState(ServerStatusState.WAITING);
   const [potentialEndpoint, setPotentialEndpoint] = useState(null);
   const [potentialHost, setPotentialHost] = useState(null);
@@ -321,12 +315,20 @@ export default function Multicaster({ userData, bindEndpoint }) {
           padding: "20px",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "row", gap: "50px" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "50px",
+            alignContent: "center",
+            justifyContent: "center",
+            marginBottom: "15px",
+          }}
+        >
           <Button
             variant="contained"
             sx={{
               width: "fit-content",
-              marginBottom: "15px",
               padding: "20px", // Larger padding for bigger buttons
               fontSize: "1.25rem", // Increase font size
             }}
@@ -335,15 +337,7 @@ export default function Multicaster({ userData, bindEndpoint }) {
             Connect Manually
             <SearchIcon sx={{ marginLeft: "10px" }} />
           </Button>
-          <FormControlLabel
-            control={
-              <Switch
-                sx={{ transform: "scale(1.5)" }}
-                checked={localDiscovery}
-                onChange={toggleLocalDiscovery}
-              />
-            }
-          />
+          <DiscoveryToggle mode={localDiscovery} setMode={setLocalDiscovery} />
         </div>
         {RenderServerInput()}
         {RenderServerState()}
