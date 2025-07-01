@@ -69,11 +69,11 @@ public class MessagingController implements MessagingControllerInterface {
                                                           @DestinationVariable("PluginKey") UUID pluginKey, @Payload UpdatedDataMapper messageUpdateRequest) {
 
         UUID idForChange = messageUpdateRequest.getId();
-        boolean canUpdate = serv.matchRequestWithSender(clientKey, idForChange);
-
-        if (!canUpdate) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+//        boolean canUpdate = serv.matchRequestWithSender(clientKey, idForChange);
+//
+//        if (!canUpdate) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
 
         String contentToChange = messageUpdateRequest.getData();
         boolean updated = serv.updateMessage(idForChange, contentToChange);

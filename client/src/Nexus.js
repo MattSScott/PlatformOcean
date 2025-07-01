@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Gateway from "./Gateway/Gateway";
 import Multicaster from "./ServiceDiscovery/Multicaster";
 import { Button } from "@mui/material";
@@ -27,6 +27,7 @@ export default function Nexus({ userData }) {
   const unbindEndpoint = () => {
     setIsDiscovering(true);
     localStorage.removeItem("endpointData");
+    localStorage.removeItem("userData");
     setEndpointDetails(null);
   };
 

@@ -18,6 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import WifiFindIcon from "@mui/icons-material/WifiFind";
 import SearchIcon from "@mui/icons-material/Search";
 import EndpointButton from "./EndpointButton";
+import DiscoveryToggle from "./DiscoveryToggle";
 
 const fetchWithTimeout = async (endpointURL, timeout) => {
   const controller = new AbortController();
@@ -36,19 +37,19 @@ const fetchWithTimeout = async (endpointURL, timeout) => {
   }
 };
 
+const ServerStatusState = {
+  WAITING: 0,
+  LOADING: 1,
+  VALID: 2,
+  INVALID: 3,
+};
+
 export default function Multicaster({ userData, bindEndpoint }) {
   const [endpointList, setEndpointList] = useState([]);
   const [manualIp, setManualIp] = useState("192.168.0.43");
   const [manualPort, setManualPort] = useState(8080);
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const ServerStatusState = {
-    WAITING: 0,
-    LOADING: 1,
-    VALID: 2,
-    INVALID: 3,
-  };
-
+  const [localDiscovery, setLocalDiscovery] = useState(true);
   const [hostStatus, setHostStatus] = useState(ServerStatusState.WAITING);
   const [potentialEndpoint, setPotentialEndpoint] = useState(null);
   const [potentialHost, setPotentialHost] = useState(null);
@@ -66,13 +67,15 @@ export default function Multicaster({ userData, bindEndpoint }) {
   };
 
   const attemptManualConnection = async () => {
-    if (!manualIp || !manualPort) {
+    if (!manualIp || (localDiscovery && !manualPort)) {
       setDialogOpen(true);
       return;
     }
 
     setHostStatus(ServerStatusState.LOADING);
-    const attemptedServerEndpoint = `http://${manualIp}:${manualPort}`;
+    const attemptedServerEndpoint = localDiscovery
+      ? `http://${manualIp}:${manualPort}`
+      : manualIp;
 
     try {
       const endpointURL = `${attemptedServerEndpoint}/discover`;
@@ -108,7 +111,66 @@ export default function Multicaster({ userData, bindEndpoint }) {
     setHostStatus(ServerStatusState.WAITING);
   };
 
-  const renderServerState = () => {
+  const RenderServerInput = () => {
+    if (localDiscovery) {
+      return (
+        <Grid container spacing={2} sx={{ margin: "20px" }}>
+          <Grid item xs={6} sx={{ paddingTop: 0 }}>
+            <TextField
+              label="Enter Platform IP"
+              variant="outlined"
+              type="text"
+              value={manualIp}
+              onChange={(e) => {
+                setHostStatus(ServerStatusState.WAITING);
+                setManualIp(e.target.value);
+              }}
+              fullWidth
+              style={{ fontSize: "1.25rem" }} // Larger font size for input field
+            />
+          </Grid>
+          <Grid item xs={6} sx={{ paddingTop: 0 }}>
+            <TextField
+              label="Enter Platform Port"
+              variant="outlined"
+              type="number"
+              value={manualPort}
+              onChange={(e) => {
+                setHostStatus(ServerStatusState.WAITING);
+                setManualPort(e.target.value);
+              }}
+              fullWidth
+              style={{ fontSize: "1.25rem" }} // Larger font size for input field
+            />
+          </Grid>
+        </Grid>
+      );
+    } else {
+      return (
+        <Grid container spacing={2} sx={{ margin: "20px" }}>
+          <Grid item xs={12} sx={{ paddingTop: 0 }}>
+            <TextField
+              label="Enter Platform URL"
+              variant="outlined"
+              type="text"
+              value={manualIp}
+              onChange={(e) => {
+                setHostStatus(ServerStatusState.WAITING);
+                setManualIp(e.target.value);
+              }}
+              fullWidth
+              style={{ fontSize: "1.25rem" }} // Larger font size for input field
+            />
+          </Grid>
+        </Grid>
+      );
+    }
+  };
+
+  const RenderServerState = () => {
+    const attemptedAddress = localDiscovery
+      ? `${manualIp}:${manualPort}`
+      : manualIp;
     if (hostStatus === ServerStatusState.WAITING) {
       return;
     } else if (hostStatus === ServerStatusState.LOADING) {
@@ -133,7 +195,7 @@ export default function Multicaster({ userData, bindEndpoint }) {
               borderRadius: "16px",
             }}
           >
-            Unable to find endpoint with address {`${manualIp}:${manualPort}`}
+            Unable to find endpoint with address: {attemptedAddress}
           </Typography>
         </div>
       );
@@ -154,7 +216,7 @@ export default function Multicaster({ userData, bindEndpoint }) {
           >
             Server found!
             <br />
-            Address: {`${manualIp}:${manualPort}`}
+            Address: {attemptedAddress}
             <br />
             Name: "{potentialHost}"
             <br />
@@ -253,50 +315,32 @@ export default function Multicaster({ userData, bindEndpoint }) {
           padding: "20px",
         }}
       >
-        <Button
-          variant="contained"
-          sx={{
-            width: "fit-content",
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: "50px",
+            alignContent: "center",
+            justifyContent: "center",
             marginBottom: "15px",
-            padding: "20px", // Larger padding for bigger buttons
-            fontSize: "1.25rem", // Increase font size
           }}
-          onClick={attemptManualConnection}
         >
-          Connect Manually
-          <SearchIcon sx={{ marginLeft: "10px" }} />
-        </Button>
-        <Grid container spacing={2} sx={{ margin: "20px" }}>
-          <Grid item xs={6} sx={{ paddingTop: 0 }}>
-            <TextField
-              label="Enter Platform IP"
-              variant="outlined"
-              type="text"
-              value={manualIp}
-              onChange={(e) => {
-                setHostStatus(ServerStatusState.WAITING);
-                setManualIp(e.target.value);
-              }}
-              fullWidth
-              style={{ fontSize: "1.25rem" }} // Larger font size for input field
-            />
-          </Grid>
-          <Grid item xs={6} sx={{ paddingTop: 0 }}>
-            <TextField
-              label="Enter Platform Port"
-              variant="outlined"
-              type="number"
-              value={manualPort}
-              onChange={(e) => {
-                setHostStatus(ServerStatusState.WAITING);
-                setManualPort(e.target.value);
-              }}
-              fullWidth
-              style={{ fontSize: "1.25rem" }} // Larger font size for input field
-            />
-          </Grid>
-        </Grid>
-        {renderServerState()}
+          <Button
+            variant="contained"
+            sx={{
+              width: "fit-content",
+              padding: "20px", // Larger padding for bigger buttons
+              fontSize: "1.25rem", // Increase font size
+            }}
+            onClick={attemptManualConnection}
+          >
+            Connect Manually
+            <SearchIcon sx={{ marginLeft: "10px" }} />
+          </Button>
+          <DiscoveryToggle mode={localDiscovery} setMode={setLocalDiscovery} />
+        </div>
+        {RenderServerInput()}
+        {RenderServerState()}
       </div>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
         <DialogTitle>Error</DialogTitle>

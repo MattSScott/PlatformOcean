@@ -4,6 +4,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 export default function Deregistration({ unsetUserDetails }) {
   const triggerLogout = () => {
     localStorage.removeItem("userData");
+    localStorage.removeItem("endpointData");
     unsetUserDetails();
   };
 
