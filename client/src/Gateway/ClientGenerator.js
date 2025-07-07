@@ -8,6 +8,7 @@ export default function ClientGenerator(endpoint) {
   useEffect(() => {
     const socket = new SockJS(`${endpoint}/PlatformOcean`); // handshake with endpoint
     const clientHelper = Stomp.over(socket);
+    clientHelper.debug = () => {};
     clientHelper.connect({}, () => setClient(clientHelper));
     // Cleanup on unmount
     return () => {

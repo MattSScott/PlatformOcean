@@ -2,12 +2,16 @@ import React, { useEffect } from "react";
 import { useClientDataContext } from "../Contexts/ClientContext";
 import MessageProtcol from "./MessageProtocol";
 import "../Renderer/Renderer.css";
+import { useMessageQueues } from "./MessageQueue";
 
 export default function PluginWrapper(WrappedComponent) {
   function WrappedPlugin({ routingKey }) {
     const { client, clientID, username } = useClientDataContext();
-    const { data, dataHistory, runMessageProtocol } =
-      MessageProtcol(routingKey);
+    const { enqueueMessage, dequeueMessage, queueLength } = useMessageQueues();
+    const { dataHistory, runMessageProtocol } = MessageProtcol(
+      routingKey,
+      enqueueMessage
+    );
 
     useEffect(() => {
       const subscribe = () => {
@@ -45,28 +49,28 @@ export default function PluginWrapper(WrappedComponent) {
       };
     }, [runMessageProtocol, client, clientID, routingKey]);
 
-    function getData(preprocessor = (x) => x) {
-      return data && preprocessor(data.message);
-    }
+    // function getData(preprocessor = (x) => x) {
+    //   return data && preprocessor(data.message);
+    // }
 
-    function getDataHistory() {
-      return dataHistory;
-    }
+    // function getDataHistory() {
+    //   return dataHistory;
+    // }
 
-    function getSender() {
-      return data && data.sender;
-    }
+    // function getSender() {
+    //   return data && data.sender;
+    // }
 
-    function getUser() {
-      return clientID;
-    }
+    // function getUser() {
+    //   return clientID;
+    // }
 
-    function isMe() {
-      if (data) {
-        return data.sender === clientID;
-      }
-      return false;
-    }
+    // function isMe() {
+    //   if (data) {
+    //     return data.sender === clientID;
+    //   }
+    //   return false;
+    // }
 
     function sendCreateMessage(processedData, shouldPersist = true) {
       const SenderRoutingAddress = `/app/${clientID}/${routingKey}/send`;
@@ -108,12 +112,13 @@ export default function PluginWrapper(WrappedComponent) {
 
     return (
       <WrappedComponent
-        getData={getData}
-        getDataHistory={getDataHistory}
-        getSender={getSender}
-        getUser={getUser}
+        getData={dequeueMessage}
+        numMessages={queueLength}
+        dataHistory={dataHistory}
+        // getSender={getSender}
+        user={clientID}
         nickname={username}
-        isMe={isMe}
+        // isMe={isMe}
         sendCreateMessage={sendCreateMessage}
         sendUpdateMessage={sendUpdateMessage}
         sendDeleteMessage={sendDeleteMessage}
