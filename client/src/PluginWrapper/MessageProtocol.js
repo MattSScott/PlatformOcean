@@ -1,8 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useNetworkIPContext } from "../Contexts/ServerIPContext";
 
-export default function MessageProtcol(routingKey) {
-  const [data, setData] = useState(null);
+export default function MessageProtcol(routingKey, enqueueMessage) {
   const [dataHistory, setDataHistory] = useState([]);
   const NetworkIP = useNetworkIPContext();
 
@@ -24,43 +23,46 @@ export default function MessageProtcol(routingKey) {
     fetchHistory();
   }, [NetworkIP, routingKey]);
 
-  const runMessageProtocol = useCallback((message, protocol) => {
-    const handleCreateMessage = (data) => {
-      setData(data);
-      setDataHistory((hist) => [...hist, data]);
-    };
+  const runMessageProtocol = useCallback(
+    (message, protocol) => {
+      const handleCreateMessage = (data) => {
+        enqueueMessage(data);
+        setDataHistory((hist) => [...hist, data]);
+      };
 
-    const handleUpdateMessage = (data) => {
-      setDataHistory((hist) =>
-        hist.map((entry) => {
-          if (entry.messageID !== data.messageID) {
-            return entry;
-          }
-          return data;
-        })
-      );
-    };
+      const handleUpdateMessage = (data) => {
+        setDataHistory((hist) =>
+          hist.map((entry) => {
+            if (entry.messageID !== data.messageID) {
+              return entry;
+            }
+            return data;
+          })
+        );
+      };
 
-    const handleDeleteMessage = (data) => {
-      setDataHistory((hist) =>
-        hist.filter((entry) => entry.messageID !== data.messageID)
-      );
-    };
+      const handleDeleteMessage = (data) => {
+        setDataHistory((hist) =>
+          hist.filter((entry) => entry.messageID !== data.messageID)
+        );
+      };
 
-    switch (protocol) {
-      case "CREATE":
-        handleCreateMessage(message);
-        return;
-      case "UPDATE":
-        handleUpdateMessage(message);
-        return;
-      case "DELETE":
-        handleDeleteMessage(message);
-        return;
-      default:
-        return;
-    }
-  }, []);
+      switch (protocol) {
+        case "CREATE":
+          handleCreateMessage(message);
+          return;
+        case "UPDATE":
+          handleUpdateMessage(message);
+          return;
+        case "DELETE":
+          handleDeleteMessage(message);
+          return;
+        default:
+          return;
+      }
+    },
+    [enqueueMessage]
+  );
 
-  return { data, dataHistory, runMessageProtocol };
+  return { dataHistory, runMessageProtocol };
 }
