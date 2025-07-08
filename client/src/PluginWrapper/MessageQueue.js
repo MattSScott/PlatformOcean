@@ -12,7 +12,7 @@ export function useMessageQueues() {
   const dequeueMessage = useCallback(() => {
     const msg = messageQueueRef.current.shift();
     setQueueLength(messageQueueRef.current.length);
-    return msg.message;
+    return msg;
   }, []);
 
   return {

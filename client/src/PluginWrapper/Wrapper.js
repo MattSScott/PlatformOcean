@@ -115,10 +115,8 @@ export default function PluginWrapper(WrappedComponent) {
         getData={dequeueMessage}
         numMessages={queueLength}
         dataHistory={dataHistory}
-        // getSender={getSender}
         user={clientID}
         nickname={username}
-        // isMe={isMe}
         sendCreateMessage={sendCreateMessage}
         sendUpdateMessage={sendUpdateMessage}
         sendDeleteMessage={sendDeleteMessage}
