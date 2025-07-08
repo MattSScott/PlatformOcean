@@ -6,12 +6,12 @@ export function useMessageQueues() {
 
   const enqueueMessage = useCallback((msg) => {
     messageQueueRef.current.push(msg);
-    setQueueLength(messageQueueRef.current.length);
+    setQueueLength(() => messageQueueRef.current.length);
   }, []);
 
   const dequeueMessage = useCallback(() => {
     const msg = messageQueueRef.current.shift();
-    setQueueLength(messageQueueRef.current.length);
+    setQueueLength(() => messageQueueRef.current.length);
     return msg;
   }, []);
 
