@@ -9,14 +9,7 @@ export default function Gateway({ endpoint, clientState, username }) {
   const [pluginDescriptors, setPluginDescriptors] = useState([]);
 
   useEffect(() => {
-    const subscribeToPluginList = () => {
-      const SubscriberRoutingAddress = `/topic/newPlugins`;
-      client &&
-        client.subscribe(SubscriberRoutingAddress, (resp) => {
-          const parsedPlugins = JSON.parse(resp.body);
-          setPluginDescriptors(parsedPlugins);
-        });
-    };
+    if (!client) return;
 
     const retrievePluginDetails = async () => {
       try {
@@ -28,8 +21,14 @@ export default function Gateway({ endpoint, clientState, username }) {
       }
     };
 
-    subscribeToPluginList();
+    const SubscriberRoutingAddress = `/topic/newPlugins`;
+    const subscription = client.subscribe(SubscriberRoutingAddress, (resp) => {
+      setPluginDescriptors(JSON.parse(resp.body));
+    });
+
     retrievePluginDetails();
+
+    return () => subscription.unsubscribe();
   }, [client, endpoint]);
 
   if (!clientState.id) {
@@ -47,7 +46,7 @@ export default function Gateway({ endpoint, clientState, username }) {
         }}
       >
         <NetworkIPContext.Provider value={endpoint}>
-          {client && pluginDescriptors ? (
+          {client ? (
             <Renderer pluginDescriptors={pluginDescriptors} />
           ) : (
             <div>
