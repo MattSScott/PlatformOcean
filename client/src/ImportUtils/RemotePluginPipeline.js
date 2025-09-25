@@ -11,42 +11,48 @@ export default function RemotePluginPipeline({
   pluginKey,
   ...props
 }) {
-  const sandboxRef = useRef(null);
-  const [isSandboxReady, setIsSandboxReady] = useState(false);
+  // const sandboxRef = useRef(null);
+  // const [isSandboxReady, setIsSandboxReady] = useState(false);
 
-  const sandboxCurrent = sandboxRef.current;
+  // const sandboxCurrent = sandboxRef.current;
 
-  useEffect(() => {
-    const handleIframeLoad = () => {
-      if (sandboxCurrent && sandboxCurrent.contentDocument) {
-        setIsSandboxReady(true);
-      }
-    };
-    handleIframeLoad();
-  }, [sandboxCurrent]);
+  // useEffect(() => {
+  //   const handleIframeLoad = () => {
+  //     if (sandboxCurrent && sandboxCurrent.contentDocument) {
+  //       setIsSandboxReady(true);
+  //     }
+  //   };
+  //   handleIframeLoad();
+  // }, [sandboxCurrent]);
+
+  const [sandboxRef, setSandboxRef] = useState(null);
 
   const DistributedRemoteComponent = SandboxStateController(
     pluginName,
     scope,
     module,
-    sandboxCurrent
+    // sandboxCurrent
+    sandboxRef
   );
 
-  const mountNode = sandboxCurrent?.contentDocument?.body;
+  // const mountNode = sandboxCurrent?.contentDocument?.body;
+  const mountNode = sandboxRef?.contentWindow?.document?.body;
+
+  // console.log(mountNode);
 
   return (
-    <ErrorBoundary>
+    <>
       <iframe
-        ref={sandboxRef}
+        ref={setSandboxRef}
         style={{
           border: "none",
           width: "100%",
           height: "100%",
-          display: mountNode && isSandboxReady ? "inline" : "none",
+          // display: mountNode && isSandboxReady ? "inline" : "none",
         }}
         title={`iframe-${pluginKey}`}
       />
-      {mountNode && isSandboxReady ? (
+      {mountNode ? (
         createPortal(
           <DistributedRemoteComponent {...props} routingKey={pluginKey} />,
           mountNode
@@ -54,6 +60,6 @@ export default function RemotePluginPipeline({
       ) : (
         <GeneratingSandbox />
       )}
-    </ErrorBoundary>
+    </>
   );
 }
