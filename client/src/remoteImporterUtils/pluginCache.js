@@ -13,7 +13,6 @@ export const ConsultPluginCache = (pluginName, scope, module, sandbox) => {
 
   useEffect(() => {
     const key = `${pluginName}-${scope}-${module}`;
-    console.log(key, componentCache.has(key));
 
     if (!sandbox?.contentDocument) {
       setState((prev) => ({

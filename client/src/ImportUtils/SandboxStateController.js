@@ -9,10 +9,6 @@ export default function SandboxStateController(...args) {
     return FetchingPlugin;
   }
 
-  // console.log(component, isLoading, error);
-
-  // window.err = error;
-
   if (error) {
     return () => (
       <div>
