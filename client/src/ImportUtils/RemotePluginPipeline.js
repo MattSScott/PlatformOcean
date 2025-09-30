@@ -1,6 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import ErrorBoundary from "../remoteImporterUtils/errorBoundary";
 import SandboxStateController from "./SandboxStateController";
 import GeneratingSandbox from "./GeneratingSandbox";
 

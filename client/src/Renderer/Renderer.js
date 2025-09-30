@@ -3,6 +3,7 @@ import { Slider } from "@mui/material";
 import PluginAdder from "../PluginAdder/PluginAdder";
 import { useClientDataContext } from "../Contexts/ClientContext";
 import { NetworkIPContext } from "../Contexts/ServerIPContext";
+import { PluginRegistryProvider } from "../Contexts/PluginRegistryContext";
 import PluginImporter from "../ImportUtils/PluginImporter";
 import PluginStacker from "../ImportUtils/PluginStacker";
 import "./Renderer.css";
@@ -41,9 +42,11 @@ export default function Renderer({ pluginDescriptors }) {
           gap: "20px", // Spacing between items
         }}
       >
-        {Object.values(PluginStackerArray).map((pluginKeyPair, idx) => (
-          <PluginStacker plugins={pluginKeyPair} key={`stacker-${idx}`} />
-        ))}
+        <PluginRegistryProvider platformHash={pluginDescriptors}>
+          {Object.values(PluginStackerArray).map((pluginKeyPair, idx) => (
+            <PluginStacker plugins={pluginKeyPair} key={`stacker-${idx}`} />
+          ))}
+        </PluginRegistryProvider>
       </div>
     </div>
   );

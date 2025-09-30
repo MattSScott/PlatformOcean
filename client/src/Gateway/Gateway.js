@@ -28,7 +28,9 @@ export default function Gateway({ endpoint, clientState, username }) {
 
     retrievePluginDetails();
 
-    return () => subscription.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, [client, endpoint]);
 
   if (!clientState.id) {
