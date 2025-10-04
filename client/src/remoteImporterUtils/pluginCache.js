@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import { loadComponent } from "./loadComponent";
 
@@ -14,7 +13,7 @@ export const ConsultPluginCache = (pluginName, scope, module, sandbox) => {
   useEffect(() => {
     const key = `${pluginName}-${scope}-${module}`;
 
-    if (!sandbox || !sandbox.contentDocument) {
+    if (!sandbox?.contentDocument) {
       setState((prev) => ({
         ...prev,
         isLoading: true,
@@ -32,25 +31,35 @@ export const ConsultPluginCache = (pluginName, scope, module, sandbox) => {
       return;
     }
 
-    try {
-      const DynamicComponent = React.lazy(
-        loadComponent(pluginName, scope, module, sandbox)
-      );
-      // componentCache.set(key, DynamicComponent);
+    const attemptLoad = async () => {
+      try {
+        const DynamicModule = await loadComponent(
+          pluginName,
+          scope,
+          module,
+          sandbox
+        );
 
-      setState({
-        component: DynamicComponent,
-        isLoading: false,
-        error: null,
-      });
-    } catch (err) {
-      console.log(err);
-      setState({
-        component: null,
-        isLoading: false,
-        error: err,
-      });
-    }
+        const DynamicComponent = DynamicModule.default;
+
+        setState({
+          component: DynamicComponent,
+          isLoading: false,
+          error: null,
+        });
+
+        componentCache.set(key, DynamicComponent);
+      } catch (err) {
+        console.log(err);
+        setState({
+          component: null,
+          isLoading: false,
+          error: err,
+        });
+      }
+    };
+
+    attemptLoad();
   }, [pluginName, scope, module, sandbox]);
 
   return state;

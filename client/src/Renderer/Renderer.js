@@ -1,16 +1,18 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Slider } from "@mui/material";
 import PluginAdder from "../PluginAdder/PluginAdder";
 import { useClientDataContext } from "../Contexts/ClientContext";
-import { NetworkIPContext } from "../Contexts/ServerIPContext";
+import { PluginRegistryProvider } from "../Contexts/PluginRegistryContext";
 import PluginImporter from "../ImportUtils/PluginImporter";
 import PluginStacker from "../ImportUtils/PluginStacker";
 import "./Renderer.css";
 
 export default function Renderer({ pluginDescriptors }) {
-  const { clientID } = useClientDataContext();
-  const networkAddress = useContext(NetworkIPContext);
+  const { clientID, username } = useClientDataContext();
   const [slider, setSlider] = useState(3);
+  const [mouseIsOver, setMouseIsOver] = useState(false);
+
+  const clientIDSubs = `${clientID.substring(0, 8)}...`;
 
   const PluginStackerArray = PluginImporter(pluginDescriptors);
 
@@ -21,8 +23,13 @@ export default function Renderer({ pluginDescriptors }) {
   return (
     <div className="renderer">
       <div className="logout">
-        <PluginAdder networkAddress={networkAddress} />
-        <p>Signed in as: {`${clientID.substring(0, 8)}...`}</p>
+        <PluginAdder />
+        <p
+          onMouseEnter={() => setMouseIsOver(true)}
+          onMouseLeave={() => setMouseIsOver(false)}
+        >
+          Signed in as: <b>{mouseIsOver ? clientIDSubs : username}</b>
+        </p>
         <Slider
           aria-label="Columns"
           valueLabelDisplay="auto"
@@ -41,9 +48,11 @@ export default function Renderer({ pluginDescriptors }) {
           gap: "20px", // Spacing between items
         }}
       >
-        {Object.values(PluginStackerArray).map((pluginKeyPair, idx) => (
-          <PluginStacker plugins={pluginKeyPair} key={`stacker-${idx}`} />
-        ))}
+        <PluginRegistryProvider platformHash={pluginDescriptors}>
+          {Object.values(PluginStackerArray).map((pluginKeyPair, idx) => (
+            <PluginStacker plugins={pluginKeyPair} key={`stacker-${idx}`} />
+          ))}
+        </PluginRegistryProvider>
       </div>
     </div>
   );
