@@ -33,7 +33,7 @@ export default function Gateway({ endpoint, clientState, username }) {
     };
   }, [client, endpoint]);
 
-  if (!clientState.id) {
+  if (!clientState?.id) {
     return <p>Client State went wrong...</p>;
   }
 
