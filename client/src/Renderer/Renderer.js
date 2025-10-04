@@ -8,9 +8,11 @@ import PluginStacker from "../ImportUtils/PluginStacker";
 import "./Renderer.css";
 
 export default function Renderer({ pluginDescriptors }) {
-  const { clientID } = useClientDataContext();
-  // const networkAddress = useContext(NetworkIPContext);
+  const { clientID, username } = useClientDataContext();
   const [slider, setSlider] = useState(3);
+  const [mouseIsOver, setMouseIsOver] = useState(false);
+
+  const clientIDSubs = `${clientID.substring(0, 8)}...`;
 
   const PluginStackerArray = PluginImporter(pluginDescriptors);
 
@@ -22,7 +24,12 @@ export default function Renderer({ pluginDescriptors }) {
     <div className="renderer">
       <div className="logout">
         <PluginAdder />
-        <p>Signed in as: {`${clientID.substring(0, 8)}...`}</p>
+        <p
+          onMouseEnter={() => setMouseIsOver(true)}
+          onMouseLeave={() => setMouseIsOver(false)}
+        >
+          Signed in as: <b>{mouseIsOver ? clientIDSubs : username}</b>
+        </p>
         <Slider
           aria-label="Columns"
           valueLabelDisplay="auto"
