@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 import { useClientDataContext } from "../Contexts/ClientContext";
+import AddPlugin from "./AddPlugin";
 
-export default function PluginAdder({ networkAddress }) {
+export default function PluginAdder() {
   const [pluginName, setPluginName] = useState("");
   const { clientRole } = useClientDataContext();
   const isOwner = clientRole === "OWNER";
@@ -11,25 +12,8 @@ export default function PluginAdder({ networkAddress }) {
     setPluginName(e.target.value);
   };
 
-  const sendPluginPayload = async () => {
-    const body = {
-      pluginName: pluginName,
-    };
-
-    // TODO: add checking for validity of send?
-
-    const pluginEndpoint = `${networkAddress}/plugins/add`;
-
-    const response = await fetch(pluginEndpoint, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-
-    console.log(response);
-  };
+  // add a plugin with no other subscriptions
+  const sendPluginPayload = AddPlugin(pluginName, []);
 
   return (
     isOwner && (

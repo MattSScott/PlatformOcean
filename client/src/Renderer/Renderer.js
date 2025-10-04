@@ -10,7 +10,7 @@ import "./Renderer.css";
 
 export default function Renderer({ pluginDescriptors }) {
   const { clientID } = useClientDataContext();
-  const networkAddress = useContext(NetworkIPContext);
+  // const networkAddress = useContext(NetworkIPContext);
   const [slider, setSlider] = useState(3);
 
   const PluginStackerArray = PluginImporter(pluginDescriptors);
@@ -22,7 +22,7 @@ export default function Renderer({ pluginDescriptors }) {
   return (
     <div className="renderer">
       <div className="logout">
-        <PluginAdder networkAddress={networkAddress} />
+        <PluginAdder />
         <p>Signed in as: {`${clientID.substring(0, 8)}...`}</p>
         <Slider
           aria-label="Columns"
