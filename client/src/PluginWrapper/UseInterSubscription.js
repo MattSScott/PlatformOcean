@@ -21,6 +21,7 @@ export default function useInterSubscription(routingKey, depKey) {
     if (ready) {
       setCanSubscribe(true);
     }
+  }, [canSubscribe, pluginReadyCount, areSubsReady, routingKey]);
 
   // subscribe once deps are ready
   useEffect(() => {

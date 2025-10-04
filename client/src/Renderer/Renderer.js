@@ -1,8 +1,7 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { Slider } from "@mui/material";
 import PluginAdder from "../PluginAdder/PluginAdder";
 import { useClientDataContext } from "../Contexts/ClientContext";
-import { NetworkIPContext } from "../Contexts/ServerIPContext";
 import { PluginRegistryProvider } from "../Contexts/PluginRegistryContext";
 import PluginImporter from "../ImportUtils/PluginImporter";
 import PluginStacker from "../ImportUtils/PluginStacker";
