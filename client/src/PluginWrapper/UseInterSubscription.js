@@ -6,13 +6,13 @@ import { useClientDataContext } from "../Contexts/ClientContext";
 
 export default function useInterSubscription(routingKey, depKey) {
   const { client, clientID } = useClientDataContext();
+  const [canSubscribe, setCanSubscribe] = useState(!depKey);
   const { enqueueMessage, dequeueMessage, queueLength } = useMessageQueues();
   const { dataHistory, runMessageProtocol } = MessageProtocol(
     depKey,
     enqueueMessage
   );
   const { pluginReadyCount, areSubsReady } = usePluginRegistry();
-  const [canSubscribe, setCanSubscribe] = useState(false);
 
   // dependency check
   useEffect(() => {
@@ -25,7 +25,7 @@ export default function useInterSubscription(routingKey, depKey) {
 
   // subscribe once deps are ready
   useEffect(() => {
-    if (!canSubscribe || !client) return;
+    if (!canSubscribe || !client || !depKey) return;
 
     const subscribe = () => {
       const SubscriberRoutingAddress = `/topic/${depKey}/receive`;

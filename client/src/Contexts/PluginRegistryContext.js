@@ -6,6 +6,8 @@ export function PluginRegistryProvider({ platformHash, children }) {
   const [readyPlugins, setReadyPlugins] = useState(new Set());
   const [dependencyLookup, setDependencyLookup] = useState({});
 
+  console.log(platformHash);
+
   useEffect(() => {
     const reformedHash = {};
     platformHash.forEach(({ pluginKey, subscriptions }) => {

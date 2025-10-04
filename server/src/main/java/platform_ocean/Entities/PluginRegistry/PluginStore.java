@@ -2,6 +2,7 @@ package platform_ocean.Entities.PluginRegistry;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -16,8 +17,11 @@ public class PluginStore {
 
     private final UUID pluginName;
 
-    public PluginStore(UUID pluginName) {
+    private List<UUID> subscriptions;
+
+    public PluginStore(UUID pluginName, List<UUID> subscriptions) {
         this.pluginName = pluginName;
+        this.subscriptions = subscriptions;
     }
 
     public PluginStore() {
@@ -32,11 +36,15 @@ public class PluginStore {
         return pluginName;
     }
 
+    public List<UUID> getSubscriptions() {return subscriptions;}
+
 
     public interface PluginData {
         UUID getPluginKey();
 
         UUID getPluginName();
+
+        List<UUID> getSubscriptions();
     }
 
 }

@@ -4,12 +4,15 @@ import useIntraSubscription from "./UseIntraSubscription";
 import useInterSubscription from "./UseInterSubscription";
 
 export default function PluginWrapper(WrappedComponent) {
-  function WrappedPlugin({ routingKey, depKey }) {
+  function WrappedPlugin({ routingKey, subscriptions = [] }) {
+    if (subscriptions.length > 1) {
+      throw new Error("Plugins support  at most one inter subscription");
+    }
     const { clientID, username } = useClientDataContext();
     const intraOperators = useIntraSubscription(routingKey);
     const { canSubscribe, ...interOperators } = useInterSubscription(
       routingKey,
-      depKey
+      subscriptions[0] || null
     );
 
     return canSubscribe ? (
