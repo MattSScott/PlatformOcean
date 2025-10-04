@@ -1,19 +1,23 @@
 import React, { useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 import { useClientDataContext } from "../Contexts/ClientContext";
-import AddPlugin from "./AddPlugin";
+import addPlugin from "./AddPlugin";
+import { useNetworkIPContext } from "../Contexts/ServerIPContext";
 
 export default function PluginAdder() {
   const [pluginName, setPluginName] = useState("");
   const { clientRole } = useClientDataContext();
   const isOwner = clientRole === "OWNER";
+  const NetworkIP = useNetworkIPContext();
 
   const updatePluginText = (e) => {
     setPluginName(e.target.value);
   };
 
   // add a plugin with no other subscriptions
-  const sendPluginPayload = AddPlugin(pluginName, []);
+  const sendPluginPayload = () => {
+    addPlugin(NetworkIP, pluginName, []);
+  };
 
   return (
     isOwner && (
