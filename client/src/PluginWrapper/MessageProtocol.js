@@ -6,6 +6,7 @@ export default function MessageProtcol(routingKey, enqueueMessage) {
   const NetworkIP = useNetworkIPContext();
 
   useEffect(() => {
+    if (!routingKey) return;
     const fetchHistory = async () => {
       try {
         const HistoryRoutingAddress = `${NetworkIP}/history/${routingKey}`;

@@ -10,7 +10,12 @@ export default function SandboxStateController(...args) {
   }
 
   if (error) {
-    return <p>Failed to import plugin 🙀</p>;
+    return () => (
+      <div>
+        <h2>Failed to import plugin 🙀</h2>
+        <p>{error.toString()}</p>
+      </div>
+    );
   }
 
   return PluginWrapper(component);
